@@ -23,7 +23,7 @@ public final class Constants {
     public static final double DRIVE_REDUCTION = 8.33/1.0;
     public static final double DRIVE_CONVERSION = WHEEL_DIAMETER * Math.PI / DRIVE_REDUCTION;
     
-    public static final double kMaxAngularVelocity = Math.PI;
+    public static final double MAX_ANGULAR_VELOCITY = Math.PI;
     public static final double ROT_POSITION_CONVERSION_FACTOR = 2 * Math.PI / (18.0 / 1.0);
     
     public static final int DRIVE_CURRENT_LIMIT = 35;
@@ -39,11 +39,10 @@ public final class Constants {
   }
 
   public static enum SwerveModules {
-    FRONTLEFT(2,4,3, new Translation2d(0.381, 0.381), 2.70633265),
-    FRONTRIGHT(3,2,1, new Translation2d(0.381, -0.381), -5.30972),
-    BACKLEFT(0,8,7, new Translation2d(-0.381, 0.381), -1.57568),
-    BACKRIGHT(1,6,5, new Translation2d(-.381, -0.381), -0.278867)
-    ;
+    FRONTLEFT(2,4,3, new Translation2d(0.381, 0.381), -(0.0431 + 0.39216 + 3.14159265 - (2 * 3.14159265))),
+    FRONTRIGHT(3,2,1, new Translation2d(0.381, -0.381), -(1.57568)),
+    BACKLEFT(0,8,7, new Translation2d(-0.381, 0.381), -(-0.97338 + 6.2831)),
+    BACKRIGHT(1,6,5, new Translation2d(-.381, -0.381), -(0.278867));
     //analog absolute encoder port (analog in on roborio)
     private final int encoderPort;
     //neo drive motor id on can loop

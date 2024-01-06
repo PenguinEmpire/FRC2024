@@ -41,7 +41,6 @@ public class DriveSubsystem extends SubsystemBase {
   private Pose2d location;
   private int ticks = 0;
   private boolean driveEnabled = true;
-  private Field2d field;
   private AHRS navX = new AHRS(Port.kUSB);
   
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
@@ -144,13 +143,13 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber(frontRightModule.name + " Offset", SwerveModules.FRONTRIGHT.getEncoderOffset());
     SmartDashboard.putNumber(backLeftModule.name + " Offset", SwerveModules.BACKLEFT.getEncoderOffset());
     SmartDashboard.putNumber(backRightModule.name + " Offset", SwerveModules.BACKRIGHT.getEncoderOffset());
-
+    SmartDashboard.putBoolean("Enable Debug", false);
     SmartDashboard.putBoolean("Update Offsets", false);
     turnController = new PIDController(kP, kI, kD);
     turnController.setIntegratorRange(-6.283, 6.283);
 
     SmartDashboard.putData("Rot", turnController);
-    SmartDashboard.putData("Field Test", field);
+    // SmartDashboard.putData("Field Test", field);
     resetGyroscope();
   }
 
@@ -233,7 +232,7 @@ public class DriveSubsystem extends SubsystemBase {
       backRightModule.getPosition()
     });
 
-    field.setRobotPose(location);
+    // field.setRobotPose(location);
 
     //location = odometry.getPose();
 

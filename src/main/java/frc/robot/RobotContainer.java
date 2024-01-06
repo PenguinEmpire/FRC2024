@@ -4,9 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.ControlInput;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.commands.AlignmentCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -16,8 +18,9 @@ import frc.robot.subsystems.DriveSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DriveSubsystem driveSubsystem = new DriveSubsystem();
+  private final DriveSubsystem driveSubsystem;
   private SwerveDriveCommand swerveDriveCommand;
+  private AlignmentCommand alignmentCommand;
 
   private ControlInput controlInput;
   
@@ -26,6 +29,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     controlInput = new ControlInput();
+    driveSubsystem = new DriveSubsystem();
   }
 
   private void configureBindings() {
@@ -35,6 +39,11 @@ public class RobotContainer {
   public void teleopInit() {
     swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, controlInput);
     driveSubsystem.setDefaultCommand(swerveDriveCommand);
+
+    alignmentCommand = new AlignmentCommand(driveSubsystem, controlInput);
+    JoystickButton alignmentButton  = new JoystickButton(controlInput.getLeftJoystick(),5);
+    alignmentButton.whileTrue(alignmentCommand);
+
   }
 
   /**

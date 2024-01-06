@@ -106,7 +106,7 @@ public class SwerveDriveCommand extends CommandBase {
   //         clamp(clamp(turnValue, -0.4, 0.4), -Drive.kMaxAngularVelocity), false, false);
   // }
     // if(m_input->IsConeMode()) m_vs->SetLED(false);
-        subsystem.drive(forward, strafe, clamp(rotation * 0.8, -Drive.kMaxAngularVelocity, Drive.kMaxAngularVelocity), true, false);
+        subsystem.drive(forward, strafe, clamp(rotation * 0.8, -Drive.MAX_ANGULAR_VELOCITY, Drive.MAX_ANGULAR_VELOCITY), true, false);
         // autoAlignPID.reset();
         // yPID.reset();
   }

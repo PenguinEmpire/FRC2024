@@ -49,6 +49,7 @@ public class SwerveModule {
 
     public SwerveModule(String name, int driveID, int turnID, int analogEncoderPort, Translation2d locationOffset, double analogOffset) {
         //boilerplate initialization
+        System.out.println(name + " Initialized");
         this.name = name;
         this.driveMotorID = driveID;
         this.turnMotorID = turnID;
