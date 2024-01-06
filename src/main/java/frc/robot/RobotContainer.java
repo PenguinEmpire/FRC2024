@@ -4,11 +4,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import physical.SwerveModule;
+import frc.ControlInput;
+import frc.robot.commands.SwerveDriveCommand;
+import frc.robot.subsystems.DriveSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -18,26 +16,25 @@ import physical.SwerveModule;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private final DriveSubsystem driveSubsystem = new DriveSubsystem();
+  private SwerveDriveCommand swerveDriveCommand;
+
+  private ControlInput controlInput;
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    //m_driveSubsystem.setDefaultCommand(driveWithJoystickCommand);
+    controlInput = new ControlInput();
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
-
   private void configureBindings() {
-  
+    
+  }
+
+  public void teleopInit() {
+    swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, controlInput);
+    driveSubsystem.setDefaultCommand(swerveDriveCommand);
   }
 
   /**
@@ -45,8 +42,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return null;
-  }
+  // public Command getAutonomousCommand() {
+  //   // An example command will be run in autonomous
+  //   return Autos.exampleAuto(m_exampleSubsystem);
+  // }
 }

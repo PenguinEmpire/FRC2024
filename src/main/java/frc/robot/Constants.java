@@ -6,93 +6,82 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
+ * constants. This class should not be used for any other purpose. All constants should be declared
+ * globally (i.e. public static). Do not put anything functional in this class.
+ *
+ * <p>It is advised to statically import this class (or one of its inner classes) wherever the
+ * constants are needed, to reduce verbosity.
+ */
 public final class Constants {
-
-  public static final class Vision {
-    // how many degrees back is your limelight rotated from perfectly vertical?
-    public static final double LIMELIGHT_MOUNT_ANGLE_DEGREES = 15.0;
-    public static final double photonMountAngleDegrees = 15.0;
-
-    // distance from the center of the Limelight lens to the floor (in inches)
-    public static final double LIMELIGHT_LENS_HEIGHT_INCHES = 7.717;
-    public static final double photonLensHeightInches = 7.717;
-
-    // distance from the target to the floor
-    public static final double GOAL_HEIGHT_INCHES = 15.0;
+  //too lazy to do enum for drive constants
+  // first four constants are from swervedrivespecialties github
+  public static class Drive {
+    public static final double DISTANCE_PER_ROT = 1.0/8.16;
+    public static final double WHEEL_DIAMETER = 4;
+    public static final double DRIVE_REDUCTION = 8.33/1.0;
+    public static final double DRIVE_CONVERSION = WHEEL_DIAMETER * Math.PI / DRIVE_REDUCTION;
+    
+    public static final double kMaxAngularVelocity = Math.PI;
+    public static final double ROT_POSITION_CONVERSION_FACTOR = 2 * Math.PI / (18.0 / 1.0);
+    
+    public static final int DRIVE_CURRENT_LIMIT = 35;
+    public static final int TURN_CURRENT_LIMIT = 20;
+    public static final int SECONDARY_CURRENT_OFFSET = 5;
+    
   }
 
-  public static final class Drive {
-    public static final double DISTANCE_PER_Rotation = 1/8.16;
-    public static final double DRIVE_CONVERSION = 4.572/110; //8.33 / 1.0; // (gear ratio)
-
-    public enum Module {
-      FRONTLEFT(
-          2,
-          4,
-          3, 
-          new Translation2d(0.381, 0.381), 
-          -0.880729
-      ),
-      FRONTRIGHT(
-          3,
-          2,
-          1, 
-          new Translation2d(0.381, -0.381), 
-          -1.57568
-      ),
-      BACKLEFT(
-          0,
-          8,
-          7, 
-          new Translation2d(-0.381, +0.381), 
-          0.97338
-      ),
-      BACKRIGHT(
-          1,
-          6,
-          5, 
-          new Translation2d(-0.381, -0.381), 
-          -0.278867
-      );
-      private int analogEncoderPort, driveMotorCanID, turnMotorCanID;
-      private Translation2d location;
-      private double turnEncoderOffset;
-      Module(
-          int analogEncoderPort,
-          int driveMotorCanID, 
-          int turnMotorCanID, 
-          Translation2d location, 
-          double turnEncoderOffset) {
-              this.analogEncoderPort = analogEncoderPort;
-              this.driveMotorCanID = driveMotorCanID;
-              this.turnMotorCanID = turnMotorCanID;
-              this.location = location;
-              this.turnEncoderOffset = turnEncoderOffset;
-      }
-
-      public int getAnalogEncoderPort() { return analogEncoderPort; }
-      
-      public int getDriveMotorCanID() { return driveMotorCanID; }
-
-      public int getTurnMotorCanID() { return turnMotorCanID; }
-
-      public Translation2d getLocation() { return location; }
-
-      public double getTurnEncoderOffset() { return turnEncoderOffset; }
-      
-      public static Translation2d[] getLocations() {
-          final List<Translation2d> locations = new ArrayList<>();
-          for (Module swerveModule : Module.values()) {
-              locations.add(swerveModule.getLocation());
-          }
-          return (Translation2d[]) locations.toArray();
-      }
+  public static class Turn {
+    public static final double P = 1.5;
+    public static final double I = 0;
+    public static final double D = 0.5;
   }
 
-  public static final double K_MAX_ANGULAR_VELOCITY = Math.PI;
+  public static enum SwerveModules {
+    FRONTLEFT(2,4,3, new Translation2d(0.381, 0.381), 2.70633265),
+    FRONTRIGHT(3,2,1, new Translation2d(0.381, -0.381), -5.30972),
+    BACKLEFT(0,8,7, new Translation2d(-0.381, 0.381), -1.57568),
+    BACKRIGHT(1,6,5, new Translation2d(-.381, -0.381), -0.278867)
+    ;
+    //analog absolute encoder port (analog in on roborio)
+    private final int encoderPort;
+    //neo drive motor id on can loop
+    private final int driveMotorID;
+    //neo turn motor id on can loop
+    private final int turnMotorID;
+    //module location in 2d space
+    private final Translation2d moduleLocation;
+    //absolute encoder offset in radians
+    private final double encoderOffset;
+    SwerveModules(int encoderPort, int driveID, int turnID, Translation2d location, double encoderOffset) {
+      this.encoderPort = encoderPort;
+      this.driveMotorID = driveID;
+      this.turnMotorID = turnID;
+      this.moduleLocation = location;
+      this.encoderOffset = encoderOffset;
+    }
+
+    public int getEncoderPort() {
+      return this.encoderPort;
+    }
+
+    public int getDriveMotorID() {
+      return this.driveMotorID;
+    }
+
+    public int getTurnMotorID() {
+      return this.turnMotorID;
+    }
+
+    public Translation2d getModuleLocation() {
+      return this.moduleLocation;
+    } 
+
+    public double getEncoderOffset() {
+      return this.encoderOffset;
+    }
 
   }
+
 }
