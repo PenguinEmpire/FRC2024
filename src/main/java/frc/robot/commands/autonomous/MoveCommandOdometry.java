@@ -1,0 +1,93 @@
+package frc.robot.commands.autonomous;
+
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.DriveSubsystem;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+public class MoveCommandOdometry extends CommandBase {
+    private DriveSubsystem driveSubsystem;
+    private Pose2d targetPosition;
+    private PIDController xPID;
+    private PIDController yPID;
+    private PIDController turnPID;
+
+    private double ticks = 0;
+    private boolean keepVelocity;
+    private double maxSpeed;
+
+    public MoveCommandOdometry(DriveSubsystem driveSubsystem, Pose2d targetPosition, boolean keepVelocity, double maxSpeed){
+        this.driveSubsystem = driveSubsystem;
+        this.targetPosition = targetPosition;
+        this.keepVelocity = false;
+        this.maxSpeed = 0.5;
+
+        xPID = new PIDController(1.35, 0, 0);
+        yPID = new PIDController(1.35, 0, 0);
+        turnPID = new PIDController(0.0154, 0, 0);
+        addRequirements(driveSubsystem);
+    }
+
+    @Override
+    public void initialize() {
+        xPID.reset();
+        yPID.reset();
+        turnPID.reset();
+
+        xPID.setTolerance(0.02, 0.2);
+        yPID.setTolerance(0.02, 0.2);
+        turnPID.setTolerance(0.02, 0.2);
+        turnPID.enableContinuousInput(-180, 180);
+
+        ticks = 0;
+    }
+
+    @Override
+    public void execute(){
+        ticks++;
+        Pose2d currentPose = driveSubsystem.getPosition();
+
+        double xValue = xPID.calculate(currentPose.X().value(), targetPosition.X().value());
+        double yValue = yPID.calculate(currentPose.Y().value(), targetPosition.Y().value());
+        double turnValue = -turnPID.calculate(currentPose.rotation().Degrees().value(), targetPosition.rotation().Degrees().value());
+        
+        double tickLength = 20;
+
+        if(ticks > tickLength) ticks = tickLength;
+
+        double maxDrive = maxSpeed * (ticks / tickLength);
+        double maxRot = 0.4 * (ticks / tickLength);
+
+        driveSubsystem.drive((std::clamp(xValue, -maxDrive, maxDrive)), units::meters_per_second_t(std::clamp(yValue, -maxDrive, maxDrive)), units::radians_per_second_t(std::clamp(turnValue, -maxRot, maxRot)), true, false);
+    }
+   
+    @Override
+    public void end (boolean interrupted){
+        driveSubsystem.drive(0, 0, 0, false, true);
+    }
+
+    @Override
+    public boolean isFinished (){
+        double posError = keepVelocity ? 0.02 : 0.009;
+        double velError = keepVelocity ? 9999 : 0.1;
+        if(
+            (xPID.getPositionError() < posError && Math.abs(xPID.getVelocityError()) < velError) &&
+            (yPID.getPositionError() < posError && Math.abs(yPID.getVelocityError()) < velError)
+        
+        ) {
+            System.out.println("-----------------Completed Command------------------" );
+            return true;
+        }
+
+        return false;
+    }
+
+
+
+}
+
+
+
+
+    

@@ -7,8 +7,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.ControlInput;
 import frc.robot.commands.SwerveDriveCommand;
+import frc.robot.commands.autonomous.MoveCommandOdometry;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.commands.AlignmentCommand;
+import frc.robot.commands.autonomous.MoveCommandOdometry;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -21,6 +23,7 @@ public class RobotContainer {
   private final DriveSubsystem driveSubsystem;
   private SwerveDriveCommand swerveDriveCommand;
   private AlignmentCommand alignmentCommand;
+  private MoveCommandOdometry moveCommandOdometry;
 
   private ControlInput controlInput;
   
@@ -39,6 +42,8 @@ public class RobotContainer {
     alignmentCommand = new AlignmentCommand(driveSubsystem, controlInput);
     JoystickButton alignmentButton  = new JoystickButton(controlInput.getLeftJoystick(),5);
     alignmentButton.whileTrue(alignmentCommand);
+
+    moveCommandOdometry = new MoveCommandOdometry(driveSubsystem, null, false, 0);
 
   }
 
