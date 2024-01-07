@@ -151,6 +151,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putData("Rot", turnController);
     // SmartDashboard.putData("Field Test", field);
     resetGyroscope();
+
   }
 
   public void resetGyroscope() {
@@ -247,8 +248,7 @@ public class DriveSubsystem extends SubsystemBase {
     SwerveModuleState[] states = kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(fwd, str, rot, Rotation2d.fromDegrees(getAngleWithOffset(0))), centerofRotation);
     
     if (!fieldRelative) {
-      states = kinematics.toSwerveModuleStates(
-        new ChassisSpeeds(fwd, str, rot), centerofRotation);
+      states = kinematics.toSwerveModuleStates(new ChassisSpeeds(fwd, str, rot), centerofRotation);
       //to-do: Wheel desaturation move out of field relative if
       //m_kinematics.DesaturateWheelSpeeds(&states, 1_mps);
     }
@@ -257,7 +257,9 @@ public class DriveSubsystem extends SubsystemBase {
     frontRightModule.setTargetState(states[1]);
     backLeftModule.setTargetState(states[2]);
     backRightModule.setTargetState(states[3]);
+
   }
+
 
   public void driveAndAngle(double fwd, double str, double angleDegree, boolean safe) {
     double rot = clamp(turnController.calculate(getRawAngle(), angleDegree), -0.8, 0.8);

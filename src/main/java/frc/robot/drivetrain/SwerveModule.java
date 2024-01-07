@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.AnalogEncoder;
 import frc.robot.Constants.Drive;
 import frc.robot.Constants.Turn;
 
+
+
 public class SwerveModule {
     //boilerplate fields
     public final String name;
@@ -141,6 +143,8 @@ public class SwerveModule {
         targetVelocity = stateOptimized.speedMetersPerSecond;
         targetAngle = stateOptimized.angle.getRadians();
     }
+
+    
 
     public void realignWheel() {
         turnEncoder.setPosition(getAnalogEncoderAngle());

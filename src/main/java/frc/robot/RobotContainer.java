@@ -33,16 +33,16 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    
-  }
-
-  public void teleopInit() {
     swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, controlInput);
     driveSubsystem.setDefaultCommand(swerveDriveCommand);
 
     alignmentCommand = new AlignmentCommand(driveSubsystem, controlInput);
     JoystickButton alignmentButton  = new JoystickButton(controlInput.getLeftJoystick(),5);
     alignmentButton.whileTrue(alignmentCommand);
+
+  }
+
+  public void teleopInit() {
 
   }
 
