@@ -47,10 +47,11 @@ public class MoveCommandOdometry extends CommandBase {
     public void execute(){
         ticks++;
         Pose2d currentPose = driveSubsystem.getPosition();
+        
 
-        double xValue = xPID.calculate(currentPose.X().value(), targetPosition.X().value());
-        double yValue = yPID.calculate(currentPose.Y().value(), targetPosition.Y().value());
-        double turnValue = -turnPID.calculate(currentPose.rotation().Degrees().value(), targetPosition.rotation().Degrees().value());
+        double xValue = xPID.calculate(currentPose.getX(), targetPosition.getX());
+        double yValue = yPID.calculate(currentPose.getY(), targetPosition.getY());
+        double turnValue = -turnPID.calculate(currentPose.getRotation().getDegrees(), targetPosition.getRotation().getDegrees());
         
         double tickLength = 20;
 
@@ -59,7 +60,7 @@ public class MoveCommandOdometry extends CommandBase {
         double maxDrive = maxSpeed * (ticks / tickLength);
         double maxRot = 0.4 * (ticks / tickLength);
 
-        driveSubsystem.drive((std::clamp(xValue, -maxDrive, maxDrive)), units::meters_per_second_t(std::clamp(yValue, -maxDrive, maxDrive)), units::radians_per_second_t(std::clamp(turnValue, -maxRot, maxRot)), true, false);
+        driveSubsystem.drive(clamp(xValue, -maxDrive, maxDrive), clamp(yValue, -maxDrive, maxDrive), clamp(turnValue, -maxRot, maxRot), true, false);
     }
    
     @Override
@@ -81,6 +82,10 @@ public class MoveCommandOdometry extends CommandBase {
         }
 
         return false;
+    }
+
+    public double clamp(double value, double min, double max) {
+        return Math.max(min, Math.min(max, value));
     }
 
 
