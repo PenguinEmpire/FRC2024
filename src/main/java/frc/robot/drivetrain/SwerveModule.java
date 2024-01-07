@@ -1,10 +1,13 @@
 package frc.robot.drivetrain;
 
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkMaxRelativeEncoder;
-import com.revrobotics.CANSparkMax.ControlType;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.SparkRelativeEncoder;
+import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -32,12 +35,12 @@ public class SwerveModule {
 
     //sensor input
     private AnalogEncoder analogEncoder;
-    private SparkMaxRelativeEncoder driveEncoder;
-    private SparkMaxRelativeEncoder turnEncoder;
+    private SparkRelativeEncoder driveEncoder;
+    private SparkRelativeEncoder turnEncoder;
 
     //pid controllers
-    private SparkMaxPIDController drivePIDController;
-    private SparkMaxPIDController turnPIDController;
+    private SparkPIDController drivePIDController;
+    private SparkPIDController turnPIDController;
     
     //module state
     private Translation2d m_position;
@@ -59,7 +62,7 @@ public class SwerveModule {
         this.locationOffset = locationOffset;
         this.analogOffset = analogOffset;
 
-
+            
         //create motor objects
         driveMotor = new CANSparkMax(driveMotorID, MotorType.kBrushless);
         turnMotor = new CANSparkMax(turnMotorID, MotorType.kBrushless);
@@ -69,8 +72,8 @@ public class SwerveModule {
         
         //create hall effect sensor encoder objects
         //casting because its type is RelativeEncoder, but returns SparkMaxRelativeEncoder for some reason
-        driveEncoder = (SparkMaxRelativeEncoder) driveMotor.getEncoder();
-        turnEncoder = (SparkMaxRelativeEncoder) turnMotor.getEncoder();
+        driveEncoder = (SparkRelativeEncoder) driveMotor.getEncoder();
+        turnEncoder = (SparkRelativeEncoder) turnMotor.getEncoder();
 
         //create pid controller objects from internal sparkmax pid controller
         drivePIDController = driveMotor.getPIDController();
@@ -135,7 +138,7 @@ public class SwerveModule {
         }
 
         driveMotor.set(targetSpeed);
-        turnPIDController.setReference(newTarget, ControlType.kPosition);
+        turnPIDController.setReference(newTarget, CANSparkBase.ControlType.kPosition);
     }
 
     public void setTargetState(SwerveModuleState state) {

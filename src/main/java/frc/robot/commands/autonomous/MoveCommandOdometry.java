@@ -1,12 +1,12 @@
 package frc.robot.commands.autonomous;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class MoveCommandOdometry extends CommandBase {
+public class MoveCommandOdometry extends Command {
     private DriveSubsystem driveSubsystem;
     private Pose2d targetPosition;
     private PIDController xPID;

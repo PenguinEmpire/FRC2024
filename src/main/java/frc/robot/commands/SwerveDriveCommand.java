@@ -9,9 +9,9 @@ import frc.robot.Constants.Drive;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public class SwerveDriveCommand extends CommandBase {
+public class SwerveDriveCommand extends Command {
     private DriveSubsystem subsystem;
     private PIDController autoAlignPID;
     private ControlInput input;
