@@ -4,40 +4,62 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.ControlInput;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.commands.AlignmentCommand;
 
+import frc.robot.commands.Auto;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
- */
+ */ 
+
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DriveSubsystem driveSubsystem;
+  private DriveSubsystem m_driveSubsystem;
   private SwerveDriveCommand swerveDriveCommand;
   private AlignmentCommand alignmentCommand;
+  private Auto m_auto;
 
-  private ControlInput controlInput;
+  private ControlInput m_controlInput;
+
+  public SendableChooser<String> autoChooser;
+  public final String kRoutine1;
+  public final String kRoutine2;
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    controlInput = new ControlInput();
-    driveSubsystem = new DriveSubsystem();
+    m_controlInput = new ControlInput();
+    m_driveSubsystem = new DriveSubsystem();
+    m_auto = new Auto();
+
+    autoChooser = new SendableChooser<>();
+    kRoutine1 = "Routine 1";
+    kRoutine2 = "Routine 2";
+
+    autoChooser.setDefaultOption(kRoutine1, kRoutine1);
+    autoChooser.addOption(kRoutine2, kRoutine2);
+
+    SmartDashboard.putData(autoChooser);
+
     configureBindings();
   }
 
   private void configureBindings() {
-    swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, controlInput);
-    driveSubsystem.setDefaultCommand(swerveDriveCommand);
+    swerveDriveCommand = new SwerveDriveCommand(m_driveSubsystem, m_controlInput);
+    m_driveSubsystem.setDefaultCommand(swerveDriveCommand);
 
-    alignmentCommand = new AlignmentCommand(driveSubsystem, controlInput);
-    JoystickButton alignmentButton  = new JoystickButton(controlInput.getLeftJoystick(),5);
+    alignmentCommand = new AlignmentCommand(m_driveSubsystem, m_controlInput);
+    JoystickButton alignmentButton  = new JoystickButton(m_controlInput.getLeftJoystick(),5);
     alignmentButton.whileTrue(alignmentCommand);
 
   }
@@ -51,8 +73,15 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  // public Command getAutonomousCommand() {
-  //   // An example command will be run in autonomous
-  //   return Autos.exampleAuto(m_exampleSubsystem);
-  // }
+  public Command getAutonomousCommand() {
+    Object choice = autoChooser.getSelected();
+
+    if (choice == kRoutine1){
+      return m_auto.firstRoutine(m_driveSubsystem);
+    } else if (choice == kRoutine2) {
+      return m_auto.secondRoutine(m_driveSubsystem);
+    } else {
+      return null;
+    }
+  }
 }

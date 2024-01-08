@@ -24,7 +24,7 @@ public class LightingSubsystem extends SubsystemBase {
     public int tempG = 0;
     public int tempB = 0;
     public boolean isTempColor;
-    public SendableChooser chooser;
+    public SendableChooser<String> chooser;
 
     final String kBlue = "Blue";
     final String kRed = "Red";
@@ -40,7 +40,7 @@ public class LightingSubsystem extends SubsystemBase {
         led.setData(ledBuffer);
         led.start();
 
-        chooser.addOption(kBlue, kBlue);
+        chooser.setDefaultOption(kBlue, kBlue);
         chooser.addOption(kRed, kRed);
         chooser.addOption(kBlueWhite, kBlueWhite);
         chooser.addOption(kRainbow, kRainbow);
@@ -48,6 +48,7 @@ public class LightingSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Animation Speed", 0);
         SmartDashboard.putData("Lighting Modes", chooser);
+       
     }
 
     @Override
@@ -63,12 +64,12 @@ public class LightingSubsystem extends SubsystemBase {
         if (choice == kPenguin) penguin(0,0,255);
         
 
-        if (isTempColor) {
-            for (var i = 0; i < ledBuffer.getLength(); i++) {
-                ledBuffer.setRGB(i, 255, 0, 0);
-            }
-        }
-        led.setData(ledBuffer);
+        // if (isTempColor) {
+        //     for (var i = 0; i < ledBuffer.getLength(); i++) {
+        //         ledBuffer.setRGB(i, 255, 0, 0);
+        //     }
+        // }
+        // led.setData(ledBuffer);
     }
 
     public void blue() {
