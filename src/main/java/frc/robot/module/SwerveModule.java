@@ -1,4 +1,4 @@
-package frc.robot.drivetrain;
+package frc.robot.module;
 
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;

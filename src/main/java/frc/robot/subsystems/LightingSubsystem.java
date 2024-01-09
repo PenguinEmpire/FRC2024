@@ -35,6 +35,7 @@ public class LightingSubsystem extends SubsystemBase {
     public LightingSubsystem(ControlInput controlInput){
         this.controlInput = controlInput;
         led = new AddressableLED(9);
+        ledBuffer = new AddressableLEDBuffer(length);
 
         led.setLength(length);
         led.setData(ledBuffer);
@@ -54,7 +55,6 @@ public class LightingSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         var choice = chooser.getSelected();
-        ledBuffer = new AddressableLEDBuffer(length);
         led.setLength(length);
 
         if (choice == kBlue) blue();
@@ -76,15 +76,12 @@ public class LightingSubsystem extends SubsystemBase {
         for (var i = 0; i < ledBuffer.getLength(); i++) {
             ledBuffer.setRGB(i, 0, 0, 255);
         }
-        System.out.println("blue");
     }
 
     public void red(){
         for (var i = 0; i < ledBuffer.getLength(); i++) {
             ledBuffer.setRGB(i, 255, 0, 0);
         }
-        System.out.println("red");
-
     }
 
     public void blueAndWhite(){
