@@ -13,7 +13,7 @@ public class Auto extends Command{
     public Command firstRoutine(DriveSubsystem driveSubsystem) {
         return Commands.sequence(
             Commands.parallel(
-                new MoveCommandOdometry(driveSubsystem, new Pose2d(0.1, 0.1, new Rotation2d(0)), true, 0.5)
+                new MoveCommandOdometry(driveSubsystem, new Pose2d(0.01, 0, new Rotation2d(0)), true, 0.5)
             )
         );
     }

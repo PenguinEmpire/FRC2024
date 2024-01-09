@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.ControlInput;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LightingSubsystem;
 import frc.robot.commands.AlignmentCommand;
 
 import frc.robot.commands.Auto;
@@ -27,6 +28,7 @@ public class RobotContainer {
   private DriveSubsystem m_driveSubsystem;
   private SwerveDriveCommand swerveDriveCommand;
   private AlignmentCommand alignmentCommand;
+  private LightingSubsystem m_lightingSubsystem;
   private Auto m_auto;
 
   private ControlInput m_controlInput;
@@ -40,6 +42,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     m_controlInput = new ControlInput();
     m_driveSubsystem = new DriveSubsystem();
+    m_lightingSubsystem = new LightingSubsystem(m_controlInput);
     m_auto = new Auto();
 
     autoChooser = new SendableChooser<>();
@@ -77,8 +80,10 @@ public class RobotContainer {
     Object choice = autoChooser.getSelected();
 
     if (choice == kRoutine1){
+      System.out.println("Running");
       return m_auto.firstRoutine(m_driveSubsystem);
     } else if (choice == kRoutine2) {
+      System.out.println("Running");
       return m_auto.secondRoutine(m_driveSubsystem);
     } else {
       return null;

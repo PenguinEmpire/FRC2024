@@ -23,8 +23,8 @@ public class MoveCommandOdometry extends Command {
         this.keepVelocity = false;
         this.maxSpeed = 0.5;
 
-        xPID = new PIDController(1.35, 0, 0);
-        yPID = new PIDController(1.35, 0, 0);
+        xPID = new PIDController(0.8, 0, 0);
+        yPID = new PIDController(0.8, 0, 0);
         turnPID = new PIDController(0.0154, 0, 0);
         addRequirements(driveSubsystem);
     }
@@ -48,7 +48,6 @@ public class MoveCommandOdometry extends Command {
         ticks++;
         Pose2d currentPose = driveSubsystem.getPosition();
         
-
         double xValue = xPID.calculate(currentPose.getX(), targetPosition.getX());
         double yValue = yPID.calculate(currentPose.getY(), targetPosition.getY());
         double turnValue = -turnPID.calculate(currentPose.getRotation().getDegrees(), targetPosition.getRotation().getDegrees());
@@ -61,6 +60,8 @@ public class MoveCommandOdometry extends Command {
         double maxRot = 0.4 * (ticks / tickLength);
 
         driveSubsystem.drive(clamp(xValue, -maxDrive, maxDrive), clamp(yValue, -maxDrive, maxDrive), clamp(turnValue, -maxRot, maxRot), true, false);
+        System.out.println("xValue: " + xValue + " yValue: " + yValue + " turnValue: " + turnValue);
+
     }
    
     @Override

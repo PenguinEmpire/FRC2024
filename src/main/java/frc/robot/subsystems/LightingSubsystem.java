@@ -17,14 +17,14 @@ public class LightingSubsystem extends SubsystemBase {
 
     private ControlInput controlInput = new ControlInput();
     private AddressableLED led;
-    private Timer timer;
-    private AddressableLEDBuffer ledBuffer;
+    private Timer timer = new Timer();
+    private AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(251);
 
     public int tempR = 0;
     public int tempG = 0;
     public int tempB = 0;
     public boolean isTempColor;
-    public SendableChooser<String> chooser;
+    public SendableChooser<String> chooser = new SendableChooser<String>();
 
     final String kBlue = "Blue";
     final String kRed = "Red";
@@ -76,12 +76,15 @@ public class LightingSubsystem extends SubsystemBase {
         for (var i = 0; i < ledBuffer.getLength(); i++) {
             ledBuffer.setRGB(i, 0, 0, 255);
         }
+        System.out.println("blue");
     }
 
     public void red(){
         for (var i = 0; i < ledBuffer.getLength(); i++) {
             ledBuffer.setRGB(i, 255, 0, 0);
         }
+        System.out.println("red");
+
     }
 
     public void blueAndWhite(){
