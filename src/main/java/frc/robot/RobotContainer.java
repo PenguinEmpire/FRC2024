@@ -45,7 +45,7 @@ public class RobotContainer {
     m_controlInput = new ControlInput();
     m_driveSubsystem = new DriveSubsystem();
     m_lightingSubsystem = new LightingSubsystem(m_controlInput);
-    // m_visionSubsystem = new VisionSubsystem(m_controlInput);
+    m_visionSubsystem = new VisionSubsystem(m_controlInput);
     m_auto = new Auto();
 
     autoChooser = new SendableChooser<>();

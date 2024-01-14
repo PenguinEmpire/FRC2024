@@ -65,7 +65,7 @@ public class LightingSubsystem extends SubsystemBase {
 
         if (isTempColor) {
             for (var i = 0; i < ledBuffer.getLength(); i++) {
-                ledBuffer.setRGB(i, 255, 0, 0);
+                ledBuffer.setRGB(i, tempR, tempG, tempB);
             }
         }
         led.setData(ledBuffer);
