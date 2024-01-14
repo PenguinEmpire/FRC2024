@@ -20,12 +20,12 @@ public class MoveCommandOdometry extends Command {
     public MoveCommandOdometry(DriveSubsystem driveSubsystem, Pose2d targetPosition, boolean keepVelocity, double maxSpeed){
         this.driveSubsystem = driveSubsystem;
         this.targetPosition = targetPosition;
-        this.keepVelocity = false;
+        this.keepVelocity = true;
         this.maxSpeed = 0.5;
 
-        xPID = new PIDController(0.8, 0, 0);
-        yPID = new PIDController(0.8, 0, 0);
-        turnPID = new PIDController(0.0154, 0, 0);
+        xPID = new PIDController(0.09, 0, 0.0);
+        yPID = new PIDController(0.09, 0, 0.0);
+        // turnPID = new PIDController(0.0154, 0, 0);
         addRequirements(driveSubsystem);
     }
 
@@ -33,24 +33,26 @@ public class MoveCommandOdometry extends Command {
     public void initialize() {
         xPID.reset();
         yPID.reset();
-        turnPID.reset();
+        // turnPID.reset();
 
         xPID.setTolerance(0.02, 0.2);
         yPID.setTolerance(0.02, 0.2);
-        turnPID.setTolerance(0.02, 0.2);
-        turnPID.enableContinuousInput(-180, 180);
+        // turnPID.setTolerance(0.02, 0.2);
+        // turnPID.enableContinuousInput(-180, 180);
 
         ticks = 0;
+        
     }
 
     @Override
     public void execute(){
         ticks++;
+        
         Pose2d currentPose = driveSubsystem.getPosition();
         
         double xValue = xPID.calculate(currentPose.getX(), targetPosition.getX());
         double yValue = yPID.calculate(currentPose.getY(), targetPosition.getY());
-        double turnValue = -turnPID.calculate(currentPose.getRotation().getDegrees(), targetPosition.getRotation().getDegrees());
+        // double turnValue = -turnPID.calculate(currentPose.getRotation().getDegrees(), targetPosition.getRotation().getDegrees());
         
         double tickLength = 20;
 
@@ -59,9 +61,14 @@ public class MoveCommandOdometry extends Command {
         double maxDrive = maxSpeed * (ticks / tickLength);
         double maxRot = 0.4 * (ticks / tickLength);
 
-        driveSubsystem.drive(clamp(xValue, -maxDrive, maxDrive), clamp(yValue, -maxDrive, maxDrive), clamp(turnValue, -maxRot, maxRot), true, false);
-        System.out.println("xValue: " + xValue + " yValue: " + yValue + " turnValue: " + turnValue);
-
+        driveSubsystem.drive(clamp(xValue, -maxDrive, maxDrive), clamp(yValue, -maxDrive, maxDrive), 0.0 , true, false);
+        // xValue: clamp(xValue, -maxDrive, maxDrive)
+        // yValue: clamp(yValue, -maxDrive, maxDrive)
+        // rot: clamp(turnValue, - maxDrive, maxDrive)
+        System.out.println("xP: " + xPID.getP() + " xD: " + xPID.getD());
+        System.out.println("currentPose: " + currentPose.getX());
+        System.out.println("target: " + targetPosition.getX());
+        System.out.println();
     }
    
     @Override
@@ -88,8 +95,6 @@ public class MoveCommandOdometry extends Command {
     public double clamp(double value, double min, double max) {
         return Math.max(min, Math.min(max, value));
     }
-
-
 
 }
 

@@ -6,7 +6,10 @@ package frc.robot.commands;
 
 import frc.ControlInput;
 import frc.robot.Constants.Drive;
+import frc.robot.Constants.Vision;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LightingSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,18 +17,22 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class SwerveDriveCommand extends Command {
     private DriveSubsystem subsystem;
     private PIDController autoAlignPID;
-    private ControlInput input;
+    private ControlInput controlInput;
+    private LightingSubsystem lightingSubsystem;
+    private VisionSubsystem visionSubsystem;
     private double targetRot;
     private PIDController xPID;
     private PIDController yPID;
 
-    private boolean wasTargeting = false;
+    private boolean m_wasTargeting = false;
 
     
   //todo: add vision and lighting
-  public SwerveDriveCommand(DriveSubsystem subsystem, ControlInput ci) {
+  public SwerveDriveCommand(DriveSubsystem subsystem, ControlInput controlInput, LightingSubsystem LightingSubsystem, VisionSubsystem visionSubsystem) {
     this.subsystem = subsystem;
-    this.input = ci;
+    this.controlInput = controlInput;
+    this.lightingSubsystem = lightingSubsystem;
+    this.visionSubsystem = visionSubsystem;
     this.targetRot = subsystem.getAngle();
     addRequirements(subsystem);
     setName("SwerveDrive");
@@ -41,7 +48,7 @@ public class SwerveDriveCommand extends Command {
     autoAlignPID.enableContinuousInput(0, 360);
     xPID.reset();
     yPID.reset();
-    wasTargeting = false;
+    m_wasTargeting = false;
   }
 
   @Override
@@ -62,49 +69,60 @@ public class SwerveDriveCommand extends Command {
     rotation = Math.copySign(Math.pow(rotation, pow), rotation);
     rotation = linearDeadband(rotation);
 
-    // double isFacingOtherSide = std::abs(m_subsystem->GetAngle().value()) > 90 && std::abs(m_subsystem->GetAngle().value()) < 270;
-    //  if(isFacingOtherSide) {
-    //         m_vs->SetCustomPipeline(true);
-    //         bool isInverted = SmartDashboard.GetBoolean("Inverted Pickup", false);
-    //         if(!isInverted) m_vs->SetPipeline(2);
-    //         else m_vs->SetPipeline(3);
-    //   }
-    //   else {
-    //       m_vs->SetCustomPipeline(false);
-    //   }
-    // if(getInput().getLeftJoystick().getTrigger()) {
-      // double angleToGoalDegrees = physical::vision::limelightMountAngleDegrees + m_vs->GetPitch();
-      // double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
-
-      // double distanceFromLimelightToGoalInches = (physical::vision::goalHeightInches - physical::vision::limelightLensHeightInches)/tan(angleToGoalRadians);
-      // if(SmartDashboard.GetBoolean("Enable Debug", false)) SmartDashboard.PutNumber("target dist", distanceFromLimelightToGoalInches);
-      // if(m_input->IsConeMode()) m_vs->SetLED(true);
-      // double test = 0;
-      // if(isFacingOtherSide) {
-      //     test = 180;
-      //     forward *= -1;
-      // }
-      // double turnValue = -autoAlignPID.calculate(m_subsystem.getAngle().value(), test);
-      // if(!m_vs->HasTargets()) {
-      //     if(m_wasTargeting) {
-      //         m_subsystem->Drive(
-      //             units::meters_per_second_t(forward * 0.4),
-      //             units::meters_per_second_t(0), 
-      //             units::radians_per_second_t{std::clamp(std::clamp(turnValue, -0.4, 0.4), -physical::drive::kMaxAngularVelocity,physical::drive::kMaxAngularVelocity)}, false, false// keep rot static
-      //         );
-      //     }
-      //     return;
-      // }
-      // wasTargeting = true;
-      // m_ls->SetTemporaryColor(0,255,0);
-
-      // strafe = -clamp(yPID->Calculate(m_vs->GetYaw(), 0), -0.3, 0.3);
- 
-  //     subsystem.drive(
-  //         forward * 0.4,
-  //         strafe, 
-  //         clamp(clamp(turnValue, -0.4, 0.4), -Drive.kMaxAngularVelocity), false, false);
-  // }
+    double angleValue = Math.abs(subsystem.getAngle());
+    boolean isFacingOtherSide = angleValue > 90 && angleValue < 270;
+    
+    if (isFacingOtherSide) {
+      visionSubsystem.setCustomPipeline(true);
+      boolean isInverted = SmartDashboard.getBoolean("Inverted Pickup", false);
+      if (!isInverted) visionSubsystem.setPipeline(2);
+      else visionSubsystem.setPipeline(3);
+  } else {
+      visionSubsystem.setCustomPipeline(false);
+  }
+  
+  if (getInput().getLeftJoystick().getTrigger()) {
+      double angleToGoalDegrees = Vision.LIMELIGHT_MOUNT_ANGLE_DEGREES + visionSubsystem.getPitch();
+      double angleToGoalRadians = angleToGoalDegrees * (Math.PI / 180.0);
+  
+      double distanceFromLimelightToGoalInches = (Vision.GOAL_HEIGHT_INCHES - Vision.LIMELIGHT_MOUNT_ANGLE_DEGREES) / Math.tan(angleToGoalRadians);
+      if (SmartDashboard.getBoolean("Enable Debug", false)) SmartDashboard.putNumber("target dist", distanceFromLimelightToGoalInches);
+      if (controlInput.isConeMode()) visionSubsystem.setLED(true);
+      
+      double test = 0;
+      if (isFacingOtherSide) {
+          test = 180;
+          forward *= -1;
+      }
+  
+      double turnValue = -autoAlignPID.calculate(subsystem.getAngle(), test);
+  
+      if (!visionSubsystem.hasTargets()) {
+          if (m_wasTargeting) {
+              subsystem.drive(
+                  forward * 0.4,
+                  0,
+                  turnValue,
+                  false,
+                  false
+              );
+          }
+          return;
+      }
+  
+      m_wasTargeting = true;
+      lightingSubsystem.setTemporaryColor(0, 255, 0);
+  
+      strafe = -clamp(yPID.calculate(visionSubsystem.getYaw(), 0), -0.3, 0.3);
+  
+      subsystem.drive(
+          forward * 0.4,
+          strafe,
+          clamp(turnValue, -0.4, 0.4),
+          false,
+          false
+      );
+  }
     // if(m_input->IsConeMode()) m_vs->SetLED(false);
         subsystem.drive(forward, strafe, clamp(rotation * 0.8, -Drive.MAX_ANGULAR_VELOCITY, Drive.MAX_ANGULAR_VELOCITY), true, false);
         // autoAlignPID.reset();
@@ -122,7 +140,7 @@ public class SwerveDriveCommand extends Command {
   }
 
   public ControlInput getInput() {
-    return this.input;
+    return this.controlInput;
   }
 
   public double clamp(double value, double min, double max) {

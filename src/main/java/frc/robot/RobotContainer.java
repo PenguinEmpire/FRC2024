@@ -13,6 +13,7 @@ import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LightingSubsystem;
 import frc.robot.commands.AlignmentCommand;
+import frc.robot.subsystems.VisionSubsystem;
 
 import frc.robot.commands.Auto;
 
@@ -26,9 +27,10 @@ import frc.robot.commands.Auto;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private DriveSubsystem m_driveSubsystem;
-  private SwerveDriveCommand swerveDriveCommand;
+  private SwerveDriveCommand m_swerveDriveCommand;
   private AlignmentCommand alignmentCommand;
   private LightingSubsystem m_lightingSubsystem;
+  private VisionSubsystem m_visionSubsystem;
   private Auto m_auto;
 
   private ControlInput m_controlInput;
@@ -43,6 +45,7 @@ public class RobotContainer {
     m_controlInput = new ControlInput();
     m_driveSubsystem = new DriveSubsystem();
     m_lightingSubsystem = new LightingSubsystem(m_controlInput);
+    // m_visionSubsystem = new VisionSubsystem(m_controlInput);
     m_auto = new Auto();
 
     autoChooser = new SendableChooser<>();
@@ -58,9 +61,6 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    swerveDriveCommand = new SwerveDriveCommand(m_driveSubsystem, m_controlInput);
-    m_driveSubsystem.setDefaultCommand(swerveDriveCommand);
-
     alignmentCommand = new AlignmentCommand(m_driveSubsystem, m_controlInput);
     JoystickButton alignmentButton  = new JoystickButton(m_controlInput.getLeftJoystick(),5);
     alignmentButton.whileTrue(alignmentCommand);
@@ -68,7 +68,8 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
-
+    m_swerveDriveCommand = new SwerveDriveCommand(m_driveSubsystem, m_controlInput, m_lightingSubsystem, m_visionSubsystem);
+    m_driveSubsystem.setDefaultCommand(m_swerveDriveCommand);
   }
 
   /**
@@ -80,10 +81,10 @@ public class RobotContainer {
     Object choice = autoChooser.getSelected();
 
     if (choice == kRoutine1){
-      System.out.println("Running");
+      System.out.println("Running 1");
       return m_auto.firstRoutine(m_driveSubsystem);
     } else if (choice == kRoutine2) {
-      System.out.println("Running");
+      System.out.println("Running 2");
       return m_auto.secondRoutine(m_driveSubsystem);
     } else {
       return null;

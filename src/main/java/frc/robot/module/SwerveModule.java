@@ -78,8 +78,6 @@ public class SwerveModule {
         //create pid controller objects from internal sparkmax pid controller
         drivePIDController = driveMotor.getPIDController();
         turnPIDController = turnMotor.getPIDController();
-        
-        
 
         // configure analog absolute and CAN relative encoders
         analogEncoder.setDistancePerRotation(Drive.DISTANCE_PER_ROT);

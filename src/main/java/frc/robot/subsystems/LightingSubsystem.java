@@ -18,7 +18,7 @@ public class LightingSubsystem extends SubsystemBase {
     private ControlInput controlInput = new ControlInput();
     private AddressableLED led;
     private Timer timer = new Timer();
-    private AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(251);
+    private AddressableLEDBuffer ledBuffer;
 
     public int tempR = 0;
     public int tempG = 0;
@@ -55,7 +55,6 @@ public class LightingSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         var choice = chooser.getSelected();
-        led.setLength(length);
 
         if (choice == kBlue) blue();
         if (choice == kRed) red();
@@ -64,12 +63,12 @@ public class LightingSubsystem extends SubsystemBase {
         if (choice == kPenguin) penguin(0,0,255);
         
 
-        // if (isTempColor) {
-        //     for (var i = 0; i < ledBuffer.getLength(); i++) {
-        //         ledBuffer.setRGB(i, 255, 0, 0);
-        //     }
-        // }
-        // led.setData(ledBuffer);
+        if (isTempColor) {
+            for (var i = 0; i < ledBuffer.getLength(); i++) {
+                ledBuffer.setRGB(i, 255, 0, 0);
+            }
+        }
+        led.setData(ledBuffer);
     }
 
     public void blue() {
@@ -96,6 +95,7 @@ public class LightingSubsystem extends SubsystemBase {
           firstPixelHue += 3;
           // Check bounds
           firstPixelHue %= 180;
+
     }
 
     public void rainbow() {

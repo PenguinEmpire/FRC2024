@@ -45,14 +45,19 @@ public final class Constants {
     BACKRIGHT(1,6,5, new Translation2d(-.381, -0.381), -(0.278867));
     //analog absolute encoder port (analog in on roborio)
     private final int encoderPort;
+
     //neo drive motor id on can loop
     private final int driveMotorID;
+
     //neo turn motor id on can loop
     private final int turnMotorID;
+
     //module location in 2d space
     private final Translation2d moduleLocation;
+
     //absolute encoder offset in radians
     private final double encoderOffset;
+    
     SwerveModules(int encoderPort, int driveID, int turnID, Translation2d location, double encoderOffset) {
       this.encoderPort = encoderPort;
       this.driveMotorID = driveID;
@@ -81,6 +86,15 @@ public final class Constants {
       return this.encoderOffset;
     }
 
+  }
+
+  public static class Vision {
+    public static final int GOAL_HEIGHT_INCHES = 122;
+
+    // need to change these two
+    public static final int DISTANCE_FROM_LIMELIGHT_TO_GOAL_INCHES = 0;
+    public static final int  LIMELIGHT_MOUNT_ANGLE_DEGREES = 0;
+    
   }
 
 }
