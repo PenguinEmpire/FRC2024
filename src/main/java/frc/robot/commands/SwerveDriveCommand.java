@@ -26,9 +26,12 @@ public class SwerveDriveCommand extends Command {
 
   // false = red;
   // true = blue;
-  private boolean side = false;
+  private boolean team = false;
 
-  private boolean m_wasTargeting = false;
+  // pipeline 0: red
+  // pipeline 1: blue
+
+  private boolean m_wasTargeting;
 
   // todo: add vision and lighting
   public SwerveDriveCommand(DriveSubsystem subsystem, ControlInput controlInput, LightingSubsystem LightingSubsystem,
@@ -38,12 +41,15 @@ public class SwerveDriveCommand extends Command {
     this.lightingSubsystem = lightingSubsystem;
     this.visionSubsystem = visionSubsystem;
     this.targetRot = subsystem.getAngle();
+
     addRequirements(subsystem);
     setName("SwerveDrive");
+
     autoAlignPID = new PIDController(0.0154, 0, 0);
     xPID = new PIDController(0.02, 0, 0);
     yPID = new PIDController(0.02, 0, 0);
-    SmartDashboard.putBoolean("Inverted Pickup", false);
+
+    SmartDashboard.putBoolean("Red/Blue Pickup (r: true/: false)", false);
 
   }
 
@@ -57,6 +63,7 @@ public class SwerveDriveCommand extends Command {
 
   @Override
   public void execute() {
+    System.out.println("execute");
     double forward = -getInput().getLeftJoystick().getRawAxis(1);
     double pow = 2;
     forward = linearDeadband(forward);
@@ -74,44 +81,23 @@ public class SwerveDriveCommand extends Command {
     rotation = linearDeadband(rotation);
 
     double angleValue = Math.abs(subsystem.getAngle());
-    // boolean isFacingOtherSide = angleValue > 90 && angleValue < 270;
 
-    // if (isFacingOtherSide) {
-    // visionSubsystem.setCustomPipeline(true);
-    // boolean isInverted = SmartDashboard.getBoolean("Inverted Pickup", false);
-    // if (!isInverted)
-    // visionSubsystem.setPipeline(2);
-    // else
-    // visionSubsystem.setPipeline(3);
-    // } else {
-    // visionSubsystem.setCustomPipeline(false);
-    // }
+    // this needs to change (idk how to)
+    boolean isFacingOtherSide = angleValue > 90 && angleValue < 270;
 
-    if (getInput().getLeftJoystick().getTrigger()) {
-      if (visionSubsystem.getID() == 9 || visionSubsystem.getID() == 10) {
+    if (team) {
+      visionSubsystem.setCustomPipeline(true);
+      boolean isOtherTeam = SmartDashboard.getBoolean("Red/Blue Pickup (r: true/: false)", false);
+      if (!isOtherTeam)
         visionSubsystem.setPipeline(0);
-        if (visionSubsystem.hasTargets()){
-          if (m_wasTargeting) {
-          subsystem.drive(
-              forward * 0.4,
-              0,
-              turnValue,
-              false,
-              false);
-        }
-        }
-        strafe = -clamp(yPID.calculate(visionSubsystem.getYaw(), 0), -0.3, 0.3);
-
-        subsystem.drive(
-            forward * 0.4,
-            strafe,
-            clamp(turnValue, -0.4, 0.4),
-            false,
-            false);
-      }
+      else
+        visionSubsystem.setPipeline(1);
+    } else {
+      visionSubsystem.setCustomPipeline(false);
     }
 
     if (getInput().getLeftJoystick().getTrigger()) {
+      // debug
       double angleToGoalDegrees = Vision.LIMELIGHT_MOUNT_ANGLE_DEGREES + visionSubsystem.getPitch();
       double angleToGoalRadians = angleToGoalDegrees * (Math.PI / 180.0);
 
@@ -121,29 +107,29 @@ public class SwerveDriveCommand extends Command {
         SmartDashboard.putNumber("target dist", distanceFromLimelightToGoalInches);
       if (controlInput.isConeMode())
         visionSubsystem.setLED(true);
+      // debug
 
       double test = 0;
-      // if (isFacingOtherSide) {
-      // test = 180;
-      // forward *= -1;
-      // }
+      if (isFacingOtherSide) {
+        test = 180;
+        forward *= -1;
+      }
 
       double turnValue = -autoAlignPID.calculate(subsystem.getAngle(), test);
 
-      // if (!visionSubsystem.hasTargets()) {
-      //   if (m_wasTargeting) {
-      //     subsystem.drive(
-      //         forward * 0.4,
-      //         0,
-      //         turnValue,
-      //         false,
-      //         false);
-      //   }
-      //   return;
-      // }
-
+      if (!visionSubsystem.hasTargets()) {
+        if (m_wasTargeting) {
+          subsystem.drive(
+              forward * 0.4,
+              0,
+              turnValue,
+              false,
+              false);
+        }
+        return;
+      }
       m_wasTargeting = true;
-      lightingSubsystem.setTemporaryColor(0, 255, 0);
+      // lightingSubsystem.setTemporaryColor(0, 255, 0);
 
       strafe = -clamp(yPID.calculate(visionSubsystem.getYaw(), 0), -0.3, 0.3);
 
@@ -154,11 +140,10 @@ public class SwerveDriveCommand extends Command {
           false,
           false);
     }
-    // if(m_input->IsConeMode()) m_vs->SetLED(false);
     subsystem.drive(forward, strafe, clamp(rotation * 0.8, -Drive.MAX_ANGULAR_VELOCITY, Drive.MAX_ANGULAR_VELOCITY),
         true, false);
-    // autoAlignPID.reset();
-    // yPID.reset();
+    autoAlignPID.reset();
+    yPID.reset();  
 
   }
 

@@ -40,6 +40,10 @@ public class VisionSubsystem {
         return table.getEntry("tv").getDouble(0.0) == 1.0;
     }
 
+    public long getID() {
+        return table.getEntry("tid").getInteger(-1);
+    }
+
     public Command UpdateLimelight(boolean toggle, int index) {
         return Commands.startEnd(
             () -> {
