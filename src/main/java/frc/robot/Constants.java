@@ -93,7 +93,7 @@ public final class Constants {
 
     // need to change these two
     public static final int DISTANCE_FROM_LIMELIGHT_TO_GOAL_INCHES = 0;
-    public static final int  LIMELIGHT_MOUNT_ANGLE_DEGREES = 0;
+    public static final int  LIMELIGHT_MOUNT_ANGLE_DEGREES = 15;
     
   }
 

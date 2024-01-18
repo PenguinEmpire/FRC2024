@@ -26,7 +26,7 @@ public class SwerveDriveCommand extends Command {
 
   // false = red;
   // true = blue;
-  private boolean team = false;
+  private boolean isTeam = false;
 
   // pipeline 0: red
   // pipeline 1: blue
@@ -63,7 +63,6 @@ public class SwerveDriveCommand extends Command {
 
   @Override
   public void execute() {
-    System.out.println("execute");
     double forward = -getInput().getLeftJoystick().getRawAxis(1);
     double pow = 2;
     forward = linearDeadband(forward);
@@ -85,18 +84,22 @@ public class SwerveDriveCommand extends Command {
     // this needs to change (idk how to)
     boolean isFacingOtherSide = angleValue > 90 && angleValue < 270;
 
-    if (team) {
+    if (isFacingOtherSide) {
       visionSubsystem.setCustomPipeline(true);
-      boolean isOtherTeam = SmartDashboard.getBoolean("Red/Blue Pickup (r: true/: false)", false);
-      if (!isOtherTeam)
-        visionSubsystem.setPipeline(0);
-      else
+      boolean isTeam = SmartDashboard.getBoolean("Red/Blue Pickup (r: true/: false)", false);
+      if (isTeam) {
         visionSubsystem.setPipeline(1);
-    } else {
-      visionSubsystem.setCustomPipeline(false);
+        System.out.println("1");
+      } else {
+        visionSubsystem.setPipeline(0);
+        System.out.println("0");
+      }
+    } else  {
+    visionSubsystem.setCustomPipeline(false);
     }
 
     if (getInput().getLeftJoystick().getTrigger()) {
+      System.out.println("moving");
       // debug
       double angleToGoalDegrees = Vision.LIMELIGHT_MOUNT_ANGLE_DEGREES + visionSubsystem.getPitch();
       double angleToGoalRadians = angleToGoalDegrees * (Math.PI / 180.0);
@@ -105,8 +108,8 @@ public class SwerveDriveCommand extends Command {
           / Math.tan(angleToGoalRadians);
       if (SmartDashboard.getBoolean("Enable Debug", false))
         SmartDashboard.putNumber("target dist", distanceFromLimelightToGoalInches);
-      if (controlInput.isConeMode())
-        visionSubsystem.setLED(true);
+      // if (controlInput.isConeMode())
+      // visionSubsystem.setLED(true);
       // debug
 
       double test = 0;
@@ -119,6 +122,7 @@ public class SwerveDriveCommand extends Command {
 
       if (!visionSubsystem.hasTargets()) {
         if (m_wasTargeting) {
+          System.out.println("targeting");
           subsystem.drive(
               forward * 0.4,
               0,
@@ -143,7 +147,7 @@ public class SwerveDriveCommand extends Command {
     subsystem.drive(forward, strafe, clamp(rotation * 0.8, -Drive.MAX_ANGULAR_VELOCITY, Drive.MAX_ANGULAR_VELOCITY),
         true, false);
     autoAlignPID.reset();
-    yPID.reset();  
+    yPID.reset();
 
   }
 
