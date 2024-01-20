@@ -66,7 +66,6 @@ public class SwerveDriveCommand extends Command {
     double forward = -getInput().getLeftJoystick().getRawAxis(1);
     double pow = 2;
     forward = linearDeadband(forward);
-
     forward = Math.copySign(Math.pow(forward, pow), forward);
 
     double strafe = -getInput().getLeftJoystick().getRawAxis(0);
@@ -99,7 +98,6 @@ public class SwerveDriveCommand extends Command {
     }
 
     if (getInput().getLeftJoystick().getTrigger()) {
-      System.out.println("moving");
       // debug
       double angleToGoalDegrees = Vision.LIMELIGHT_MOUNT_ANGLE_DEGREES + visionSubsystem.getPitch();
       double angleToGoalRadians = angleToGoalDegrees * (Math.PI / 180.0);
@@ -108,8 +106,6 @@ public class SwerveDriveCommand extends Command {
           / Math.tan(angleToGoalRadians);
       if (SmartDashboard.getBoolean("Enable Debug", false))
         SmartDashboard.putNumber("target dist", distanceFromLimelightToGoalInches);
-      // if (controlInput.isConeMode())
-      // visionSubsystem.setLED(true);
       // debug
 
       double test = 0;
@@ -120,11 +116,14 @@ public class SwerveDriveCommand extends Command {
 
       double turnValue = -autoAlignPID.calculate(subsystem.getAngle(), test);
 
+
+      System.out.println("Has targets: " + visionSubsystem.hasTargets());
+
       if (!visionSubsystem.hasTargets()) {
         if (m_wasTargeting) {
           System.out.println("targeting");
           subsystem.drive(
-              forward * 0.4,
+              forward,
               0,
               turnValue,
               false,
@@ -138,7 +137,7 @@ public class SwerveDriveCommand extends Command {
       strafe = -clamp(yPID.calculate(visionSubsystem.getYaw(), 0), -0.3, 0.3);
 
       subsystem.drive(
-          forward * 0.4,
+          forward,
           strafe,
           clamp(turnValue, -0.4, 0.4),
           false,
@@ -148,6 +147,10 @@ public class SwerveDriveCommand extends Command {
         true, false);
     autoAlignPID.reset();
     yPID.reset();
+
+    if (getInput().getLeftJoystick().getTriggerReleased()){
+      m_wasTargeting = false;
+    }
 
   }
 
