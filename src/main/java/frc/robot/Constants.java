@@ -19,8 +19,8 @@ public final class Constants {
   // first four constants are from swervedrivespecialties github
   public static class Drive {
     public static final double DISTANCE_PER_ROT = 1.0/8.16;
-    public static final double WHEEL_DIAMETER = 4;
-    public static final double DRIVE_REDUCTION = 8.33/1.0;
+    public static final double WHEEL_DIAMETER = 4.064;
+    public static final double DRIVE_REDUCTION = (8.33)/(1.0);
     public static final double DRIVE_CONVERSION = WHEEL_DIAMETER * Math.PI / DRIVE_REDUCTION;
     
     public static final double MAX_ANGULAR_VELOCITY = Math.PI;

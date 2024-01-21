@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -11,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.ControlInput;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LightingSubsystem;
 import frc.robot.commands.AlignmentCommand;
 import frc.robot.subsystems.VisionSubsystem;
@@ -31,6 +33,7 @@ public class RobotContainer {
   private AlignmentCommand alignmentCommand;
   private LightingSubsystem m_lightingSubsystem;
   private VisionSubsystem m_visionSubsystem;
+  private IntakeSubsystem m_intakeSubsystem;
   private Auto m_auto;
 
   private ControlInput m_controlInput;
@@ -46,6 +49,8 @@ public class RobotContainer {
     m_driveSubsystem = new DriveSubsystem();
     m_lightingSubsystem = new LightingSubsystem(m_controlInput);
     m_visionSubsystem = new VisionSubsystem(m_controlInput);
+    // set new IDs
+    m_intakeSubsystem = new IntakeSubsystem(11, 12);
     m_auto = new Auto();
 
     autoChooser = new SendableChooser<>();
@@ -61,12 +66,27 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+
+    JoystickButton amp = new JoystickButton(m_controlInput.getAccessoryJoystick(), 7);
+    JoystickButton speaker = new JoystickButton(m_controlInput.getAccessoryJoystick(), 8);
+    JoystickButton sourcepu = new JoystickButton(m_controlInput.getAccessoryJoystick(), 9);
+    JoystickButton home = new JoystickButton(m_controlInput.getAccessoryJoystick(), 10);
+    JoystickButton stage = new JoystickButton(m_controlInput.getAccessoryJoystick(), 11);
+
     alignmentCommand = new AlignmentCommand(m_driveSubsystem, m_controlInput);
     JoystickButton alignmentButton  = new JoystickButton(m_controlInput.getLeftJoystick(),5);
     alignmentButton.whileTrue(alignmentCommand);
 
   }
 
+  public void autoExit() {
+    m_driveSubsystem.getNavX().setAngleAdjustment(180);
+  }
+
+  public void robotInit(){
+    m_driveSubsystem.getNavX().setAngleAdjustment(0);
+  }
+  
   public void teleopInit() {
     m_swerveDriveCommand = new SwerveDriveCommand(m_driveSubsystem, m_controlInput, m_lightingSubsystem, m_visionSubsystem);
     m_driveSubsystem.setDefaultCommand(m_swerveDriveCommand);
