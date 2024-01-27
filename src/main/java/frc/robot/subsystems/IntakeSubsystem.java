@@ -6,6 +6,7 @@ import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 public class IntakeSubsystem {
 
@@ -24,30 +25,35 @@ public class IntakeSubsystem {
 
     private final String m_name = "I";
 
-    public IntakeSubsystem(int moveSparkID, int rollerSparkID ) {
-            moveMotor = new CANSparkMax(moveSparkID, CANSparkMax.MotorType.kBrushless);
-            rollerMotor = new CANSparkMax(rollerSparkID, CANSparkMax.MotorType.kBrushless);
-            m_pidController = moveMotor.getPIDController();
-            m_encoder = moveMotor.getEncoder();
+    public IntakeSubsystem(int moveSparkID, int rollerSparkID) {
+        moveMotor = new CANSparkMax(moveSparkID, CANSparkMax.MotorType.kBrushless);
+        rollerMotor = new CANSparkMax(rollerSparkID, CANSparkMax.MotorType.kBrushless);
+        m_pidController = moveMotor.getPIDController();
+        m_encoder = moveMotor.getEncoder();
 
-            m_pidController.setP(kP);
-            m_pidController.setI(kI);
-            m_pidController.setD(kD);
-            m_pidController.setIZone(kIz);
-            m_pidController.setFF(kFF);
-            m_pidController.setOutputRange(kMinOutput, kMaxOutput);
-            moveMotor.setInverted(false);
+        m_pidController.setP(kP);
+        m_pidController.setI(kI);
+        m_pidController.setD(kD);
+        m_pidController.setIZone(kIz);
+        m_pidController.setFF(kFF);
+        m_pidController.setOutputRange(kMinOutput, kMaxOutput);
+        moveMotor.setInverted(false);
 
-            SmartDashboard.putNumber("IntakePos", m_encoder.getPosition());
-            SmartDashboard.putNumber(m_name + "P Gain", 0);
-            SmartDashboard.putNumber(m_name + "I Gain", 0);
-            SmartDashboard.putNumber(m_name + "D Gain", 0);
-            SmartDashboard.putNumber(m_name + "I Zone", 0);
-            SmartDashboard.putNumber(m_name + "Feed Forward", 0);
-            SmartDashboard.putNumber(m_name + "Max Output", 0);
-            SmartDashboard.putNumber(m_name + "Min Output", 0);
-            SmartDashboard.putBoolean(m_name + "Manual Control", false);
-        }
+        SmartDashboard.putNumber("IntakePos", m_encoder.getPosition());
+        SmartDashboard.putNumber(m_name + "P Gain", 0);
+        SmartDashboard.putNumber(m_name + "I Gain", 0);
+        SmartDashboard.putNumber(m_name + "D Gain", 0);
+        SmartDashboard.putNumber(m_name + "I Zone", 0);
+        SmartDashboard.putNumber(m_name + "Feed Forward", 0);
+        SmartDashboard.putNumber(m_name + "Max Output", 0);
+        SmartDashboard.putNumber(m_name + "Min Output", 0);
+
+        SmartDashboard.putBoolean(m_name + "Manual Control", false);
+        SmartDashboard.putNumber(m_name + "pos", 0);
+
+        SmartDashboard.putNumber("Intake Speed", 0);
+
+    }
 
     public void moveIntakeManual(boolean toggle, boolean reverse, double speed) {
         if (!SmartDashboard.getBoolean(m_name + "Manual Control", true)) {
@@ -56,12 +62,23 @@ public class IntakeSubsystem {
         moveMotor.set(toggle ? (reverse ? speed : -speed) : 0);
     }
 
-    public void runRollers() {
-
+    public Command runRollers() {
+        double speed = SmartDashboard.getNumber("Intake Speed", 0);
+        return Commands.startEnd (
+            () -> {
+                rollerMotor.set(speed);
+                },
+            () -> {
+                rollerMotor.set(0);
+                }
+        );
     }
 
     public void setPosition() {
-
+        double intakePos = SmartDashboard.getNumber(m_name + "pos", 0);
+        if (SmartDashboard.getBoolean(m_name + "Manual Control", true))
+            return;
+        m_pidController.setReference(intakePos, CANSparkMax.ControlType.kPosition);
     }
 
     public boolean hasReached() {
