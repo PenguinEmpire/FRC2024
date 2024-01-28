@@ -73,9 +73,14 @@ public class RobotContainer {
     JoystickButton home = new JoystickButton(m_controlInput.getAccessoryJoystick(), 10);
     JoystickButton stage = new JoystickButton(m_controlInput.getAccessoryJoystick(), 11);
 
+
     alignmentCommand = new AlignmentCommand(m_driveSubsystem, m_controlInput);
     JoystickButton alignmentButton  = new JoystickButton(m_controlInput.getLeftJoystick(),5);
     alignmentButton.whileTrue(alignmentCommand);
+
+    JoystickButton runRollers = new JoystickButton(m_controlInput.getAccessoryJoystick(), 5);
+    runRollers.whileTrue(m_intakeSubsystem.runRollers());
+
 
   }
 
