@@ -7,21 +7,22 @@ import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class IntakeSubsystem {
+public class IntakeSubsystem extends SubsystemBase{
 
     private final CANSparkMax moveMotor;
     private final CANSparkMax rollerMotor;
     private final SparkPIDController m_pidController;
     private final RelativeEncoder m_encoder;
 
-    private final double kP = 0.0;
-    private final double kI = 0.0;
-    private final double kD = 0.0;
-    private final double kIz = 0.0;
-    private final double kFF = 0.0;
-    private final double kMaxOutput = 0.0;
-    private final double kMinOutput = 0.0;
+    private double kP = 0.0;
+    private double kI = 0.0;
+    private double kD = 0.0;
+    private double kIz = 0.0;
+    private double kFF = 0.0;
+    private double kMaxOutput = 0.0;
+    private double kMinOutput = 0.0;
 
     private double m_targetPosition;
     private double m_currentPosition;
