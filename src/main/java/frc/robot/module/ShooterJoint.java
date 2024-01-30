@@ -1,21 +1,29 @@
 package frc.robot.module;
+
+import com.revrobotics.SparkPIDController;
+
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShooterJoint {
+
+    private int armID;
     private CANSparkMax armMotor;
+    private final SparkPIDController armPIDController;
+    private boolean inverted;
+    private boolean driveInverted;
+    private double offset;
 
-    public ShooterJoint() {
-        // need to change ID
-        this.armMotor = new CANSparkMax( 0, CANSparkMax.MotorType.kBrushless);
-        SmartDashboard.putNumber("Arm-A Speed", 0.6);
-    }
-
-    public void moveA(boolean toggle, boolean reverse) {
-        double speed = SmartDashboard.getNumber("Arm-A Speed", 0);
-      
-        armMotor.set(speed);
-    
-        
+    public ShooterJoint(int armSparkID, boolean inverted, boolean driveInverted, double offset) {
+        armMotor = new CANSparkMax(armSparkID, CANSparkMax.MotorType.kBrushless);
+        armPIDController = armMotor.getPIDController();
+        this.inverted = inverted;
+        this.driveInverted = driveInverted;
+        this.offset = offset; 
     }
 }
+
+
+        
+
+    
