@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.ControlInput;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -102,17 +101,18 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    Object choice = autoChooser.getSelected();
+  // public Command getAutonomousCommand() {
+  //   Object choice = autoChooser.getSelected();
 
-    if (choice == kRoutine1){
-      System.out.println("Running 1");
-      return m_auto.firstRoutine(m_driveSubsystem);
-    } else if (choice == kRoutine2) {
-      System.out.println("Running 2");
-      return m_auto.secondRoutine(m_driveSubsystem);
-    } else {
-      return null;
-    }
-  }
+  //   // if (choice == kRoutine1){
+  //   //   System.out.println("Running 1");
+  //   //   return m_auto.firstRoutine(m_driveSubsystem);
+  //   // } else if (choice == kRoutine2) {
+  //   //   System.out.println("Running 2");
+  //   //   return m_auto.secondRoutine(m_driveSubsystem);
+  //   // } else {
+  //   //   return null;
+  //   // }
+
+  // }
 }

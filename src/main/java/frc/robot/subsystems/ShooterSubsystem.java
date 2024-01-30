@@ -25,15 +25,22 @@ public class ShooterSubsystem {
         intakeMotor = new CANSparkMax(intakeSparkID, CANSparkMax.MotorType.kBrushless);
         shooterMotor = new CANSparkMax(shooterSparkID, CANSparkMax.MotorType.kBrushless);
 
+        // PIDs for all motors
+        // used for making not jerky
         armPID = armMotor.getPIDController();
         intakePID = intakeMotor.getPIDController();
+        // used for changing velocity 
         shooterSpeedPID = shooterMotor.getPIDController();
 
+        // used for setting the positions of the arms 
         armEncoder = armMotor.getEncoder();
+
+        // used for setting the position of the intake/shooter
         intakeEncoder = intakeMotor.getEncoder();
+
     }
 
 
-    
+
 
 }

@@ -55,7 +55,6 @@ public class IntakeSubsystem extends SubsystemBase{
         SmartDashboard.putNumber(m_name + "pos", m_encoder.getPosition());
 
         SmartDashboard.putNumber("Intake Speed", 0);
-
     }
 
     @Override
@@ -136,7 +135,6 @@ public class IntakeSubsystem extends SubsystemBase{
     }
 
     // use for auto
-    
     public Command rollerContinuous() {
         return null;
     }

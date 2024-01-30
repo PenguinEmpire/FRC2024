@@ -4,7 +4,7 @@
 
 package frc.robot.commands;
 
-import frc.ControlInput;
+import frc.robot.ControlInput;
 import frc.robot.Constants.Drive;
 import frc.robot.Constants.Vision;
 import frc.robot.subsystems.DriveSubsystem;
