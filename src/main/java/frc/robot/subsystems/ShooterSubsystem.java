@@ -51,13 +51,13 @@ public class ShooterSubsystem {
     }
 
     // for manual control
-    public Command moveArm(boolean reverse) {
-        double speed = SmartDashboard.getNumber("Intake Speed", 0);
+    // public Command moveArm(boolean reverse) {
+    //     double speed = SmartDashboard.getNumber("Intake Speed", 0);
         
-        return Commands.startEnd(
-            () -> armMotor.moveArmManual(true, reverse, speed),
-            () -> armModule.MoveManual(false, reverse, speed)
-        );
-    }
+    //     return Commands.startEnd(
+    //         () -> armMotor.moveArmManual(true, reverse, speed),
+    //         () -> armModule.MoveManual(false, reverse, speed)
+    //     );
+    // }
 }
 
