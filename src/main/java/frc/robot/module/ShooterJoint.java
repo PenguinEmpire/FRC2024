@@ -20,6 +20,8 @@ public class ShooterJoint {
         this.inverted = inverted;
         this.driveInverted = driveInverted;
         this.offset = offset; 
+
+        
     }
 }
 
