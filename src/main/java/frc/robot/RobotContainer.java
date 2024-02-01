@@ -16,7 +16,6 @@ import frc.robot.subsystems.LightingSubsystem;
 import frc.robot.commands.AlignmentCommand;
 import frc.robot.subsystems.VisionSubsystem;
 
-import frc.robot.commands.Auto;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -33,7 +32,6 @@ public class RobotContainer {
   private LightingSubsystem m_lightingSubsystem;
   private VisionSubsystem m_visionSubsystem;
   private IntakeSubsystem m_intakeSubsystem;
-  private Auto m_auto;
 
   private ControlInput m_controlInput;
 
@@ -50,7 +48,6 @@ public class RobotContainer {
     m_visionSubsystem = new VisionSubsystem(m_controlInput);
     // set new IDs
     m_intakeSubsystem = new IntakeSubsystem(11, 12);
-    m_auto = new Auto();
 
     autoChooser = new SendableChooser<>();
     kRoutine1 = "Routine 1";
