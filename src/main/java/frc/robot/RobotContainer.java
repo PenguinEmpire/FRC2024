@@ -26,7 +26,7 @@ import frc.robot.subsystems.VisionSubsystem;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private DriveSubsystem m_driveSubsystem;
+  // private DriveSubsystem m_driveSubsystem;
   private SwerveDriveCommand m_swerveDriveCommand;
   private AlignmentCommand alignmentCommand;
   private LightingSubsystem m_lightingSubsystem;
@@ -43,7 +43,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     m_controlInput = new ControlInput();
-    m_driveSubsystem = new DriveSubsystem();
+    // m_driveSubsystem = new DriveSubsystem();
     m_lightingSubsystem = new LightingSubsystem(m_controlInput);
     m_visionSubsystem = new VisionSubsystem(m_controlInput);
     // set new IDs
@@ -70,9 +70,9 @@ public class RobotContainer {
     JoystickButton stage = new JoystickButton(m_controlInput.getAccessoryJoystick(), 11);
 
 
-    alignmentCommand = new AlignmentCommand(m_driveSubsystem, m_controlInput);
-    JoystickButton alignmentButton  = new JoystickButton(m_controlInput.getLeftJoystick(),5);
-    alignmentButton.whileTrue(alignmentCommand);
+    // alignmentCommand = new AlignmentCommand(m_driveSubsystem, m_controlInput);
+    // JoystickButton alignmentButton  = new JoystickButton(m_controlInput.getLeftJoystick(),5);
+    // alignmentButton.whileTrue(alignmentCommand);
 
     JoystickButton runRollers = new JoystickButton(m_controlInput.getAccessoryJoystick(), 5);
     runRollers.whileTrue(m_intakeSubsystem.runRollers());
@@ -81,16 +81,16 @@ public class RobotContainer {
   }
 
   public void autoExit() {
-    m_driveSubsystem.getNavX().setAngleAdjustment(180);
+    // m_driveSubsystem.getNavX().setAngleAdjustment(180);
   }
 
   public void robotInit(){
-    m_driveSubsystem.getNavX().setAngleAdjustment(0);
+    //m_driveSubsystem.getNavX().setAngleAdjustment(0);
   }
   
   public void teleopInit() {
-    m_swerveDriveCommand = new SwerveDriveCommand(m_driveSubsystem, m_controlInput, m_lightingSubsystem, m_visionSubsystem);
-    m_driveSubsystem.setDefaultCommand(m_swerveDriveCommand);
+    // m_swerveDriveCommand = new SwerveDriveCommand(m_driveSubsystem, m_controlInput, m_lightingSubsystem, m_visionSubsystem);
+    // m_driveSubsystem.setDefaultCommand(m_swerveDriveCommand);
   }
 
   /**

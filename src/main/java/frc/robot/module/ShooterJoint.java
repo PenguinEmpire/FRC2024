@@ -14,14 +14,14 @@ public class ShooterJoint {
     private boolean driveInverted;
     private double offset;
 
+
+    // for arms only
     public ShooterJoint(int armSparkID, boolean inverted, boolean driveInverted, double offset) {
         armMotor = new CANSparkMax(armSparkID, CANSparkMax.MotorType.kBrushless);
         armPIDController = armMotor.getPIDController();
         this.inverted = inverted;
         this.driveInverted = driveInverted;
         this.offset = offset; 
-
-        
     }
 }
 
