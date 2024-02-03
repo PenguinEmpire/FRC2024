@@ -24,24 +24,15 @@ public class ShooterJoint {
     private final AbsoluteEncoder armEncoder; 
     private boolean inverted;
     private double offset;
-<<<<<<< HEAD
-
-
-    // for arms only
-    public ShooterJoint(int armSparkID, boolean inverted, boolean driveInverted, double offset) {
-=======
     // neeed to set PID tuning
     private String name;
     public ShooterJoint(String name, int armSparkID, double offset) {
         SmartDashboard.putBoolean(name + ": Manual Control",true);
         this.name = name ;
->>>>>>> 0666a3e698b124b628bcbc3a1486e27bd04f2e6a
         armMotor = new CANSparkMax(armSparkID, CANSparkMax.MotorType.kBrushless);
         armPIDController = armMotor.getPIDController();
         armEncoder =  armMotor.getAbsoluteEncoder(Type.kDutyCycle);
         this.offset = offset; 
-<<<<<<< HEAD
-=======
     }
 
     public void periodic() {
@@ -66,7 +57,6 @@ public class ShooterJoint {
         armPIDController.setReference(position, ControlType.kPosition);
             
         
->>>>>>> 0666a3e698b124b628bcbc3a1486e27bd04f2e6a
     }
 
 
