@@ -13,7 +13,9 @@ import com.revrobotics.SparkAbsoluteEncoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import com.revrobotics.CANSparkBase.ControlType;
+import frc.robot.module.ShooterJoint;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 public class ShooterJoint {
 
     private int armID;
