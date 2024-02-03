@@ -4,7 +4,9 @@ import com.revrobotics.SparkPIDController;
 
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import com.revrobotics.CANSparkBase.ControlType;
+import frc.robot.module.ShooterJoint;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 public class ShooterJoint {
 
     private int armID;
