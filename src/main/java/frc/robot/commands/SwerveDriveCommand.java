@@ -6,10 +6,7 @@ package frc.robot.commands;
 
 import frc.robot.ControlInput;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.Vision;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.LightingSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,28 +15,20 @@ public class SwerveDriveCommand extends Command {
   private DriveSubsystem subsystem;
   private PIDController autoAlignPID;
   private ControlInput controlInput;
-  private LightingSubsystem lightingSubsystem;
-  private VisionSubsystem visionSubsystem;
-  private double targetRot;
   private PIDController xPID;
   private PIDController yPID;
 
   // false = red;
   // true = blue;
-  private boolean isTeam = false;
+  // private boolean isTeam = false;
 
   // pipeline 0: red
   // pipeline 1: blue
 
-  private boolean m_wasTargeting;
-
   // todo: add vision and lighting
-  public SwerveDriveCommand(DriveSubsystem subsystem, ControlInput controlInput, LightingSubsystem LightingSubsystem,
-      VisionSubsystem visionSubsystem) {
+  public SwerveDriveCommand(DriveSubsystem subsystem, ControlInput controlInput) {
     this.subsystem = subsystem;
     this.controlInput = controlInput;
-    this.lightingSubsystem = lightingSubsystem;
-    this.visionSubsystem = visionSubsystem;
 
     addRequirements(subsystem);
     setName("SwerveDrive");
@@ -57,7 +46,6 @@ public class SwerveDriveCommand extends Command {
     autoAlignPID.enableContinuousInput(0, 360);
     xPID.reset();
     yPID.reset();
-    m_wasTargeting = false;
   }
 
   @Override
@@ -82,12 +70,6 @@ public class SwerveDriveCommand extends Command {
 
     subsystem.drive(forward, strafe, clamp(rotation * 0.8, -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed),
         true, false);
-    autoAlignPID.reset();
-    yPID.reset();
-
-    if (getInput().getLeftJoystick().getTriggerReleased()){
-      m_wasTargeting = false;
-    }
 
   }
 

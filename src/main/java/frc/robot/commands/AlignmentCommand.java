@@ -1,16 +1,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.ControlInput;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class AlignmentCommand extends Command {
     private DriveSubsystem driveSubsystem;
-    private ControlInput controlInput;
-
-    public AlignmentCommand (DriveSubsystem driveSubsystem, ControlInput controlInput){
+    
+    public AlignmentCommand (DriveSubsystem driveSubsystem){
         this.driveSubsystem = driveSubsystem;
-        this.controlInput = controlInput;
         addRequirements(this.driveSubsystem);
         setName("Alignment Command");
     }

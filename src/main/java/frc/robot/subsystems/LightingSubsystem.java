@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.ControlInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -14,8 +13,6 @@ public class LightingSubsystem extends SubsystemBase {
     private int firstPixelHue = 0;
     private int counterRGB = 0;
     private int length = 251;
-
-    private ControlInput controlInput = new ControlInput();
     private AddressableLED led;
     private Timer timer = new Timer();
     private AddressableLEDBuffer ledBuffer;
@@ -32,8 +29,7 @@ public class LightingSubsystem extends SubsystemBase {
     final String kRainbow = "Rainbow";
     final String kPenguin = "Penguin";
 
-    public LightingSubsystem(ControlInput controlInput){
-        this.controlInput = controlInput;
+    public LightingSubsystem(ControlInput controlInput) {
         led = new AddressableLED(9);
         ledBuffer = new AddressableLEDBuffer(length);
 
