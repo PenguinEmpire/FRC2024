@@ -4,10 +4,8 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
@@ -23,10 +21,10 @@ import frc.robot.subsystems.VisionSubsystem;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */ 
-
+@SuppressWarnings("unused")
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  // private DriveSubsystem m_driveSubsystem;
+  private DriveSubsystem m_driveSubsystem;
   private SwerveDriveCommand m_swerveDriveCommand;
   private AlignmentCommand alignmentCommand;
   private LightingSubsystem m_lightingSubsystem;
@@ -45,7 +43,7 @@ public class RobotContainer {
     m_controlInput = new ControlInput();
     // m_driveSubsystem = new DriveSubsystem();
     m_lightingSubsystem = new LightingSubsystem(m_controlInput);
-    m_visionSubsystem = new VisionSubsystem(m_controlInput);
+    m_visionSubsystem = new VisionSubsystem();
     // set new IDs
     m_intakeSubsystem = new IntakeSubsystem(11, 12);
 

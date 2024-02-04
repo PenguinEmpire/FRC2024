@@ -2,13 +2,10 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkPIDController;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-
+//remove suppressor once done implementing
+@SuppressWarnings("unused")
 public class ShooterSubsystem { 
     private final CANSparkMax armMotor;
     private final CANSparkMax intakeMotor; 
@@ -20,8 +17,6 @@ public class ShooterSubsystem {
 
     private final RelativeEncoder armEncoder;
     private final RelativeEncoder intakeEncoder;
-
-    private final String m_armName = "Arm";
 
     public ShooterSubsystem(int armSparkID, int intakeSparkID, int shooterSparkID) {
         armMotor = new CANSparkMax(armSparkID, CANSparkMax.MotorType.kBrushless);
@@ -42,22 +37,5 @@ public class ShooterSubsystem {
         intakeEncoder = intakeMotor.getEncoder();
 
     }
-
-    public void moveArmManual(boolean toggle, boolean reverse, double speed) {
-        if (!SmartDashboard.getBoolean(m_armName + "Manual Control", true)) {
-            return;
-        }
-        armMotor.set(toggle ? (reverse ? speed : -speed) : 0);
-    }
-
-    // for manual control
-    // public Command moveArm(boolean reverse) {
-    //     double speed = SmartDashboard.getNumber("Intake Speed", 0);
-        
-    //     return Commands.startEnd(
-    //         () -> armMotor.moveArmManual(true, reverse, speed),
-    //         () -> armModule.MoveManual(false, reverse, speed)
-    //     );
-    // }
 }
 
