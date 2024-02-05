@@ -50,7 +50,7 @@ public class ShooterSubsystem  {
         intakeEncoder = intakeMotor.getEncoder();
 
     }
-    public void Intake(boolean toggle, boolean reverse) {
+    public void runIntakeRollers(boolean toggle, boolean reverse) {
         double speed = SmartDashboard.getNumber("IntakeMotor",0);
         if(toggle) {
          intakeMotor.set(reverse ? speed : -speed);
@@ -62,7 +62,7 @@ public class ShooterSubsystem  {
     //    armPID.set(kI);
     //    armPID.set(kD);
     }
-    public void Shooter( boolean toggle, boolean reverse) {
+    public void runShooterRollers( boolean toggle, boolean reverse) {
         double speed = SmartDashboard.getNumber("shooterMotor",0);
         if(toggle) {
          shooterMotor.set(reverse ? speed : - speed);
@@ -71,7 +71,7 @@ public class ShooterSubsystem  {
             }
      
     }
-    public void arm(boolean toggle, boolean reverse) {
+    public void moveArm(boolean toggle, boolean reverse) {
     double speed = SmartDashboard.getNumber("armMotor",0);
     if(toggle) {
         armMotor.set(reverse ? speed : -speed);
