@@ -181,7 +181,7 @@ public final class Constants {
     public static final double kDrivingMaxOutput = 1;
 
     // could turn p back to 0.04
-    public static final double kTurningP = 1;
+    public static final double kTurningP = 0.3;
     public static final double kTurningI = 0;
     public static final double kTurningD = 0;
     public static final double kTurningFF = 0;
@@ -192,7 +192,7 @@ public final class Constants {
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
     public static final int kDrivingMotorCurrentLimit = 80; // amps
-    public static final int kTurningMotorCurrentLimit = 30; // amps
+    public static final int kTurningMotorCurrentLimit = 40; // amps
   }
 
   // change for auto
