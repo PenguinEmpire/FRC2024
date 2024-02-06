@@ -22,6 +22,7 @@ import edu.wpi.first.util.WPIUtilJNI;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.module.SwerveModule;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -86,6 +87,9 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         });
+
+    SmartDashboard.putNumber("Odometry X", m_odometry.getPoseMeters().getX());
+    SmartDashboard.putNumber("Odometry Y", m_odometry.getPoseMeters().getY());
 
       
   }
@@ -258,19 +262,5 @@ public class DriveSubsystem extends SubsystemBase {
   public void resetGyroscope(){
     m_gyro.reset();
   }
-
-  AutoBuilder.configureHolonomic(
-            this.getPose(), // Robot pose supplier
-            this.resetPose(), // Method to reset odometry (will be called if your auto has a starting pose)
-            getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            this.drive(), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-            new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-                    4.5, // Max module speed, in m/s
-                    0.4, // Drive base radius in meters. Distance from robot center to furthest module.
-                    new ReplanningConfig() // Default path replanning config. See the API for the options here
-            )
-    );
   
 }
