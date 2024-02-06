@@ -4,8 +4,11 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
@@ -43,7 +46,7 @@ public class RobotContainer {
     m_swerveDriveCommand = new SwerveDriveCommand(m_driveSubsystem, m_controlInput);
   
     // set new IDs
-    m_intakeSubsystem = new IntakeSubsystem(9, 12);
+    // m_intakeSubsystem = new IntakeSubsystem(9, 12);
 
     
     configureBindings();
@@ -84,18 +87,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  // public Command getAutonomousCommand() {
-  //   Object choice = autoChooser.getSelected();
-
-  //   // if (choice == kRoutine1){
-  //   //   System.out.println("Running 1");
-  //   //   return m_auto.firstRoutine(m_driveSubsystem);
-  //   // } else if (choice == kRoutine2) {
-  //   //   System.out.println("Running 2");
-  //   //   return m_auto.secondRoutine(m_driveSubsystem);
-  //   // } else {
-  //   //   return null;
-  //   // }
-
-  // }
+  public Command getAutonomousCommand() {    
+      return new PathPlannerAuto("realtest");
+  }
 }
