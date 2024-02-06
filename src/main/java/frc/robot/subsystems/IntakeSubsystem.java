@@ -109,7 +109,7 @@ public class IntakeSubsystem extends SubsystemBase{
 
     public Command runRollers() {
         double speed = SmartDashboard.getNumber("Intake Speed", 0);
-        return Commands.startEnd (
+        return Commands.runEnd (
             () -> {
                 rollerMotor.set(speed);
                 },

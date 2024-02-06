@@ -28,8 +28,4 @@ public class ControlInput {
         return xboxController;
     }
 
-    public boolean isConeMode() {
-        return getAccessoryJoystick().getRawAxis(3) > 0;
-    }
-
 }
