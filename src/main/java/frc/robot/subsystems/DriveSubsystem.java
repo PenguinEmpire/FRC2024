@@ -85,7 +85,7 @@ public class DriveSubsystem extends SubsystemBase {
         this::getRobotRelativeSpeeds,
         this::driveRobotRelative,
         new HolonomicPathFollowerConfig(
-            new PIDConstants(0.9, 0.50, 0),
+            new PIDConstants(0.9, 0.2, 0),
             new PIDConstants(0.02, 0, 0),
             0.25, // max speed in m/s
             0.15,
