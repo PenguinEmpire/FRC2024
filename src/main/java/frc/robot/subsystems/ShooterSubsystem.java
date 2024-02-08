@@ -149,18 +149,31 @@ public class ShooterSubsystem extends SubsystemBase{
         );
     }
 
-    // public Command runShooterRollers(boolean reverse) {
-    //     double speed = SmartDashboard.getNumber("shooterMotor", 0);
-    //     return Commands.runEnd (
-    //         (reverse) -> {
-    //             intakeMotor.set(-speed);
-    //         },
-    //         () -> {
-    //             intakeMotor.set(speed);
-    //         }
-    //     );
+    public Command runShooterRollers(boolean reverse) {
+        double speed = SmartDashboard.getNumber("shooterMotor", 0);
+        return Commands.runEnd (
+            () -> {
+                intakeMotor.set(- speed);
+            },
+            () -> {
+                intakeMotor.set(speed);
+            } 
+        ); 
 
-    // }
+    }
+
+     public Command moveArm (boolean toggle, boolean reverse) {
+        double speed = SmartDashboard.getNumber("armMotor", 0);
+        return Commands.runEnd (
+            () -> {  
+                shooterEntMotor.set(reverse ? speed: -speed);
+            },
+            () -> {
+                shooterEntMotor.set(speed);
+            } 
+        ); 
+
+    }
 
     // public void moveArm(boolean toggle, boolean reverse) {
     //     double speed = SmartDashboard.getNumber("armMotor", 0);
