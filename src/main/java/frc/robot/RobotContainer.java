@@ -45,8 +45,7 @@ public class RobotContainer {
     m_visionSubsystem = new VisionSubsystem();
     m_swerveDriveCommand = new SwerveDriveCommand(m_driveSubsystem, m_controlInput);
   
-    // set new IDs
-    // m_intakeSubsystem = new IntakeSubsystem(9, 12);
+    m_intakeSubsystem = new IntakeSubsystem(11, 12);
 
     
     configureBindings();
@@ -65,8 +64,8 @@ public class RobotContainer {
     JoystickButton alignmentButton  = new JoystickButton(m_controlInput.getLeftJoystick(),5);
     alignmentButton.whileTrue(alignmentCommand);
 
-    // JoystickButton runRollers = new JoystickButton(m_controlInput.getAccessoryJoystick(), 5);
-    // runRollers.whileTrue(m_intakeSubsystem.runRollers());
+    JoystickButton runRollers = new JoystickButton(m_controlInput.getAccessoryJoystick(), 5);
+    runRollers.whileTrue(m_intakeSubsystem.runMotor());
   }
 
   public void autoExit() {

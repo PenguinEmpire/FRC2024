@@ -68,26 +68,11 @@ public class IntakeSubsystem extends SubsystemBase{
         double min = SmartDashboard.getNumber(m_name + "Min Output", 0);
         double intakePos = SmartDashboard.getNumber(m_name + "pos", 0);
 
-        if(p != kP) { 
-            m_pidController.setP(p); 
-            kP = p; 
-        }
-        if(i != kI) { 
-            m_pidController.setI(i); 
-            kI = i; 
-        }
-        if(d != kD) { 
-            m_pidController.setD(d); 
-            kD = d; 
-        }
-        if(iz != kIz) { 
-            m_pidController.setIZone(iz); 
-            kIz = iz; 
-        }
-        if(ff != kFF) { 
-            m_pidController.setFF(ff); 
-            kFF = ff; 
-        }
+        if(p != kP) { m_pidController.setP(p); kP = p;}
+        if(i != kI) { m_pidController.setI(i); kI = i;}
+        if(d != kD) { m_pidController.setD(d); kD = d;}
+        if(iz != kIz) {m_pidController.setIZone(iz); kIz = iz;}
+        if(ff != kFF) { m_pidController.setFF(ff); kFF = ff;}
         if((max != kMaxOutput) || (min != kMinOutput)) { 
             m_pidController.setOutputRange(min, max); 
             kMinOutput = min; 
@@ -116,6 +101,18 @@ public class IntakeSubsystem extends SubsystemBase{
             () -> {
                 rollerMotor.set(0);
                 }
+        );
+    }
+
+    public Command runMotor() {
+        System.out.println("running");
+        return Commands.runEnd(
+            () -> {
+                moveMotor.set(1.0);
+                },
+            () -> {
+                moveMotor.set(0);
+            }
         );
     }
 
