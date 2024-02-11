@@ -45,7 +45,7 @@ public class ShooterJoint {
         return armEncoder.getPosition();
     }
     
-    public void setPosition(double position) {
+    public void setArmPosition(double position) {
         targetPos = position;
         SmartDashboard.putNumber(name, position);
         if(SmartDashboard.getBoolean(name + ": Manual Control",true)) {

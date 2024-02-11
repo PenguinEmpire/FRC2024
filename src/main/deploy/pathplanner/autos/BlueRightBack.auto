@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 2.0,
+      "x": 0.53,
       "y": 7.0
     },
-    "rotation": 0.46038864754682324
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -20,43 +20,31 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 4.0
+            "waitTime": 1.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "firstRingtoFront"
+            "pathName": "rightBackRightRing"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "frontToBack"
+            "pathName": "backRightToMiddle"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 4.0
+            "waitTime": 1.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "secondBackToThirdFront"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "thirdToBackTrap"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 4.0
+            "pathName": "middleToBackRightSecond"
           }
         }
       ]

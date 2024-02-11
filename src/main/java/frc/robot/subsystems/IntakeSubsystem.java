@@ -120,10 +120,10 @@ public class IntakeSubsystem extends SubsystemBase{
     }
 
     public void setPosition(double position) {
-        double intakePos = SmartDashboard.getNumber(m_name + "pos", 0);
+        SmartDashboard.putNumber(m_name + "pos", position);
         if (SmartDashboard.getBoolean(m_name + "Manual Control", true))
             return;
-        m_pidController.setReference(intakePos, CANSparkMax.ControlType.kPosition);
+        m_pidController.setReference(position, CANSparkMax.ControlType.kPosition);
     }
 
     public boolean hasReached(double tolerance) {

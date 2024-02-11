@@ -3,15 +3,16 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-
 //remove suppressor once done implementing
 @SuppressWarnings("unused")
-public class ShooterSubsystem extends SubsystemBase{
+public class ShooterSubsystem extends SubsystemBase {
     // used for intake rollers
     private final CANSparkMax intakeMotor;
     // used for output rollers
@@ -64,7 +65,7 @@ public class ShooterSubsystem extends SubsystemBase{
 
         // used for changing velocity
         outputSpeedPID = outputMotor.getPIDController();
-        
+
         // used for setting the position of the intake/shooter
         shooterEntEnocder = shooterEntMotor.getEncoder();
 
@@ -94,8 +95,8 @@ public class ShooterSubsystem extends SubsystemBase{
 
     }
 
-    @ Override
-    public void periodic(){
+    @Override
+    public void periodic() {
         double iP = SmartDashboard.getNumber(iName + "P Gain", intakeP);
         double iI = SmartDashboard.getNumber(iName + "I Gain", intakeI);
         double iD = SmartDashboard.getNumber(iName + "D Gain", intakeD);
@@ -112,77 +113,70 @@ public class ShooterSubsystem extends SubsystemBase{
         double sMaxOut = SmartDashboard.getNumber(sName + "Max Output", shooterMaxOutput);
         double sMinOut = SmartDashboard.getNumber(sName + "Min Output", shooterMinOutput);
 
-        if (iP != intakeP) {intakePID.setP(iP); intakeP = iP;}
-        if (iI != intakeI) {intakePID.setI(iI); intakeI = iI;}
-        if (iD != intakeD) {intakePID.setD(iD); intakeD = iD;}
-        if (iIz != intakeIz) {intakePID.setIZone(iIz); intakeIz = iIz;}
-        if (iFF != intakeFF) {intakePID.setFF(iFF); intakeFF = iFF; }
-        if ((iIMaxOut != intakeMaxOutput) || (iIMinOut != intakeMinOutput)) { 
+        if (iP != intakeP) { intakePID.setP(iP); intakeP = iP;}
+        if (iI != intakeI) { intakePID.setI(iI); intakeI = iI;}
+        if (iD != intakeD) { intakePID.setD(iD); intakeD = iD;}
+        if (iIz != intakeIz) { intakePID.setIZone(iIz); intakeIz = iIz;}
+        if (iFF != intakeFF) { intakePID.setFF(iFF); intakeFF = iFF;}
+        if ((iIMaxOut != intakeMaxOutput) || (iIMinOut != intakeMinOutput)) {
             intakePID.setOutputRange(iIMinOut, iIMaxOut);
             intakeMinOutput = iIMinOut;
             intakeMaxOutput = iIMaxOut;
         }
 
-        if (sP != shooterP) {shooterEntPID.setP(iP); shooterP = sP;}
-        if (sI != shooterI) {shooterEntPID.setI(iI); shooterI = sI;}
-        if (sD != shooterD) {shooterEntPID.setD(iD); shooterD = sD;}
-        if (sIz != shooterIz) {shooterEntPID.setIZone(iIz); shooterIz = sIz;}
-        if (sFF != shooterFF) {shooterEntPID.setFF(iFF); shooterFF = sFF; }
-        if ((sMaxOut != shooterMaxOutput) || (sMinOut != shooterMinOutput)) { 
+        if (sP != shooterP) { shooterEntPID.setP(iP); shooterP = sP;}
+        if (sI != shooterI) { shooterEntPID.setI(iI); shooterI = sI;}
+        if (sD != shooterD) { shooterEntPID.setD(iD); shooterD = sD;}
+        if (sIz != shooterIz) { shooterEntPID.setIZone(iIz); shooterIz = sIz;}
+        if (sFF != shooterFF) { shooterEntPID.setFF(iFF); shooterFF = sFF;}
+        if ((sMaxOut != shooterMaxOutput) || (sMinOut != shooterMinOutput)) {
             shooterEntPID.setOutputRange(sMinOut, sMaxOut);
             shooterMaxOutput = sMinOut;
             shooterMinOutput = sMaxOut;
         }
-
     }
-
 
     public Command runIntakeRollers() {
         double speed = SmartDashboard.getNumber("Intake Speed", 0);
-        return Commands.runEnd (
-            () -> {
-                intakeMotor.set(speed);
+        return Commands.runEnd(
+                () -> {
+                    intakeMotor.set(speed);
                 },
-            () -> {
-                intakeMotor.set(0);
-                }
-        );
+                () -> {
+                    intakeMotor.set(0);
+                });
     }
 
     public Command runShooterRollers(boolean reverse) {
         double speed = SmartDashboard.getNumber("shooterMotor", 0);
-        return Commands.runEnd (
-            () -> {
-                intakeMotor.set(- speed);
-            },
-            () -> {
-                intakeMotor.set(speed);
-            } 
-        ); 
+        return Commands.runEnd(
+                () -> {
+                    intakeMotor.set(-speed);
+                },
+                () -> {
+                    intakeMotor.set(speed);
+                });
 
     }
 
-     public Command moveArm (boolean toggle, boolean reverse) {
+    public void setShooterPosition(double position){
+        SmartDashboard.putNumber(sName + "pos", position);
+        if (SmartDashboard.getBoolean(sName + "Manual Control", true))
+            return;
+        shooterEntPID.setReference(position, ControlType.kPosition);
+    }
+
+    // manual control
+    public Command moveArm(boolean toggle, boolean reverse) {
         double speed = SmartDashboard.getNumber("armMotor", 0);
-        return Commands.runEnd (
-            () -> {  
-                shooterEntMotor.set(reverse ? speed: -speed);
-            },
-            () -> {
-                shooterEntMotor.set(speed);
-            } 
-        ); 
+        return Commands.runEnd(
+                () -> {
+                    shooterEntMotor.set(reverse ? speed : -speed);
+                },
+                () -> {
+                    shooterEntMotor.set(speed);
+                });
 
     }
-
-    // public void moveArm(boolean toggle, boolean reverse) {
-    //     double speed = SmartDashboard.getNumber("armMotor", 0);
-    //     if (toggle) {
-    //         armMotor.set(reverse ? speed : -speed);
-    //     } else {
-    //         armMotor.set(0);
-    //     }
-
-    // }
 
 }
