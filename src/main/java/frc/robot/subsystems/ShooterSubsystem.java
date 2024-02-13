@@ -60,7 +60,7 @@ public class ShooterSubsystem extends SubsystemBase {
         intakeMotor = new CANSparkMax(intakeSparkID, CANSparkMax.MotorType.kBrushless);
         outputMotor = new CANSparkMax(ouputSparkID, CANSparkMax.MotorType.kBrushless);
         shooterEntMotor = new CANSparkMax(shooterEntID, CANSparkMax.MotorType.kBrushless);
-        infraredSensor = new AnalogInput(infraredSensorID);
+        infraredSensor = new AnalogInput(0);
         // PIDs for all motors
         // used for making not jerky
         intakePID = intakeMotor.getPIDController();
