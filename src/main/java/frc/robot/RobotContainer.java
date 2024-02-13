@@ -6,11 +6,14 @@ package frc.robot;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.SwerveDriveCommand;
+import frc.robot.commands.autonomous.autonomouspaths.BlueRightBack;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LightingSubsystem;
@@ -33,8 +36,10 @@ public class RobotContainer {
   private LightingSubsystem m_lightingSubsystem;
   private VisionSubsystem m_visionSubsystem;
   private IntakeSubsystem m_intakeSubsystem;
-
   private ControlInput m_controlInput;
+
+  public static SendableChooser<Command> autoChoice = new SendableChooser<>();
+
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -45,9 +50,14 @@ public class RobotContainer {
     m_visionSubsystem = new VisionSubsystem();
     m_swerveDriveCommand = new SwerveDriveCommand(m_driveSubsystem, m_controlInput);
   
-    m_intakeSubsystem = new IntakeSubsystem(11, 12);
+    // m_intakeSubsystem = new IntakeSubsystem(11, 12);
 
-    
+    Shuffleboard.getTab("Autonomous").add(autoChoice);
+    autoChoice.addOption(
+        "High Cone Balance",
+        new BlueRightBack()
+    );
+
     configureBindings();
   }
 
@@ -64,8 +74,8 @@ public class RobotContainer {
     JoystickButton alignmentButton  = new JoystickButton(m_controlInput.getLeftJoystick(),5);
     alignmentButton.whileTrue(alignmentCommand);
 
-    JoystickButton runRollers = new JoystickButton(m_controlInput.getAccessoryJoystick(), 5);
-    runRollers.whileTrue(m_intakeSubsystem.runMotor());
+    // JoystickButton runRollers = new JoystickButton(m_controlInput.getAccessoryJoystick(), 5);
+    // runRollers.whileTrue(m_intakeSubsystem.runMotor());
   }
 
   public void autoExit() {
@@ -87,6 +97,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {    
-      return new PathPlannerAuto("realtest");
+      return autoChoice.getSelected();
   }
 }
