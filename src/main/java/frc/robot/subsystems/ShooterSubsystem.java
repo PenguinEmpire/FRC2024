@@ -5,11 +5,12 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import edu.wpi.first.wpilibj.AnalogInput;
 //remove suppressor once done implementing
 @SuppressWarnings("unused")
 public class ShooterSubsystem extends SubsystemBase {
@@ -25,6 +26,8 @@ public class ShooterSubsystem extends SubsystemBase {
     private final SparkPIDController shooterEntPID;
 
     private final RelativeEncoder shooterEntEnocder;
+
+    private final AnalogInput infraredSensor;
 
     private String iName = "Intake";
     private double intakeP = 0.0;
@@ -53,11 +56,11 @@ public class ShooterSubsystem extends SubsystemBase {
     private double shooterMaxOutput = 0.0;
     private double shooterMinOutput = 0.0;
 
-    public ShooterSubsystem(int intakeSparkID, int ouputSparkID, int shooterEntID) {
+    public ShooterSubsystem(int intakeSparkID, int ouputSparkID, int shooterEntID, int infraredSensorID) {
         intakeMotor = new CANSparkMax(intakeSparkID, CANSparkMax.MotorType.kBrushless);
         outputMotor = new CANSparkMax(ouputSparkID, CANSparkMax.MotorType.kBrushless);
         shooterEntMotor = new CANSparkMax(shooterEntID, CANSparkMax.MotorType.kBrushless);
-
+        infraredSensor = new AnalogInput(infraredSensorID);
         // PIDs for all motors
         // used for making not jerky
         intakePID = intakeMotor.getPIDController();
@@ -135,7 +138,21 @@ public class ShooterSubsystem extends SubsystemBase {
             shooterMinOutput = sMaxOut;
         }
     }
+    public Command stopIntakeRollers(){
+     double speed = SmartDashboard.getNumber("Intake Speed", 0);
+     return Commands.runEnd(
+            () -> {
+            // need to tune and change the value     
+                if (infraredSensor.getVoltage() > 0) {
+                    intakeMotor.set(0);
+                } else {
+                    intakeMotor.set(speed);
+                }
+            },
+            () -> intakeMotor.set(0)
+    );}
 
+    
     public Command runIntakeRollers() {
         double speed = SmartDashboard.getNumber("Intake Speed", 0);
         return Commands.runEnd(
@@ -145,6 +162,7 @@ public class ShooterSubsystem extends SubsystemBase {
                 () -> {
                     intakeMotor.set(0);
                 });
+        
     }
 
     public Command runShooterRollers(boolean reverse) {
