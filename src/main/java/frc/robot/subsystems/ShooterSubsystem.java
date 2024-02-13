@@ -4,8 +4,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
-
-import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -27,7 +27,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private final RelativeEncoder shooterEntEnocder;
 
-    private final AnalogInput infraredSensor;
+    private final DigitalInput infraredSensor;
 
     private String iName = "Intake";
     private double intakeP = 0.0;
@@ -60,7 +60,7 @@ public class ShooterSubsystem extends SubsystemBase {
         intakeMotor = new CANSparkMax(intakeSparkID, CANSparkMax.MotorType.kBrushless);
         outputMotor = new CANSparkMax(ouputSparkID, CANSparkMax.MotorType.kBrushless);
         shooterEntMotor = new CANSparkMax(shooterEntID, CANSparkMax.MotorType.kBrushless);
-        infraredSensor = new AnalogInput(0);
+        infraredSensor = new DigitalInput(0);
         // PIDs for all motors
         // used for making not jerky
         intakePID = intakeMotor.getPIDController();
@@ -143,7 +143,7 @@ public class ShooterSubsystem extends SubsystemBase {
      return Commands.runEnd(
             () -> {
             // need to tune and change the value     
-                if (infraredSensor.getVoltage() > 0) {
+                if (infraredSensor.get()) {
                     intakeMotor.set(0);
                 } else {
                     intakeMotor.set(speed);
