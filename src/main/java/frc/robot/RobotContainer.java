@@ -13,12 +13,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.SwerveDriveCommand;
-import frc.robot.commands.autonomous.autonomouspaths.BlueRightBack;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LightingSubsystem;
 import frc.robot.commands.AlignmentCommand;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.commands.autonomous.AutoPaths
+
 
 
 /**
@@ -37,9 +38,11 @@ public class RobotContainer {
   private VisionSubsystem m_visionSubsystem;
   private IntakeSubsystem m_intakeSubsystem;
   private ControlInput m_controlInput;
-
+  
   public static SendableChooser<Command> autoChoice = new SendableChooser<>();
 
+  private String test = "test";
+  
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -51,12 +54,9 @@ public class RobotContainer {
     m_swerveDriveCommand = new SwerveDriveCommand(m_driveSubsystem, m_controlInput);
   
     // m_intakeSubsystem = new IntakeSubsystem(11, 12);
+    autoChoice.addOption("Test", )
+    SmartDashboard.putData("Autonomous Routine", autoChoice);
 
-    Shuffleboard.getTab("Autonomous").add(autoChoice);
-    autoChoice.addOption(
-        "High Cone Balance",
-        new BlueRightBack()
-    );
 
     configureBindings();
   }
@@ -96,7 +96,11 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {    
-      return autoChoice.getSelected();
+  public Command getAutonomousCommand() { 
+      var choice = autoChoice.getSelected();
+      if (choice == blueRightBack) {
+        return 
+      }
+      
   }
 }

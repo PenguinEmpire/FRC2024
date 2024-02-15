@@ -104,18 +104,6 @@ public class IntakeSubsystem extends SubsystemBase{
         );
     }
 
-    public Command runMotor() {
-        System.out.println("running");
-        return Commands.runEnd(
-            () -> {
-                moveMotor.set(1.0);
-                },
-            () -> {
-                moveMotor.set(0);
-            }
-        );
-    }
-
     public void setPosition(double position) {
         SmartDashboard.putNumber(m_name + "pos", position);
         if (SmartDashboard.getBoolean(m_name + "Manual Control", true))
@@ -133,7 +121,15 @@ public class IntakeSubsystem extends SubsystemBase{
 
     // use for auto
     public Command rollerContinuous() {
-        return null;
+        double speed = 0.5;
+        return Commands.runEnd(
+            () -> {
+                rollerMotor.set(speed);
+            },
+            () -> {
+                rollerMotor.set(0);
+            }
+        );
     }
 
 }
