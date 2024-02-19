@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.module.ShooterJoint;
+import frc.robot.module.Joint;
 
 
 //remove suppressor once done implementing
@@ -15,9 +15,9 @@ import frc.robot.module.ShooterJoint;
 public class ShooterSubsystem extends SubsystemBase{
 
 
-    private ShooterJoint joint;
+    private Joint joint;
     public ShooterSubsystem() {
-        joint = new ShooterJoint("joint", 11, 0);
+        // joint = new ShooterJoint("arm", 11, 0);
     }
 
     @Override
