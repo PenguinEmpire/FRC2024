@@ -11,6 +11,7 @@ import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LightingSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.commands.AlignmentCommand;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -30,6 +31,7 @@ public class RobotContainer {
   private LightingSubsystem m_lightingSubsystem;
   private VisionSubsystem m_visionSubsystem;
   private IntakeSubsystem m_intakeSubsystem;
+  private ShooterSubsystem shooterSubsystem;
 
   private ControlInput m_controlInput;
   
@@ -41,6 +43,7 @@ public class RobotContainer {
     m_lightingSubsystem = new LightingSubsystem(m_controlInput);
     m_visionSubsystem = new VisionSubsystem();
     m_swerveDriveCommand = new SwerveDriveCommand(m_driveSubsystem, m_controlInput);
+    shooterSubsystem = new ShooterSubsystem();
   
     // set new IDs
     m_intakeSubsystem = new IntakeSubsystem(9, 12);
