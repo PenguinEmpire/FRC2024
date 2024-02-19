@@ -38,9 +38,11 @@ public class ShooterJoint {
         armPIDController = armMotor.getPIDController();
         armEncoder =  armMotor.getAbsoluteEncoder(Type.kDutyCycle);
         relativeEncoder = armMotor.getEncoder();
-        armEncoder.setPositionConversionFactor(1);
-        armPIDController.setPositionPIDWrappingEnabled(true);
-        relativeEncoder.setPositionConversionFactor((3 * (16 / 84) * (16 / 24)));
+        armEncoder.setPositionConversionFactor(2 * Math.PI);
+
+        relativeEncoder.setPositionConversionFactor((24/16) * (84/16) * (84/16) * (84/16) * 2 * Math.PI);
+
+        
         // relativeEncoder.setPosition(armEncoder.getPosition());
         // 
         // armPIDController.setFeedbackDevice(armEncoder);
