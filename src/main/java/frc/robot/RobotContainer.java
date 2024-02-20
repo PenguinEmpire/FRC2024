@@ -18,7 +18,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LightingSubsystem;
 import frc.robot.commands.AlignmentCommand;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.commands.autonomous.AutoPaths
+import frc.robot.commands.autonomous.AutoPaths;
 
 
 
@@ -51,12 +51,10 @@ public class RobotContainer {
     m_driveSubsystem = new DriveSubsystem();
     m_lightingSubsystem = new LightingSubsystem(m_controlInput);
     m_visionSubsystem = new VisionSubsystem();
+    m_intakeSubsystem = new IntakeSubsystem(9, 12);
     m_swerveDriveCommand = new SwerveDriveCommand(m_driveSubsystem, m_controlInput);
   
     // m_intakeSubsystem = new IntakeSubsystem(11, 12);
-    autoChoice.addOption("Test", )
-    SmartDashboard.putData("Autonomous Routine", autoChoice);
-
 
     configureBindings();
   }
@@ -97,10 +95,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() { 
-      var choice = autoChoice.getSelected();
-      if (choice == blueRightBack) {
-        return 
-      }
+     return null;
       
   }
 }

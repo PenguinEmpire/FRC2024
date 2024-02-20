@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -13,10 +14,10 @@ public class IntakeSubsystem extends SubsystemBase{
 
     private final CANSparkMax moveMotor;
     private final CANSparkMax rollerMotor;
-    private final SparkPIDController m_pidController;
+    private final SparkPIDController pidController;
     private final RelativeEncoder m_encoder;
 
-    private double kP = 0.0;
+    private double kP = 0.560;
     private double kI = 0.0;
     private double kD = 0.0;
     private double kIz = 0.0;
@@ -32,15 +33,15 @@ public class IntakeSubsystem extends SubsystemBase{
     public IntakeSubsystem(int moveSparkID, int rollerSparkID) {
         moveMotor = new CANSparkMax(moveSparkID, CANSparkMax.MotorType.kBrushless);
         rollerMotor = new CANSparkMax(rollerSparkID, CANSparkMax.MotorType.kBrushless);
-        m_pidController = moveMotor.getPIDController();
+        pidController = moveMotor.getPIDController();
         m_encoder = moveMotor.getEncoder();
 
-        m_pidController.setP(kP);
-        m_pidController.setI(kI);
-        m_pidController.setD(kD);
-        m_pidController.setIZone(kIz);
-        m_pidController.setFF(kFF);
-        m_pidController.setOutputRange(kMinOutput, kMaxOutput);
+        pidController.setP(kP);
+        pidController.setI(kI);
+        pidController.setD(kD);
+        pidController.setIZone(kIz);
+        pidController.setFF(kFF);
+        pidController.setOutputRange(kMinOutput, kMaxOutput);
         moveMotor.setInverted(false);
 
         SmartDashboard.putNumber(m_name + "P Gain", kP);
@@ -55,6 +56,8 @@ public class IntakeSubsystem extends SubsystemBase{
         SmartDashboard.putNumber(m_name + "pos", m_encoder.getPosition());
 
         SmartDashboard.putNumber("Intake Speed", 0);
+
+        SmartDashboard.putNumber("intakeSetReference", 0);
     }
 
     @Override
@@ -66,19 +69,24 @@ public class IntakeSubsystem extends SubsystemBase{
         double ff = SmartDashboard.getNumber(m_name + "Feed Forward", 0);
         double max = SmartDashboard.getNumber(m_name + "Max Output", 0);
         double min = SmartDashboard.getNumber(m_name + "Min Output", 0);
-        double intakePos = SmartDashboard.getNumber(m_name + "pos", 0);
 
-        if(p != kP) { m_pidController.setP(p); kP = p;}
-        if(i != kI) { m_pidController.setI(i); kI = i;}
-        if(d != kD) { m_pidController.setD(d); kD = d;}
-        if(iz != kIz) {m_pidController.setIZone(iz); kIz = iz;}
-        if(ff != kFF) { m_pidController.setFF(ff); kFF = ff;}
+        double intakePos = SmartDashboard.getNumber(m_name + "pos", 0);
+        
+
+        if(p != kP) { pidController.setP(p); kP = p;}
+        if(i != kI) { pidController.setI(i); kI = i;}
+        if(d != kD) { pidController.setD(d); kD = d;}
+        if(iz != kIz) { pidController.setIZone(iz); kIz = iz;}
+        if(ff != kFF) { pidController.setFF(ff); kFF = ff;}
         if((max != kMaxOutput) || (min != kMinOutput)) { 
-            m_pidController.setOutputRange(min, max); 
+            pidController.setOutputRange(min, max); 
             kMinOutput = min; 
             kMaxOutput = max; 
         }
-
+        
+        double armSetRef = SmartDashboard.getNumber("intakeSetReference", 0);
+        pidController.setReference(armSetRef, ControlType.kPosition);
+        
         m_targetPosition = intakePos;
         m_currentPosition = getPosition();
         setPosition(m_targetPosition);
@@ -108,7 +116,7 @@ public class IntakeSubsystem extends SubsystemBase{
         SmartDashboard.putNumber(m_name + "pos", position);
         if (SmartDashboard.getBoolean(m_name + "Manual Control", true))
             return;
-        m_pidController.setReference(position, CANSparkMax.ControlType.kPosition);
+        pidController.setReference(position, CANSparkMax.ControlType.kPosition);
     }
 
     public boolean hasReached(double tolerance) {

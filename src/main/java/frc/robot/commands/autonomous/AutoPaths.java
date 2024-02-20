@@ -17,8 +17,8 @@ public class AutoPaths {
             new ParallelCommandGroup (
                 AutoBuilder.followPath(PathPlannerPath.fromPathFile("Rstarting2firstRing")),
                 new WaitCommand(1.0),
-                intakeSubsystem.rollerContinuous().withTimeout(1)
-
+                intakeSubsystem.rollerContinuous().withTimeout(1.0),
+                shooterSubsystem.rollersContinuous().withTimeout(1.0)
             ),
             new ParallelCommandGroup (
                 AutoBuilder.followPath(PathPlannerPath.fromPathFile("rightBackRightRing"))
