@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.module.ShooterJoint;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -27,16 +26,13 @@ public class PositionCommand extends Command {
 
     private ShooterSubsystem shooterSubsystem;
     private IntakeSubsystem intakeSubsystem;
-    private ShooterJoint shooterJoint;
     private Position pos;
 
     private int m_ticks = 0;
 
-    public PositionCommand(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem,
-            ShooterJoint shooterJoint, Position pos) {
+    public PositionCommand(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem, Position pos) {
         this.shooterSubsystem = shooterSubsystem;
         this.intakeSubsystem = intakeSubsystem;
-        this.shooterJoint = shooterJoint;
         this.pos = pos;
     }
 
@@ -50,7 +46,7 @@ public class PositionCommand extends Command {
         m_ticks++;
 
         if (pos == Position.SPEAKER) {
-            shooterSubsystem.setShooterPosition(0.0);
+            shooterSubsystem.setPosition(0.0);
         } else if (pos == Position.INTAKE_OUT) {
             intakeSubsystem.setPosition(0.0);
         } else if (pos == Position.INTAKE_IN) {
@@ -59,22 +55,22 @@ public class PositionCommand extends Command {
             if (m_ticks < 15) {
                 intakeSubsystem.setPosition(0.0);
             } else if (m_ticks < 30) {
-                shooterSubsystem.setShooterPosition(0.0);
+                shooterSubsystem.setPosition(0.0);
             }
         } else if (pos == Position.AMP) {
-            shooterJoint.setArmPosition(0.0);
-            shooterSubsystem.setShooterPosition(0.0);
+            shooterJoint.setPosition(0.0);
+            shooterSubsystem.setPosition(0.0);
         } else if (pos == Position.TRAP) {
             if (m_ticks < 30) {
-                shooterJoint.setArmPosition(0.0);
+                shooterSubsystem.setPosition(0.0);
             } else if (m_ticks < 50) {
-                shooterSubsystem.setShooterPosition(0.0);
+                shooterSubsystem.setPosition(0.0);
             }
         } else if (pos == Position.PICKUP) {
             if (m_ticks < 20){
                 shooterJoint.setArmPosition(0.0);
             } else if (m_ticks < 30) {
-                shooterSubsystem.setShooterPosition(0.0);
+                shooterSubsystem.setPosition(0.0);
             }
         }
     }

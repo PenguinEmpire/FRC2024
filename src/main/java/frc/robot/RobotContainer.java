@@ -31,13 +31,13 @@ import frc.robot.commands.autonomous.AutoPaths;
 @SuppressWarnings("unused")
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private DriveSubsystem m_driveSubsystem;
-  private SwerveDriveCommand m_swerveDriveCommand;
+  private DriveSubsystem driveSubsystem;
+  private SwerveDriveCommand swerveDriveCommand;
   private AlignmentCommand alignmentCommand;
-  private LightingSubsystem m_lightingSubsystem;
-  private VisionSubsystem m_visionSubsystem;
-  private IntakeSubsystem m_intakeSubsystem;
-  private ControlInput m_controlInput;
+  private LightingSubsystem lightingSubsystem;
+  private VisionSubsystem visionSubsystem;
+  private IntakeSubsystem intakeSubsystem;
+  private ControlInput controlInput;
   
   public static SendableChooser<Command> autoChoice = new SendableChooser<>();
 
@@ -47,14 +47,13 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    m_controlInput = new ControlInput();
-    m_driveSubsystem = new DriveSubsystem();
-    m_lightingSubsystem = new LightingSubsystem(m_controlInput);
-    m_visionSubsystem = new VisionSubsystem();
-    m_intakeSubsystem = new IntakeSubsystem(9, 12);
-    m_swerveDriveCommand = new SwerveDriveCommand(m_driveSubsystem, m_controlInput);
-  
-    // m_intakeSubsystem = new IntakeSubsystem(11, 12);
+    controlInput = new ControlInput();
+    driveSubsystem = new DriveSubsystem();
+    lightingSubsystem = new LightingSubsystem(controlInput);
+    visionSubsystem = new VisionSubsystem();
+    intakeSubsystem = new IntakeSubsystem(9, 1);
+    swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, controlInput);
+    // shooterSubsystem = new ShooterSubsystem (0, 0, 0)
 
     configureBindings();
   }
@@ -68,8 +67,8 @@ public class RobotContainer {
     // JoystickButton stage = new JoystickButton(m_controlInput.getAccessoryJoystick(), 11);
 
 
-    alignmentCommand = new AlignmentCommand(m_driveSubsystem);
-    JoystickButton alignmentButton  = new JoystickButton(m_controlInput.getLeftJoystick(),5);
+    alignmentCommand = new AlignmentCommand(driveSubsystem);
+    JoystickButton alignmentButton  = new JoystickButton(controlInput.getLeftJoystick(),5);
     alignmentButton.whileTrue(alignmentCommand);
 
     // JoystickButton runRollers = new JoystickButton(m_controlInput.getAccessoryJoystick(), 5);
@@ -77,16 +76,16 @@ public class RobotContainer {
   }
 
   public void autoExit() {
-    m_driveSubsystem.getNavX().setAngleAdjustment(0);
+    driveSubsystem.getNavX().setAngleAdjustment(0);
   }
 
   public void robotInit(){
-    m_driveSubsystem.getNavX().setAngleAdjustment(0);
+    driveSubsystem.getNavX().setAngleAdjustment(0);
   }
   
   public void teleopInit() {
-    m_swerveDriveCommand = new SwerveDriveCommand(m_driveSubsystem, m_controlInput);
-    m_driveSubsystem.setDefaultCommand(m_swerveDriveCommand);
+    swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, controlInput);
+    driveSubsystem.setDefaultCommand(swerveDriveCommand);
   }
 
   /**
