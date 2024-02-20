@@ -27,20 +27,22 @@ public class Joint {
     private double armFF;
     private double armMaxOutput;
     private double armMinOutput;
+    private boolean invertedEncoder;
 
-    public Joint(String name, int sparkID, double P, double I, double D, double FF, double minOutput, double maxOutput) {
-        this.name = ":" + name;
+    public Joint(String nameIn, int sparkID, double P, double I, double D, double FF, double minOutput, double maxOutput, boolean invertEncoder) {
+        this.name = nameIn + ":";
         this.armP = P;
         this.armI = I;
         this.armD = D;
         this.armFF = FF;
         this.armMinOutput = minOutput;
         this.armMaxOutput = maxOutput;
+        this.invertedEncoder = invertEncoder;
         armMotor = new CANSparkMax(sparkID, CANSparkMax.MotorType.kBrushless);
 
         armEncoder =  armMotor.getAbsoluteEncoder(Type.kDutyCycle);
         armEncoder.setPositionConversionFactor(2 * Math.PI);
-        armEncoder.setInverted(true);
+        armEncoder.setInverted(invertEncoder);
         
         armPIDController = armMotor.getPIDController();
         armPIDController.setFeedbackDevice(armEncoder);
@@ -52,7 +54,8 @@ public class Joint {
         SmartDashboard.putNumber(name + "I", armI);
         SmartDashboard.putNumber(name + "D", armD);
         SmartDashboard.putNumber(name + "FF", armFF);
-        SmartDashboard.putNumber(name + "Reference", 0);
+        SmartDashboard.putNumber(name + "Reference", armEncoder.getPosition());
+        SmartDashboard.putBoolean(name + "Inverted", invertedEncoder);
 
         armPIDController.setP(armP);
         armPIDController.setI(armI);
@@ -81,12 +84,17 @@ public class Joint {
             armPIDController.setD(armDValue);
         }
 
-         double armFFValue = SmartDashboard.getNumber("FF", 0);
+        double armFFValue = SmartDashboard.getNumber(name + "FF", 0);
         if (armFFValue != armFF) {
             armPIDController.setFF(armFFValue);
         }
 
-        double armSetRef = SmartDashboard.getNumber(name + "Reference", 0);
+        boolean invertedVal = SmartDashboard.getBoolean(name + "Inverted", invertedEncoder);
+        if(invertedVal != this.invertedEncoder) {
+            armEncoder.setInverted(invertedVal);
+        }
+        
+        double armSetRef = SmartDashboard.getNumber(name + "Reference", armEncoder.getPosition());
         armPIDController.setReference(armSetRef, ControlType.kPosition);
 
     }

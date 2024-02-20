@@ -17,7 +17,7 @@ public class ShooterSubsystem extends SubsystemBase{
 
     private Joint joint;
     public ShooterSubsystem() {
-        // joint = new ShooterJoint("arm", 11, 0);
+        joint = new Joint("shooterarm", 11, 0.7,0,0,0,-0.34,0.34, true);
     }
 
     @Override
