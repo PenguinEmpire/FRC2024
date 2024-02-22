@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.module.Joint;
 
-
 //remove suppressor once done implementing
 @SuppressWarnings("unused")
 public class ShooterSubsystem extends SubsystemBase {
@@ -26,85 +25,78 @@ public class ShooterSubsystem extends SubsystemBase {
     private final DigitalInput infraredSensor;
 
     public ShooterSubsystem(int intakeSparkID, int ouputSparkID, int infraredSensorID) {
-        arm = new Joint("shooterArm", 11, 0.7,0,0,0,-0.34,0.34, true);
-        shooter = new Joint("shooterEnt", 0, 0, 0,0, 0, -0.1, 0.1, false);
+        arm = new Joint("shooterArm", 11, 0.7, 0, 0, 0, -0.34, 0.34, true);
+        shooter = new Joint("shooterEnt", 14, 0, 0, 0, 0, -0.1, 0.1, false);
 
-        // need to change IDs
         intakeMotor = new CANSparkMax(intakeSparkID, CANSparkMax.MotorType.kBrushless);
         outputMotor = new CANSparkMax(ouputSparkID, CANSparkMax.MotorType.kBrushless);
         infraredSensor = new DigitalInput(infraredSensorID);
     }
 
     @Override
-    public void periodic(){
+    public void periodic() {
         arm.periodic();
     }
 
-    public Command stopIntakeRollers(){
+    public Command stopIntakeRollers() {
         double speed = SmartDashboard.getNumber("Intake Speed", 0);
         return Commands.runEnd(
-               () -> {
-               // need to tune and change the value     
-                   if (infraredSensor.get()) {
-                       intakeMotor.set(0);
-                   } else {
-                       intakeMotor.set(speed);
-                   }
-               },
-               () -> intakeMotor.set(0)
-       );}
-   
-       
-       public Command runIntakeRollers() {
-           double speed = SmartDashboard.getNumber("Intake Speed", 0);
-           return Commands.runEnd(
-                   () -> {
-                       intakeMotor.set(speed);
-                   },
-                   () -> {
-                       intakeMotor.set(0);
-                   });
-           
-       }
-   
-       public Command runShooterRollers(boolean reverse) {
-           double speed = SmartDashboard.getNumber("shooterMotor", 0);
-           return Commands.runEnd(
-                   () -> {
-                       intakeMotor.set(-speed);
-                   },
-                   () -> {
-                       intakeMotor.set(speed);
-                   });
-   
-       }
+                () -> {
+                    // need to tune and change the value
+                    if (infraredSensor.get()) {
+                        intakeMotor.set(0);
+                    } else {
+                        intakeMotor.set(speed);
+                    }
+                },
+                () -> intakeMotor.set(0));
+    }
 
-       public void setPosition(double pos) {
-            arm.setPosition(pos);
-       }
+    public Command runIntakeRollers() {
+        double speed = SmartDashboard.getNumber("Intake Speed", 0);
+        return Commands.runEnd(
+                () -> {
+                    intakeMotor.set(speed);
+                },
+                () -> {
+                    intakeMotor.set(0);
+                });
 
-       public void setShooterPosition(double pos) {
-            shooter.setPosition(pos);
-       }
+    }
 
-       // auto
-       public Command rollersContinuous(){
-           double speed = 0.5;
-           return Commands.runEnd(
-               () -> {
-                   intakeMotor.set(speed);
-                   outputMotor.set(speed);
-               },
-               () -> {
-                   intakeMotor.set(0);
-                   outputMotor.set(0);
-               }
-           );
-   
-       }
-   
-       
-   
-   }
+    public Command runShooterRollers() {
+        double speed = SmartDashboard.getNumber("shooterMotor", 0);
+        return Commands.runEnd(
+                () -> {
+                    outputMotor.set(speed);
+                },
+                () -> {
+                    outputMotor.set(0);
+                });
 
+    }
 
+    public void setPosition(double pos) {
+        arm.setPosition(pos);
+    }
+
+    public void setShooterPosition(double pos) {
+        shooter.setPosition(pos);
+    }
+
+    // auto
+    public Command rollersContinuous() {
+        double speed = 0.5;
+        return Commands.runEnd(
+                () -> {
+                    intakeMotor.set(speed);
+                    outputMotor.set(speed);
+                },
+                () -> {
+                    intakeMotor.set(0);
+                    outputMotor.set(0);
+                });
+
+    }
+
+}

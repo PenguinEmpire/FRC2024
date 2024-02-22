@@ -16,7 +16,9 @@ import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LightingSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.commands.AlignmentCommand;
+import frc.robot.commands.PositionCommand;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.commands.autonomous.AutoPaths;
 
@@ -38,6 +40,7 @@ public class RobotContainer {
   private VisionSubsystem visionSubsystem;
   private IntakeSubsystem intakeSubsystem;
   private ControlInput controlInput;
+  private ShooterSubsystem shooterSubsystem;
   
   public static SendableChooser<Command> autoChoice = new SendableChooser<>();
 
@@ -51,20 +54,23 @@ public class RobotContainer {
     driveSubsystem = new DriveSubsystem();
     lightingSubsystem = new LightingSubsystem(controlInput);
     visionSubsystem = new VisionSubsystem();
-    intakeSubsystem = new IntakeSubsystem(9, 1);
+    intakeSubsystem = new IntakeSubsystem(9, 12);
     swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, controlInput);
-    // shooterSubsystem = new ShooterSubsystem (0, 0, 0)
+    // need to change the infraredSensorID
+    shooterSubsystem = new ShooterSubsystem (15, 13, 16);
 
     configureBindings();
   }
 
   private void configureBindings() {
 
-    // JoystickButton amp = new JoystickButton(m_controlInput.getAccessoryJoystick(), 7);
-    // JoystickButton speaker = new JoystickButton(m_controlInput.getAccessoryJoystick(), 8);
-    // JoystickButton sourcepu = new JoystickButton(m_controlInput.getAccessoryJoystick(), 9);
-    // JoystickButton home = new JoystickButton(m_controlInput.getAccessoryJoystick(), 10);
-    // JoystickButton stage = new JoystickButton(m_controlInput.getAccessoryJoystick(), 11);
+    JoystickButton intake_in = new JoystickButton(controlInput.getAccessoryJoystick(), 7);
+    // JoystickButton speaker = new JoystickButton(controlInput.getAccessoryJoystick(), 8);
+    // JoystickButton sourcepu = new JoystickButton(controlInput.getAccessoryJoystick(), 9);
+    // JoystickButton home = new JoystickButton(controlInput.getAccessoryJoystick(), 10);
+    // JoystickButton stage = new JoystickButton(controlInput.getAccessoryJoystick(), 11);
+
+    intake_in.onTrue(new PositionCommand (shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN));
 
 
     alignmentCommand = new AlignmentCommand(driveSubsystem);

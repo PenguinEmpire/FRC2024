@@ -46,31 +46,41 @@ public class PositionCommand extends Command {
         m_ticks++;
 
         if (pos == Position.SPEAKER) {
-            shooterSubsystem.setPosition(0.0);
+            shooterSubsystem.setShooterPosition(0.0);
+
         } else if (pos == Position.INTAKE_OUT) {
-            intakeSubsystem.setPosition(0.0);
+            intakeSubsystem.setPosition(2.188);
+
         } else if (pos == Position.INTAKE_IN) {
             intakeSubsystem.setPosition(0.0);
+
         } else if (pos == Position.GAME_MODE) {
             if (m_ticks < 15) {
                 intakeSubsystem.setPosition(0.0);
+
             } else if (m_ticks < 30) {
-                shooterSubsystem.setPosition(0.0);
+                shooterSubsystem.setShooterPosition(0.0);
+
             }
         } else if (pos == Position.AMP) {
-            shooterJoint.setPosition(0.0);
             shooterSubsystem.setPosition(0.0);
+            shooterSubsystem.setShooterPosition(0.0);
+
         } else if (pos == Position.TRAP) {
             if (m_ticks < 30) {
                 shooterSubsystem.setPosition(0.0);
+
             } else if (m_ticks < 50) {
-                shooterSubsystem.setPosition(0.0);
+                shooterSubsystem.setShooterPosition(0.0);
+
             }
         } else if (pos == Position.PICKUP) {
-            if (m_ticks < 20){
-                shooterJoint.setArmPosition(0.0);
-            } else if (m_ticks < 30) {
+            if (m_ticks < 20) {
                 shooterSubsystem.setPosition(0.0);
+
+            } else if (m_ticks < 30) {
+                shooterSubsystem.setShooterPosition(0.0);
+
             }
         }
     }
