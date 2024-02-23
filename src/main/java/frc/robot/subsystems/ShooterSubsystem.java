@@ -26,7 +26,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public ShooterSubsystem(int intakeSparkID, int ouputSparkID, int infraredSensorID) {
         arm = new Joint("shooterArm", 11, 0.7, 0, 0, 0, -0.34, 0.34, true);
-        shooter = new Joint("shooterEnt", 14, 0, 0, 0, 0, -0.1, 0.1, false);
+        shooter = new Joint("shooterEnt", 20, 0.01, 0, 0, 0, -0.1, 0.1, false);
 
         intakeMotor = new CANSparkMax(intakeSparkID, CANSparkMax.MotorType.kBrushless);
         outputMotor = new CANSparkMax(ouputSparkID, CANSparkMax.MotorType.kBrushless);
@@ -36,6 +36,7 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         arm.periodic();
+        shooter.periodic();
     }
 
     public Command stopIntakeRollers() {

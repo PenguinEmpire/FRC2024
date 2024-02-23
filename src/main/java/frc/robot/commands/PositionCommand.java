@@ -49,10 +49,10 @@ public class PositionCommand extends Command {
             shooterSubsystem.setShooterPosition(0.0);
 
         } else if (pos == Position.INTAKE_OUT) {
-            intakeSubsystem.setPosition(2.188);
+            intakeSubsystem.setPosition(4.12);
 
         } else if (pos == Position.INTAKE_IN) {
-            intakeSubsystem.setPosition(0.0);
+            intakeSubsystem.setPosition(5.25);
 
         } else if (pos == Position.GAME_MODE) {
             if (m_ticks < 15) {

@@ -30,7 +30,7 @@ public class Joint {
     private boolean invertedEncoder;
 
     public Joint(String nameIn, int sparkID, double P, double I, double D, double FF, double minOutput, double maxOutput, boolean invertEncoder) {
-        this.name = nameIn + ":";
+        this.name = nameIn + ": ";
         this.armP = P;
         this.armI = I;
         this.armD = D;
@@ -40,7 +40,7 @@ public class Joint {
         this.invertedEncoder = invertEncoder;
         armMotor = new CANSparkMax(sparkID, CANSparkMax.MotorType.kBrushless);
 
-        armEncoder =  armMotor.getAbsoluteEncoder(Type.kDutyCycle);
+        armEncoder = armMotor.getAbsoluteEncoder(Type.kDutyCycle);
         armEncoder.setPositionConversionFactor(2 * Math.PI);
         armEncoder.setInverted(invertEncoder);
         
