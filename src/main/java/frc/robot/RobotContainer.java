@@ -79,8 +79,11 @@ public class RobotContainer {
     JoystickButton alignmentButton  = new JoystickButton(controlInput.getLeftJoystick(),5);
     alignmentButton.whileTrue(alignmentCommand);
 
-    // JoystickButton runRollers = new JoystickButton(m_controlInput.getAccessoryJoystick(), 5);
-    // runRollers.whileTrue(m_intakeSubsystem.runMotor());
+    JoystickButton runRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 5);
+    runRollers.whileTrue(shooterSubsystem.runIntakeRollers());
+
+    JoystickButton outputRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
+    outputRollers.whileTrue(shooterSubsystem.runShooterRollers());
   }
 
   public void autoExit() {

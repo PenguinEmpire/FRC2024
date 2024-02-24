@@ -38,7 +38,6 @@ public class SwerveDriveCommand extends Command {
     yPID = new PIDController(0.02, 0, 0);
 
     SmartDashboard.putBoolean("Red/Blue Pickup (r: true/: false)", false);
-
   }
 
   @Override

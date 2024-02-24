@@ -46,7 +46,7 @@ public class PositionCommand extends Command {
         m_ticks++;
 
         if (pos == Position.SPEAKER) {
-            shooterSubsystem.setShooterPosition(0.0);
+            shooterSubsystem.setShooterPosition(0.68);
 
         } else if (pos == Position.INTAKE_OUT) {
             intakeSubsystem.setPosition(4.12);
