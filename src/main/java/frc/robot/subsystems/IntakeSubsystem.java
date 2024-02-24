@@ -30,9 +30,13 @@ public class IntakeSubsystem extends SubsystemBase{
         intake.setPosition(pos);
    }
 
+    // for manual control, create a sequential command group that first runs the intake rollers for a
+    // certain amount of time, and then run the output rollers for a certain amount of time, and then
+    // bind that method to one button
+
     public Command runRollers() {
         double speed = SmartDashboard.getNumber("Intake Speed", 0);
-        return Commands.runEnd (
+        return Commands.startEnd (
             () -> {
                 rollerMotor.set(speed);
                 },

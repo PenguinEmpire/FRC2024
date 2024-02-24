@@ -39,6 +39,10 @@ public class ShooterSubsystem extends SubsystemBase {
         shooter.periodic();
     }
 
+    // for manual control, create a sequential command group that first runs the intake rollers for a
+    // certain amount of time, and then run the output rollers for a certain amount of time, and then
+    // bind that method to one button (runEnd should be used)
+
     public Command stopIntakeRollers() {
         double speed = SmartDashboard.getNumber("Intake Speed", 0);
         return Commands.runEnd(
@@ -55,7 +59,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public Command runIntakeRollers() {
         double speed = SmartDashboard.getNumber("Intake Speed", 0);
-        return Commands.runEnd(
+        return Commands.startEnd(
                 () -> {
                     intakeMotor.set(speed);
                 },
@@ -67,7 +71,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public Command runShooterRollers() {
         double speed = SmartDashboard.getNumber("shooterMotor", 0);
-        return Commands.runEnd(
+        return Commands.startEnd(
                 () -> {
                     outputMotor.set(speed);
                 },
