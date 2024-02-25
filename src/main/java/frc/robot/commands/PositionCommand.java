@@ -21,7 +21,8 @@ public class PositionCommand extends Command {
         GAME_MODE,
         AMP,
         TRAP,
-        PICKUP
+        PICKUP,
+        ARM_GROUND_PICKUP
     };
 
     private ShooterSubsystem shooterSubsystem;
@@ -47,7 +48,7 @@ public class PositionCommand extends Command {
 
         if (pos == Position.SPEAKER) {
             shooterSubsystem.setShooterPosition(0.68);
-
+            shooterSubsystem.setArmPosition(0.01);
         } else if (pos == Position.INTAKE_OUT) {
             intakeSubsystem.setPosition(4.12);
 
@@ -66,6 +67,9 @@ public class PositionCommand extends Command {
             shooterSubsystem.setArmPosition(0.0);
             shooterSubsystem.setShooterPosition(0.0);
 
+        } else if (pos == Position.ARM_GROUND_PICKUP) {
+            shooterSubsystem.setArmPosition(6.07);
+            shooterSubsystem.setShooterPosition(0.7);
         }
     }
 

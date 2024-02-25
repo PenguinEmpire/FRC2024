@@ -90,8 +90,8 @@ public class RobotContainer {
     JoystickButton feederRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 5);
     feederRollers.whileTrue(shooterSubsystem.runFeeder());
 
-    JoystickButton outputRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
-    outputRollers.whileTrue(shooterSubsystem.runShooter());
+    JoystickButton intakeRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
+    intakeRollers.whileTrue(intakeSubsystem.runRollers());
 
     // JoystickButton intakeRollers = new
     // JoystickButton(controlInput.getAccessoryJoystick(), 4);
@@ -103,11 +103,10 @@ public class RobotContainer {
     JoystickButton intakeMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 3);
     intakeMotion.onTrue(new ParallelCommandGroup(
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
-        new SequentialCommandGroup(new WaitCommand(1), intakeSubsystem.runRollers().withTimeout(2),
-            shooterSubsystem.runFeeder())));
-
-
-
+        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
+        new SequentialCommandGroup(new WaitCommand(1),
+            new ParallelCommandGroup(intakeSubsystem.runRollers().withTimeout(2),
+                shooterSubsystem.runFeeder().withTimeout(2)))));
   }
 
   public void autoExit() {
