@@ -1,11 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -15,8 +11,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.module.Joint;
 
-//remove suppressor once done implementing
-@SuppressWarnings("unused")
 public class ShooterSubsystem extends SubsystemBase {
 
     private final CANSparkMax feederMotor;
@@ -29,15 +23,13 @@ public class ShooterSubsystem extends SubsystemBase {
     private double feederSpeed;
     private double shooterSpeed;
 
-    private final DigitalInput infraredSensor;
 
-    public ShooterSubsystem(int feederID, int shooterID, int infraredSensorID) {
+    public ShooterSubsystem(int feederID, int shooterID) {
         arm = new Joint("shooterArm", 11, 0.7, 0, 0, 0, -0.30, 0.30, true);
         shooter = new Joint("shooterEnt", 20, 0.95, 0.0001, 0, 0.001, -0.27, 0.27, false);
 
         feederMotor = new CANSparkMax(feederID, CANSparkMax.MotorType.kBrushless);
         shooterMotor = new CANSparkMax(shooterID, CANSparkMax.MotorType.kBrushless);
-        infraredSensor = new DigitalInput(infraredSensorID);
 
         SmartDashboard.putNumber("Shooter Speed", 0.75);
         SmartDashboard.putNumber("Feeder Speed", 1);
@@ -51,14 +43,24 @@ public class ShooterSubsystem extends SubsystemBase {
         shooter.periodic();
     }
 
-    public Command runIntakeRollers() {
+
+    //these methods are for legacy setting the intake speed, do not use these if possible
+    // public Command setIntakeState(boolean enabled) {
+    //     return Commands.runOnce(() -> feederMotor.set(enabled ? feederSpeed : 0));
+    // }
+
+    //   public Command setShooterState(boolean enabled) {
+    //     return Commands.runOnce(() -> feederMotor.set(enabled ? shooterSpeed : 0));
+    // }
+
+    public Command runIntake() {
         return Commands.runEnd(
                 () -> feederMotor.set(feederSpeed),
                 () -> feederMotor.set(0)
             );
     }
 
-    public Command runShooterRollers() {
+    public Command runShooter() {
         return Commands.runEnd(
                 () -> shooterMotor.set(shooterSpeed),
                 () -> shooterMotor.set(0)
@@ -66,12 +68,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
     }
 
-    public Command runBothRollers() {
+    public Command runShooterRoutine() {
         return new ParallelCommandGroup(
-            runShooterRollers().withTimeout(5),
+            runShooter().withTimeout(5),
             new SequentialCommandGroup(
                 new WaitCommand(2.0),
-                runIntakeRollers().withTimeout(2)
+                runIntake().withTimeout(2)
             )
         );
     }

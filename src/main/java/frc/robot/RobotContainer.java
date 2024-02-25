@@ -59,8 +59,7 @@ public class RobotContainer {
     visionSubsystem = new VisionSubsystem();
     intakeSubsystem = new IntakeSubsystem(9, 12);
     swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, visionSubsystem, controlInput);
-    // need to change the infraredSensorID
-    shooterSubsystem = new ShooterSubsystem(15, 13, 16);
+    shooterSubsystem = new ShooterSubsystem(15, 13);
 
     configureBindings();
   }
@@ -87,10 +86,10 @@ public class RobotContainer {
     alignmentButton.whileTrue(alignmentCommand);
 
     JoystickButton runRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 5);
-    runRollers.whileTrue(shooterSubsystem.runIntakeRollers());
+    runRollers.whileTrue(shooterSubsystem.runIntake());
 
     JoystickButton outputRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
-    outputRollers.whileTrue(shooterSubsystem.runShooterRollers());
+    outputRollers.whileTrue(shooterSubsystem.runShooter());
 
     JoystickButton intakeRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 4);
     intakeRollers.whileTrue(intakeSubsystem.runRollersCommand());
