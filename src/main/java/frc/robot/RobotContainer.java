@@ -4,8 +4,11 @@
 
 package frc.robot;
 
+import java.util.function.BooleanSupplier;
+
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -49,6 +52,8 @@ public class RobotContainer {
   public static SendableChooser<Command> autoChoice = new SendableChooser<>();
 
   private String test = "test";
+  private final DigitalInput sensor;
+  private final BooleanSupplier sensorBooleanSupplier;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -62,6 +67,9 @@ public class RobotContainer {
     intakeSubsystem = new IntakeSubsystem(9, 12);
     swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, visionSubsystem, controlInput);
     shooterSubsystem = new ShooterSubsystem(15, 13);
+
+    sensor = new DigitalInput(0);
+    sensorBooleanSupplier = () -> sensor.get();
 
     configureBindings();
   }
@@ -98,7 +106,7 @@ public class RobotContainer {
     // intakeRollers.whileTrue(intakeSubsystem.runRollers());
 
     JoystickButton shooterMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 4);
-    shooterMotion.onTrue(shooterSubsystem.runShooterRoutine());
+    shooterMotion.onTrue(new SequentialCommandGroup(new PositionCommand(shooterSubsystem, intakeSubsystem,  PositionCommand.Position.SPEAKER), shooterSubsystem.runShooterRoutine()));
 
     JoystickButton intakeMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 3);
     intakeMotion.onTrue(new ParallelCommandGroup(
@@ -106,7 +114,7 @@ public class RobotContainer {
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
         new SequentialCommandGroup(new WaitCommand(1),
             new ParallelCommandGroup(intakeSubsystem.runRollers().withTimeout(2),
-                shooterSubsystem.runFeeder().withTimeout(2)))));
+                shooterSubsystem.runFeeder().until(sensorBooleanSupplier)))));
   }
 
   public void autoExit() {

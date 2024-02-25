@@ -60,6 +60,13 @@ public class ShooterSubsystem extends SubsystemBase {
             );
     }
 
+    public Command stopFeeder() {
+        return Commands.runEnd(
+                () -> feederMotor.set(0),
+                () -> feederMotor.set(0)
+            );
+    }
+
     public Command runShooter() {
         return Commands.runEnd(
                 () -> shooterMotor.set(shooterSpeed),
