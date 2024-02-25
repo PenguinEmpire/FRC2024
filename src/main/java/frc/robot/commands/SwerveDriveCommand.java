@@ -7,16 +7,18 @@ package frc.robot.commands;
 import frc.robot.ControlInput;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class SwerveDriveCommand extends Command {
   private DriveSubsystem subsystem;
+  private VisionSubsystem visionSubsystem;
   private PIDController autoAlignPID;
   private ControlInput controlInput;
-  private PIDController xPID;
-  private PIDController yPID;
+  private PIDController forwardPID;
+  private PIDController strafePID;
 
   // false = red;
   // true = blue;
@@ -34,8 +36,8 @@ public class SwerveDriveCommand extends Command {
     setName("SwerveDrive");
 
     autoAlignPID = new PIDController(0.0154, 0, 0);
-    xPID = new PIDController(0.02, 0, 0);
-    yPID = new PIDController(0.02, 0, 0);
+    forwardPID = new PIDController(0.02, 0, 0);
+    strafePID = new PIDController(0.02, 0, 0);
 
     SmartDashboard.putBoolean("Red/Blue Pickup (r: true/: false)", false);
   }
@@ -43,8 +45,8 @@ public class SwerveDriveCommand extends Command {
   @Override
   public void initialize() {
     autoAlignPID.enableContinuousInput(0, 360);
-    xPID.reset();
-    yPID.reset();
+    forwardPID.reset();
+    strafePID.reset();
   }
 
   @Override
@@ -64,12 +66,23 @@ public class SwerveDriveCommand extends Command {
     rotation = Math.copySign(Math.pow(rotation, pow), rotation);
     rotation = linearDeadband(rotation);
 
-
     // need to add pipeline filtering again
     SmartDashboard.putNumber("Gyro Yaw", subsystem.getNavX().getYaw());
     SmartDashboard.putNumber("Gyro Angle", subsystem.getNavX().getAngle());
     SmartDashboard.putNumber("Gyro Heading", subsystem.getHeading());
-    subsystem.drive(forward, strafe, clamp(rotation * 3.2, -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed),
+
+    // if(getInput().getLeftJoystick().getTrigger()) {
+    // double distanceFromTarget = visionSubsystem.getYaw();
+    // final double forwardPIDVal = forwardPID.calculate()
+    // }
+    // else {
+    // subsystem.drive(forward, strafe, clamp(rotation * 3.2,
+    // -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed),
+    // true, false);
+    // }
+
+    subsystem.drive(forward, strafe,
+        clamp(rotation * 3.2, -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed),
         true, false);
 
   }
