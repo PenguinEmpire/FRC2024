@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class SwerveDriveCommand extends Command {
   private DriveSubsystem subsystem;
   private VisionSubsystem visionSubsystem;
-  private PIDController autoAlignPID;
+  private PIDController rotationPID;
   private ControlInput controlInput;
   private PIDController forwardPID;
   private PIDController strafePID;
@@ -28,23 +28,26 @@ public class SwerveDriveCommand extends Command {
   // pipeline 1: blue
 
   // todo: add vision and lighting
-  public SwerveDriveCommand(DriveSubsystem subsystem, ControlInput controlInput) {
+  public SwerveDriveCommand(DriveSubsystem subsystem, VisionSubsystem vs,ControlInput controlInput) {
     this.subsystem = subsystem;
+    this.visionSubsystem = vs;
     this.controlInput = controlInput;
+    
 
     addRequirements(subsystem);
     setName("SwerveDrive");
 
-    autoAlignPID = new PIDController(0.0154, 0, 0);
-    forwardPID = new PIDController(0.02, 0, 0);
-    strafePID = new PIDController(0.02, 0, 0);
+    rotationPID = new PIDController(0, 0, 0);
+    forwardPID = new PIDController(0, 0, 0);
+    strafePID = new PIDController(0, 0, 0);
 
     SmartDashboard.putBoolean("Red/Blue Pickup (r: true/: false)", false);
   }
 
   @Override
   public void initialize() {
-    autoAlignPID.enableContinuousInput(0, 360);
+    rotationPID.enableContinuousInput(0, 360);
+    rotationPID.reset();
     forwardPID.reset();
     strafePID.reset();
   }
@@ -71,19 +74,19 @@ public class SwerveDriveCommand extends Command {
     SmartDashboard.putNumber("Gyro Angle", subsystem.getNavX().getAngle());
     SmartDashboard.putNumber("Gyro Heading", subsystem.getHeading());
 
-    // if(getInput().getLeftJoystick().getTrigger()) {
-    // double distanceFromTarget = visionSubsystem.getYaw();
-    // final double forwardPIDVal = forwardPID.calculate()
-    // }
-    // else {
-    // subsystem.drive(forward, strafe, clamp(rotation * 3.2,
-    // -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed),
-    // true, false);
-    // }
+    if (getInput().getLeftJoystick().getTrigger() && visionSubsystem.hasTargets()) {
+      double distanceHorizFromTarget = visionSubsystem.getX();
+      final double strafePIDVal = clamp(strafePID.calculate(distanceHorizFromTarget), -0.5, 0.5);
 
-    subsystem.drive(forward, strafe,
-        clamp(rotation * 3.2, -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed),
-        true, false);
+      // if there is an error, set this to true
+      boolean pidInvert = false;
+      subsystem.drive(forward, pidInvert ? -1 : 1 * strafePIDVal, 0, false, false);
+      
+    } else {
+      subsystem.drive(forward, strafe, clamp(rotation * 3.2,
+          -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed),
+          true, false);
+    }  
 
   }
 

@@ -100,7 +100,7 @@ public class ShooterSubsystem extends SubsystemBase {
         );
     }
 
-    public void setPosition(double pos) {
+    public void setArmPosition(double pos) {
         arm.setPosition(pos);
     }
 

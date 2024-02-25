@@ -63,25 +63,9 @@ public class PositionCommand extends Command {
 
             }
         } else if (pos == Position.AMP) {
-            shooterSubsystem.setPosition(0.0);
+            shooterSubsystem.setArmPosition(0.0);
             shooterSubsystem.setShooterPosition(0.0);
 
-        } else if (pos == Position.TRAP) {
-            if (m_ticks < 30) {
-                shooterSubsystem.setPosition(0.0);
-
-            } else if (m_ticks < 50) {
-                shooterSubsystem.setShooterPosition(0.0);
-
-            }
-        } else if (pos == Position.PICKUP) {
-            if (m_ticks < 20) {
-                shooterSubsystem.setPosition(0.0);
-
-            } else if (m_ticks < 30) {
-                shooterSubsystem.setShooterPosition(0.0);
-
-            }
         }
     }
 

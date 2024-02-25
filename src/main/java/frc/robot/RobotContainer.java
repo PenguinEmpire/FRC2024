@@ -58,7 +58,7 @@ public class RobotContainer {
     lightingSubsystem = new LightingSubsystem(controlInput);
     visionSubsystem = new VisionSubsystem();
     intakeSubsystem = new IntakeSubsystem(9, 12);
-    swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, controlInput);
+    swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, visionSubsystem, controlInput);
     // need to change the infraredSensorID
     shooterSubsystem = new ShooterSubsystem(15, 13, 16);
 
@@ -86,24 +86,25 @@ public class RobotContainer {
     JoystickButton alignmentButton = new JoystickButton(controlInput.getLeftJoystick(), 5);
     alignmentButton.whileTrue(alignmentCommand);
 
-    JoystickButton runRollers = new
-    JoystickButton(controlInput.getAccessoryJoystick(), 5);
+    JoystickButton runRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 5);
     runRollers.whileTrue(shooterSubsystem.runIntakeRollers());
 
-    JoystickButton outputRollers = new
-    JoystickButton(controlInput.getAccessoryJoystick(), 6);
+    JoystickButton outputRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
     outputRollers.whileTrue(shooterSubsystem.runShooterRollers());
 
     JoystickButton intakeRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 4);
     intakeRollers.whileTrue(intakeSubsystem.runRollers());
 
-    // JoystickButton intakeMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 3);
+    // JoystickButton intakeMotion = new
+    // JoystickButton(controlInput.getAccessoryJoystick(), 3);
     // intakeMotion.onTrue(new ParallelCommandGroup(
-    //     new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT), new WaitCommand(1),
-    //     shooterSubsystem.runIntakeRollers().withTimeout(5),
-    //     intakeSubsystem.runRollers().withTimeout(2)));
+    // new PositionCommand(shooterSubsystem, intakeSubsystem,
+    // PositionCommand.Position.INTAKE_OUT), new WaitCommand(1),
+    // shooterSubsystem.runIntakeRollers().withTimeout(5),
+    // intakeSubsystem.runRollers().withTimeout(2)));
 
-    // JoystickButton shooterMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 4);
+    // JoystickButton shooterMotion = new
+    // JoystickButton(controlInput.getAccessoryJoystick(), 4);
     // shooterMotion.onTrue(shooterSubsystem.runBothRollers());
   }
 
@@ -116,7 +117,7 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
-    swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, controlInput);
+    swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, visionSubsystem, controlInput);
     driveSubsystem.setDefaultCommand(swerveDriveCommand);
   }
 

@@ -17,11 +17,11 @@ public class VisionSubsystem extends SubsystemBase{
     public void periodic() {
     }
 
-    public double getYaw() {
+    public double getX() {
         return table.getEntry("tx").getDouble(0.0);
     }
 
-    public double getPitch() {
+    public double getY() {
         return table.getEntry("ty").getDouble(0.0);
     }
 
