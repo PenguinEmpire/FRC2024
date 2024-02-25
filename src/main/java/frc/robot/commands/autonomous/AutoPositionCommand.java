@@ -1,7 +1,5 @@
 package frc.robot.commands.autonomous;
 
-import javax.sound.midi.Sequence;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -17,7 +15,7 @@ public class AutoPositionCommand extends Command {
         AMP_POS
     }
 
-    public AutoPositionCommand(ShooterSubsystem shooterSubysstem, IntakeSubsystem intakeSubsystem) {
+    public AutoPositionCommand(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem) {
         this.shooterSubsystem = shooterSubsystem;
         this.intakeSubsystem = intakeSubsystem;
     }
@@ -29,7 +27,7 @@ public class AutoPositionCommand extends Command {
         } 
         
         // else if (sequence == Sequence.AMP_POS) {
-        //     shooterSubsystem.setShooterPosition(0.0);
+            // shooterSubsystem.setShooterPosition(0.0);
         // }
     }
 }

@@ -19,9 +19,9 @@ import frc.robot.module.Joint;
 @SuppressWarnings("unused")
 public class ShooterSubsystem extends SubsystemBase {
 
-    private final CANSparkMax intakeMotor;
+    private final CANSparkMax feederMotor;
     // used for output rollers
-    private final CANSparkMax outputMotor;
+    private final CANSparkMax shooterMotor;
 
     private Joint arm;
     private Joint shooter;
@@ -31,12 +31,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private final DigitalInput infraredSensor;
 
-    public ShooterSubsystem(int intakeSparkID, int ouputSparkID, int infraredSensorID) {
+    public ShooterSubsystem(int feederID, int shooterID, int infraredSensorID) {
         arm = new Joint("shooterArm", 11, 0.7, 0, 0, 0, -0.30, 0.30, true);
         shooter = new Joint("shooterEnt", 20, 0.95, 0.0001, 0, 0.001, -0.27, 0.27, false);
 
-        intakeMotor = new CANSparkMax(intakeSparkID, CANSparkMax.MotorType.kBrushless);
-        outputMotor = new CANSparkMax(ouputSparkID, CANSparkMax.MotorType.kBrushless);
+        feederMotor = new CANSparkMax(feederID, CANSparkMax.MotorType.kBrushless);
+        shooterMotor = new CANSparkMax(shooterID, CANSparkMax.MotorType.kBrushless);
         infraredSensor = new DigitalInput(infraredSensorID);
 
         SmartDashboard.putNumber("Shooter Speed", 0.75);
@@ -51,45 +51,18 @@ public class ShooterSubsystem extends SubsystemBase {
         shooter.periodic();
     }
 
-    // for manual control, create a sequential command group that first runs the
-    // intake rollers for a
-    // certain amount of time, and then run the output rollers for a certain amount
-    // of time, and then
-    // bind that method to one button (runEnd should be used)
-
-    // public Command stopIntakeRollers() {
-    //     double speed = SmartDashboard.getNumber("Feeder Speed", 0);
-    //     return Commands.runEnd(
-    //             () -> {
-    //                 // need to tune and change the value
-    //                 if (infraredSensor.get()) {
-    //                     intakeMotor.set(0);
-    //                 } else {
-    //                     intakeMotor.set(speed);
-    //                 }
-    //             },
-    //             () -> intakeMotor.set(0));
-    // }
-
     public Command runIntakeRollers() {
-        return Commands.startEnd(
-                () -> {
-                    intakeMotor.set(feederSpeed);
-                },
-                () -> {
-                    intakeMotor.set(0);
-                });
-
+        return Commands.runEnd(
+                () -> feederMotor.set(feederSpeed),
+                () -> feederMotor.set(0)
+            );
     }
 
     public Command runShooterRollers() {
-        return Commands.startEnd(
-                () -> {
-                    outputMotor.set(shooterSpeed);
-                },
-                () -> {
-                    outputMotor.set(0);
-                });
+        return Commands.runEnd(
+                () -> shooterMotor.set(shooterSpeed),
+                () -> shooterMotor.set(0)
+            );
 
     }
 
@@ -110,20 +83,4 @@ public class ShooterSubsystem extends SubsystemBase {
     public void setShooterPosition(double pos) {
         shooter.setPosition(pos);
     }
-
-    // auto
-    public Command rollersContinuous() {
-        double speed = 0.5;
-        return Commands.runEnd(
-                () -> {
-                    intakeMotor.set(speed);
-                    outputMotor.set(speed);
-                },
-                () -> {
-                    intakeMotor.set(0);
-                    outputMotor.set(0);
-                });
-
-    }
-
 }
