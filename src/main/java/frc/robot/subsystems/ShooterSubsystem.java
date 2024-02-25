@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.module.Joint;
@@ -95,8 +96,10 @@ public class ShooterSubsystem extends SubsystemBase {
     public Command runBothRollers() {
         return new ParallelCommandGroup(
             runShooterRollers().withTimeout(5),
-            new WaitCommand(2.0),
-            runIntakeRollers().withTimeout(2)
+            new SequentialCommandGroup(
+                new WaitCommand(2.0),
+                runIntakeRollers().withTimeout(2)
+            )
         );
     }
 
