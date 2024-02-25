@@ -54,6 +54,7 @@ public class RobotContainer {
   private String test = "test";
   private final DigitalInput sensor;
   private final BooleanSupplier sensorBooleanSupplier;
+  private final BooleanSupplier negSensorBooleanSupplier;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -69,7 +70,8 @@ public class RobotContainer {
     shooterSubsystem = new ShooterSubsystem(15, 13);
 
     sensor = new DigitalInput(0);
-    sensorBooleanSupplier = () -> sensor.get();
+    sensorBooleanSupplier = () -> !sensor.get();
+    negSensorBooleanSupplier = () -> sensor.get();
 
     configureBindings();
   }
@@ -77,7 +79,8 @@ public class RobotContainer {
   private void configureBindings() {
 
     JoystickButton intake_out = new JoystickButton(controlInput.getAccessoryJoystick(), 7);
-    JoystickButton intake_in = new JoystickButton(controlInput.getAccessoryJoystick(), 8);
+    // JoystickButton intake_in = new
+    // JoystickButton(controlInput.getAccessoryJoystick(), 8);
 
     // JoystickButton speaker = new
     // JoystickButton(controlInput.getAccessoryJoystick(), 8);
@@ -89,32 +92,51 @@ public class RobotContainer {
     // JoystickButton(controlInput.getAccessoryJoystick(), 11);
 
     intake_out.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT));
-    intake_in.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN));
+    // intake_in.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem,
+    // PositionCommand.Position.INTAKE_IN));
 
     alignmentCommand = new AlignmentCommand(driveSubsystem);
     JoystickButton alignmentButton = new JoystickButton(controlInput.getLeftJoystick(), 5);
     alignmentButton.whileTrue(alignmentCommand);
 
-    JoystickButton feederRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 5);
+    JoystickButton intakeRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 7);
+    intakeRollers.whileTrue(intakeSubsystem.runRollers());
+
+    JoystickButton feederRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 8);
     feederRollers.whileTrue(shooterSubsystem.runFeeder());
 
-    JoystickButton intakeRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
-    intakeRollers.whileTrue(intakeSubsystem.runRollers());
+    JoystickButton reverseFeederRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 9);
+    reverseFeederRollers.whileTrue(shooterSubsystem.reverseFeeder());
+
+    JoystickButton shooterRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 10);
+    shooterRollers.whileTrue(shooterSubsystem.runShooter());
+
 
     // JoystickButton intakeRollers = new
     // JoystickButton(controlInput.getAccessoryJoystick(), 4);
     // intakeRollers.whileTrue(intakeSubsystem.runRollers());
 
-    JoystickButton shooterMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 4);
-    shooterMotion.onTrue(new SequentialCommandGroup(new PositionCommand(shooterSubsystem, intakeSubsystem,  PositionCommand.Position.SPEAKER), shooterSubsystem.runShooterRoutine()));
-
     JoystickButton intakeMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 3);
     intakeMotion.onTrue(new ParallelCommandGroup(
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
-        new SequentialCommandGroup(new WaitCommand(1),
-            new ParallelCommandGroup(intakeSubsystem.runRollers().withTimeout(2),
-                shooterSubsystem.runFeeder().until(sensorBooleanSupplier)))));
+        new SequentialCommandGroup(new WaitCommand(0.1),
+            new ParallelCommandGroup(
+                shooterSubsystem.runFeeder().until(sensorBooleanSupplier),
+                intakeSubsystem.runRollers().until(sensorBooleanSupplier)),
+            shooterSubsystem.runFeeder().withTimeout(0.25),
+            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_PICKUP),
+            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE),
+            new WaitCommand(1),
+            shooterSubsystem.reverseFeeder().until(sensorBooleanSupplier),
+            shooterSubsystem.reverseFeeder().until(negSensorBooleanSupplier))));
+
+    JoystickButton shooterMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 5);
+    shooterMotion.onTrue(new SequentialCommandGroup(
+        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_SHOOT),
+        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SPEAKER),
+        shooterSubsystem.runShooterRoutine()));
+
   }
 
   public void autoExit() {
