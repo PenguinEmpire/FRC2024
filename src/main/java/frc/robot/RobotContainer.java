@@ -86,13 +86,13 @@ public class RobotContainer {
     alignmentButton.whileTrue(alignmentCommand);
 
     JoystickButton runRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 5);
-    runRollers.whileTrue(shooterSubsystem.runIntake());
+    runRollers.whileTrue(shooterSubsystem.runFeeder());
 
     JoystickButton outputRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
     outputRollers.whileTrue(shooterSubsystem.runShooter());
 
     JoystickButton intakeRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 4);
-    intakeRollers.whileTrue(intakeSubsystem.runRollersCommand());
+    intakeRollers.whileTrue(intakeSubsystem.runRollers());
 
     // JoystickButton intakeMotion = new
     // JoystickButton(controlInput.getAccessoryJoystick(), 3);

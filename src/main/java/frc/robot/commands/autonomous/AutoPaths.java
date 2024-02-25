@@ -16,7 +16,7 @@ public class AutoPaths {
             new SequentialCommandGroup (
                 AutoBuilder.followPath(PathPlannerPath.fromPathFile("Rstarting2firstRing")),
                 new WaitCommand(1.0),
-                intakeSubsystem.runRollersCommand().withTimeout(1.0),
+                intakeSubsystem.runRollers().withTimeout(1.0),
                 shooterSubsystem.runShooterRoutine().withTimeout(1.0)
             ),
             new ParallelCommandGroup (

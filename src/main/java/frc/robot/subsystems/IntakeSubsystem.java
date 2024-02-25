@@ -30,7 +30,7 @@ public class IntakeSubsystem extends SubsystemBase{
         intake.setPosition(pos);
    }
 
-    public Command runRollersCommand() {
+    public Command runRollers() {
         return Commands.runEnd(
             () -> rollerMotor.set(intakeSpeed),
             () -> rollerMotor.set(0)

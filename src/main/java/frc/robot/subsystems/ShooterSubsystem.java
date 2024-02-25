@@ -53,7 +53,7 @@ public class ShooterSubsystem extends SubsystemBase {
     //     return Commands.runOnce(() -> feederMotor.set(enabled ? shooterSpeed : 0));
     // }
 
-    public Command runIntake() {
+    public Command runFeeder() {
         return Commands.runEnd(
                 () -> feederMotor.set(feederSpeed),
                 () -> feederMotor.set(0)
@@ -73,7 +73,7 @@ public class ShooterSubsystem extends SubsystemBase {
             runShooter().withTimeout(5),
             new SequentialCommandGroup(
                 new WaitCommand(2.0),
-                runIntake().withTimeout(2)
+                runFeeder().withTimeout(2)
             )
         );
     }
