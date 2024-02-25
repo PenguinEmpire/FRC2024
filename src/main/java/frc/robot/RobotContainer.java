@@ -99,7 +99,7 @@ public class RobotContainer {
 
     // JoystickButton intakeMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 3);
     // intakeMotion.onTrue(new ParallelCommandGroup(
-    //     new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
+    //     new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT), new WaitCommand(1),
     //     shooterSubsystem.runIntakeRollers().withTimeout(5),
     //     intakeSubsystem.runRollers().withTimeout(2)));
 

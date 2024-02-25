@@ -51,6 +51,7 @@ public class VisionSubsystem extends SubsystemBase{
     public void setPipeline(int index) {
         table.getEntry("pipeline").setNumber(index);
     }
+      
 
     public void Periodic() {
     }
