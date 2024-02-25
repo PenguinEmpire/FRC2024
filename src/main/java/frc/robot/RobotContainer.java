@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
@@ -91,20 +93,21 @@ public class RobotContainer {
     JoystickButton outputRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
     outputRollers.whileTrue(shooterSubsystem.runShooter());
 
-    JoystickButton intakeRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 4);
-    intakeRollers.whileTrue(intakeSubsystem.runRollers());
-
-    // JoystickButton intakeMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 3);
-    // intakeMotion.onTrue(new SequentialCommandGroup(new PositionCommand(shooterSubsystem, intakeSubsystem,
-    // PositionCommand.Position.INTAKE_OUT), new WaitCommand(1),
-    // shooterSubsystem.runIntakeRollers().withTimeout(5),
-    // intakeSubsystem.runRollers().withTimeout(2)));
-
-    // JoystickButton shooterMotion = new
+    // JoystickButton intakeRollers = new
     // JoystickButton(controlInput.getAccessoryJoystick(), 4);
-    // shooterMotion.onTrue(shooterSubsystem.runBothRollers());
+    // intakeRollers.whileTrue(intakeSubsystem.runRollers());
 
-    // new ParallelCommandGroup (new PositionCommand(shooter...), new SequentialCommandGroup (new WaitCommand(1), intakeSubsystem.runRollers().withTimeout(2), shooterSubsystem.runFeeder()))
+    JoystickButton shooterMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 4);
+    shooterMotion.onTrue(shooterSubsystem.runShooterRoutine());
+
+    JoystickButton intakeMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 3);
+    intakeMotion.onTrue(new ParallelCommandGroup(
+        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
+        new SequentialCommandGroup(new WaitCommand(1), intakeSubsystem.runRollers().withTimeout(2),
+            shooterSubsystem.runFeeder())));
+
+
+
   }
 
   public void autoExit() {

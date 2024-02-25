@@ -78,7 +78,7 @@ public class SwerveDriveCommand extends Command {
       double distanceHorizFromTarget = visionSubsystem.getX();
       final double strafePIDVal = clamp(strafePID.calculate(distanceHorizFromTarget), -0.5, 0.5);
 
-      // if there is an error, set this to true
+      // if the targets exist and the distance is accurate but the robot still goes away from the target, invert this.
       boolean pidInvert = false;
       subsystem.drive(forward, pidInvert ? -1 : 1 * strafePIDVal, 0, false, false);
       
