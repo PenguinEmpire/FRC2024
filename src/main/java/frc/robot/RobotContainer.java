@@ -57,9 +57,6 @@ public class RobotContainer {
   private static final String Bcenter4P = "Blue - Center 4 Piece";
 
   private String test = "test";
-  private final DigitalInput sensor;
-  private final BooleanSupplier sensorBooleanSupplier;
-  private final BooleanSupplier negSensorBooleanSupplier;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -75,10 +72,6 @@ public class RobotContainer {
     shooterSubsystem = new ShooterSubsystem(15, 13);
     autoPaths = new AutoPaths();
     autoMotions = new AutoMotions(shooterSubsystem, intakeSubsystem);
-
-    sensor = new DigitalInput(0);
-    sensorBooleanSupplier = () -> !sensor.get();
-    negSensorBooleanSupplier = () -> sensor.get();
 
     m_chooser.addOption("Blue - Center 4 Pieces", Bcenter4P);
     SmartDashboard.putData("Auto Choicese", m_chooser);
@@ -110,14 +103,14 @@ public class RobotContainer {
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
         new SequentialCommandGroup(new WaitCommand(0.1),
             new ParallelCommandGroup(
-                shooterSubsystem.runFeeder().until(sensorBooleanSupplier),
-                intakeSubsystem.runRollers().until(sensorBooleanSupplier)),
+                shooterSubsystem.runFeeder().until(shooterSubsystem::hasRing),
+                intakeSubsystem.runRollers().until(shooterSubsystem::hasRing),
             shooterSubsystem.runFeeder().withTimeout(0.25),
             new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_PICKUP),
             new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE),
             new WaitCommand(1),
-            shooterSubsystem.reverseFeeder().until(sensorBooleanSupplier),
-            shooterSubsystem.reverseFeeder().until(negSensorBooleanSupplier))));
+            shooterSubsystem.reverseFeeder().until(shooterSubsystem::hasRing),
+            shooterSubsystem.reverseFeeder().onlyWhile(shooterSubsystem::hasRing)))));
 
     JoystickButton shooterMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 5);
     shooterMotion.onTrue(new SequentialCommandGroup(
