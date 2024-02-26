@@ -11,13 +11,11 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class AutoPaths {
-    public static Command BlueRightBack(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem){
+    public static Command BlueRightBack(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem, AutoMotions autoMotions){
         return new SequentialCommandGroup(
             new SequentialCommandGroup (
                 AutoBuilder.followPath(PathPlannerPath.fromPathFile("Rstarting2firstRing")),
-                new WaitCommand(1.0),
-                intakeSubsystem.runRollers().withTimeout(1.0),
-                shooterSubsystem.runShooterRoutine().withTimeout(1.0)
+                autoMotions.intakeAutoMotion()
             ),
             new ParallelCommandGroup (
                 AutoBuilder.followPath(PathPlannerPath.fromPathFile("rightBackRightRing"))

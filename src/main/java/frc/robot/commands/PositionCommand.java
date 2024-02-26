@@ -6,9 +6,12 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class PositionCommand extends Command {
 
-    // speaker: puts the shooter in speaker pos
-    // intake_out: assumes the arms are out and moves the intake to pickup
-    // intake_in: folds intake into frame
+    // SPEAKER: puts the shooter in speaker pos
+    // INTAKE_OUT: assumes the arms are out and moves the intake to pickup
+    // INTAKE_IN_PICKUP: folds intake into frame for ring to fit
+    // INTAKE_IN_SHOOT: moves intake out a bit for ring to shoot
+    // BASE: resets arms and shooter (0's them)
+    // ARM_GROUND_PICKUP: lifts the arm and shooter a bit for smooth intake
     // game_mode: intake moves to ground and shooter lifts up
     // amp: arms move up and shooter moves down
     // trap: arms push and shooter moves and deposits
@@ -77,7 +80,7 @@ public class PositionCommand extends Command {
     }
 
     public boolean isFinished() {
-        return (pos == Position.TRAP || pos == Position.GAME_MODE) ? m_ticks > 0
+        return (pos == Position.TRAP || pos == Position.GAME_MODE) ? m_ticks > 85
                 : true;
     }
 

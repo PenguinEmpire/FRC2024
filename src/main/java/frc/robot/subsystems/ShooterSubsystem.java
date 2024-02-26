@@ -20,7 +20,8 @@ public class ShooterSubsystem extends SubsystemBase {
     private Joint arm;
     private Joint shooter;
 
-    private double feederSpeed;
+    private double intakeFeederSpeed;
+    private double shooterFeederSpeed;
     private double shooterSpeed;
 
 
@@ -32,12 +33,14 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotor = new CANSparkMax(shooterID, CANSparkMax.MotorType.kBrushless);
 
         SmartDashboard.putNumber("Shooter Speed", 1);
-        SmartDashboard.putNumber("Feeder Speed", 0.5);
+        SmartDashboard.putNumber("Intake Feeder Speed", 0.5);
+        SmartDashboard.putNumber("Shooter Feeder Speed", 0);
     }
 
     @Override
     public void periodic() {
-        feederSpeed = SmartDashboard.getNumber("Feeder Speed", 0.5);
+        intakeFeederSpeed = SmartDashboard.getNumber("Intake Feeder Speed", 0.5);
+        shooterFeederSpeed = SmartDashboard.getNumber("Shooter Feeder Speed", 0);
         shooterSpeed = SmartDashboard.getNumber("Shooter Speed", 1);
         arm.periodic();
         shooter.periodic();
@@ -55,14 +58,14 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public Command runFeeder() {
         return Commands.runEnd(
-                () -> feederMotor.set(feederSpeed),
+                () -> feederMotor.set(intakeFeederSpeed),
                 () -> feederMotor.set(0)
             );
     }
 
     public Command reverseFeeder() {
         return Commands.runEnd(
-                () -> feederMotor.set(-feederSpeed),
+                () -> feederMotor.set(-intakeFeederSpeed),
                 () -> feederMotor.set(0)
             );
     }
