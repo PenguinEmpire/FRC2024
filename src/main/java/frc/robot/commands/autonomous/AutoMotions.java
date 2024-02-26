@@ -35,15 +35,8 @@ public class AutoMotions extends Command {
         negSensorBooleanSupplier = () -> sensor.get();
     }
 
-    @Override
     public void execute() {
-        if (sequence == Sequence.INTAKE_IN_POS) {
-            intakeSubsystem.setPosition(0.0);
-        }
-
-        // else if (sequence == Sequence.AMP_POS) {
-        // shooterSubsystem.setShooterPosition(0.0);
-        // }
+    
     }
 
     public Command intakeAutoMotion() {
@@ -61,5 +54,29 @@ public class AutoMotions extends Command {
                         new WaitCommand(1),
                         shooterSubsystem.reverseFeeder().until(sensorBooleanSupplier),
                         shooterSubsystem.reverseFeeder().until(negSensorBooleanSupplier)));
+    }
+
+    // used to shoot from middle
+    public Command shootingMiddleAutoMotion() {
+        return new SequentialCommandGroup(
+                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_SHOOT),
+                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SPEAKER),
+                shooterSubsystem.runShooterRoutine());
+    }
+
+    // used to shoot from against the speaker
+    public Command shootingClosestAutoMotion() {
+        return new SequentialCommandGroup(
+            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
+            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SPEAKER),
+            shooterSubsystem.runShooterRoutine());
+    }
+
+    // used to shoot from far out
+    public Command shootingFarAutoMotion() {
+        return new SequentialCommandGroup(
+            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
+            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.FAR_SHOOTING),
+            shooterSubsystem.runShooterRoutine());
     }
 }

@@ -11,15 +11,36 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class AutoPaths {
-    public static Command BlueRightBack(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem, AutoMotions autoMotions){
+    public static Command blueCenterFourPiece(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem,
+            AutoMotions autoMotions) {
         return new SequentialCommandGroup(
-            new SequentialCommandGroup (
-                AutoBuilder.followPath(PathPlannerPath.fromPathFile("Rstarting2firstRing")),
-                autoMotions.intakeAutoMotion()
-            ),
-            new ParallelCommandGroup (
-                AutoBuilder.followPath(PathPlannerPath.fromPathFile("rightBackRightRing"))
-            )
+                autoMotions.shootingClosestAutoMotion(),
+                new ParallelCommandGroup(
+                        AutoBuilder.followPath(PathPlannerPath.fromPathFile("speakerToLeft")),
+                        autoMotions.intakeAutoMotion()),
+                autoMotions.shootingMiddleAutoMotion(),
+                new ParallelCommandGroup(
+                        AutoBuilder.followPath(PathPlannerPath.fromPathFile("leftToMiddle")),
+                        autoMotions.intakeAutoMotion()),
+                autoMotions.shootingMiddleAutoMotion(),
+                new ParallelCommandGroup(
+                        AutoBuilder.followPath(PathPlannerPath.fromPathFile("middleToRight")),
+                        autoMotions.intakeAutoMotion()),
+                autoMotions.shootingMiddleAutoMotion()
+
+        );
+    }
+
+    public static Command blueAmpFourPiece(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem,
+            AutoMotions autoMotions) {
+        return new SequentialCommandGroup(
+                AutoBuilder.followPath(PathPlannerPath.fromPathFile("wallToSpeaker")),
+                autoMotions.shootingClosestAutoMotion(),
+                new ParallelCommandGroup(
+                        autoMotions.intakeAutoMotion(),
+                        AutoBuilder.followPath(PathPlannerPath.fromPathFile("rightSpeakertoRight"))),
+                autoMotions.shootingMiddleAutoMotion()
+
         );
     }
 }

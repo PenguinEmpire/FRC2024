@@ -12,6 +12,8 @@ public class PositionCommand extends Command {
     // INTAKE_IN_SHOOT: moves intake out a bit for ring to shoot
     // BASE: resets arms and shooter (0's them)
     // ARM_GROUND_PICKUP: lifts the arm and shooter a bit for smooth intake
+    // FAR_SHOOTING: (used in auto) lifts arms and shooter to be able to shoot from far
+    // CLOSE_SHOOTING: (used in auto) does the same thing as above but positions for a bit closer
     // game_mode: intake moves to ground and shooter lifts up
     // amp: arms move up and shooter moves down
     // trap: arms push and shooter moves and deposits
@@ -26,6 +28,8 @@ public class PositionCommand extends Command {
         BASE,
         TRAP,
         PICKUP,
+        FAR_SHOOTING,
+        CLOSE_SHOOTING,
         ARM_GROUND_PICKUP,
 
     };
@@ -76,6 +80,10 @@ public class PositionCommand extends Command {
             shooterSubsystem.setShooterPosition(0.95);
         } else if (pos == Position.INTAKE_IN_SHOOT){
             intakeSubsystem.setPosition(5.23);
+        } else if (pos == Position.FAR_SHOOTING) {
+            intakeSubsystem.setPosition(0.0);
+        } else if (pos == Position.CLOSE_SHOOTING) {
+            intakeSubsystem.setPosition(0.0);
         }
     }
 

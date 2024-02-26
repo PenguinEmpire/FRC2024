@@ -26,6 +26,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.commands.AlignmentCommand;
 import frc.robot.commands.PositionCommand;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.commands.autonomous.AutoMotions;
 import frc.robot.commands.autonomous.AutoPaths;
 
 /**
@@ -48,8 +49,12 @@ public class RobotContainer {
   private IntakeSubsystem intakeSubsystem;
   private ControlInput controlInput;
   private ShooterSubsystem shooterSubsystem;
+  private AutoPaths autoPaths;
+  private AutoMotions autoMotions;
 
-  public static SendableChooser<Command> autoChoice = new SendableChooser<>();
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private String m_autoSelected;
+  private static final String Bcenter4P = "Blue - Center 4 Piece";
 
   private String test = "test";
   private final DigitalInput sensor;
@@ -68,10 +73,16 @@ public class RobotContainer {
     intakeSubsystem = new IntakeSubsystem(9, 12);
     swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, visionSubsystem, controlInput);
     shooterSubsystem = new ShooterSubsystem(15, 13);
+    autoPaths = new AutoPaths();
+    autoMotions = new AutoMotions(shooterSubsystem, intakeSubsystem);
 
     sensor = new DigitalInput(0);
     sensorBooleanSupplier = () -> !sensor.get();
     negSensorBooleanSupplier = () -> sensor.get();
+
+    m_chooser.addOption("Blue - Center 4 Pieces", Bcenter4P);
+    SmartDashboard.putData("Auto Choicese", m_chooser);
+
 
     configureBindings();
   }
@@ -158,7 +169,12 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
+    m_autoSelected = m_chooser.getSelected();
+    if (m_autoSelected == Bcenter4P) {
+      return autoPaths.blueCenterFourPiece(intakeSubsystem, shooterSubsystem, autoMotions);
+    } else {
+      return null;
+    }
 
   }
 }

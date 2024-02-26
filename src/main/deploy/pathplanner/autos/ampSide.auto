@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.5,
+      "y": 7.33
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "wallToSpeaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "rightSpeakertoRight"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "blueAutoPaths",
+  "choreoAuto": false
+}
