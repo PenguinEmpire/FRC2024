@@ -88,24 +88,6 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-
-    JoystickButton intake_out = new JoystickButton(controlInput.getAccessoryJoystick(), 7);
-    // JoystickButton intake_in = new
-    // JoystickButton(controlInput.getAccessoryJoystick(), 8);
-
-    // JoystickButton speaker = new
-    // JoystickButton(controlInput.getAccessoryJoystick(), 8);
-    // JoystickButton sourcepu = new
-    // JoystickButton(controlInput.getAccessoryJoystick(), 9);
-    // JoystickButton home = new JoystickButton(controlInput.getAccessoryJoystick(),
-    // 10);
-    // JoystickButton stage = new
-    // JoystickButton(controlInput.getAccessoryJoystick(), 11);
-
-    intake_out.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT));
-    // intake_in.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem,
-    // PositionCommand.Position.INTAKE_IN));
-
     alignmentCommand = new AlignmentCommand(driveSubsystem);
     JoystickButton alignmentButton = new JoystickButton(controlInput.getLeftJoystick(), 5);
     alignmentButton.whileTrue(alignmentCommand);
@@ -121,11 +103,6 @@ public class RobotContainer {
 
     JoystickButton shooterRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 10);
     shooterRollers.whileTrue(shooterSubsystem.runShooter());
-
-
-    // JoystickButton intakeRollers = new
-    // JoystickButton(controlInput.getAccessoryJoystick(), 4);
-    // intakeRollers.whileTrue(intakeSubsystem.runRollers());
 
     JoystickButton intakeMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 3);
     intakeMotion.onTrue(new ParallelCommandGroup(
