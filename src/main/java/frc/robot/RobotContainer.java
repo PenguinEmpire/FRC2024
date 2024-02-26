@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.SwerveDriveCommand;
+import frc.robot.commands.PositionCommand.Position;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LightingSubsystem;
@@ -28,6 +29,7 @@ import frc.robot.commands.PositionCommand;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.commands.autonomous.AutoMotions;
 import frc.robot.commands.autonomous.AutoPaths;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -49,8 +51,8 @@ public class RobotContainer {
   private IntakeSubsystem intakeSubsystem;
   private ControlInput controlInput;
   private ShooterSubsystem shooterSubsystem;
-  private AutoPaths autoPaths;
-  private AutoMotions autoMotions;
+  // private AutoPaths autoPaths;
+  // private AutoMotions autoMotions;
 
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private String m_autoSelected;
@@ -73,15 +75,15 @@ public class RobotContainer {
     intakeSubsystem = new IntakeSubsystem(9, 12);
     swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, visionSubsystem, controlInput);
     shooterSubsystem = new ShooterSubsystem(15, 13);
-    autoPaths = new AutoPaths();
-    autoMotions = new AutoMotions(shooterSubsystem, intakeSubsystem);
+    // autoPaths = new AutoPaths();
+    // autoMotions = new AutoMotions(shooterSubsystem, intakeSubsystem);
 
     sensor = new DigitalInput(0);
     sensorBooleanSupplier = () -> !sensor.get();
     negSensorBooleanSupplier = () -> sensor.get();
 
     m_chooser.addOption("Blue - Center 4 Pieces", Bcenter4P);
-    SmartDashboard.putData("Auto Choicese", m_chooser);
+    SmartDashboard.putData("Auto Choices", m_chooser);
 
 
     configureBindings();
@@ -103,6 +105,9 @@ public class RobotContainer {
 
     JoystickButton shooterRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 10);
     shooterRollers.whileTrue(shooterSubsystem.runShooter());
+
+    JoystickButton intakeOut = new JoystickButton(controlInput.getAccessoryJoystick(), 12);
+    intakeOut.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT));
 
     JoystickButton intakeMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 3);
     intakeMotion.onTrue(new ParallelCommandGroup(
@@ -147,11 +152,11 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     m_autoSelected = m_chooser.getSelected();
-    if (m_autoSelected == Bcenter4P) {
-      return autoPaths.blueCenterFourPiece(intakeSubsystem, shooterSubsystem, autoMotions);
-    } else {
+    // if (m_autoSelected == Bcenter4P) {
+    //   return autoPaths.blueCenterFourPiece(intakeSubsystem, shooterSubsystem, autoMotions);
+    // } else {
       return null;
-    }
+    
 
   }
 }

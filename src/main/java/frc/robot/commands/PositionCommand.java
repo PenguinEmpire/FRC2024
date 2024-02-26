@@ -59,7 +59,6 @@ public class PositionCommand extends Command {
             shooterSubsystem.setShooterPosition(0.87);
         } else if (pos == Position.INTAKE_OUT) {
             intakeSubsystem.setPosition(4.12);
-
         } else if (pos == Position.INTAKE_IN_PICKUP) {
             intakeSubsystem.setPosition(5.87);
 
