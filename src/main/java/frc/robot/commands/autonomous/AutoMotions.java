@@ -53,16 +53,16 @@ public class AutoMotions extends Command {
     public Command shootingMiddleAutoMotion() {
         return new SequentialCommandGroup(
                 new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_SHOOT),
-                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SPEAKER),
-                shooterSubsystem.runShooterRoutine());
+                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
+                shooterSubsystem.runFarShooterRoutine());
     }
 
     // used to shoot from against the speaker
     public Command shootingClosestAutoMotion() {
         return new SequentialCommandGroup(
                 new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
-                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SPEAKER),
-                shooterSubsystem.runShooterRoutine());
+                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
+                shooterSubsystem.runCloseShooterRoutine());
     }
 
     // used to shoot from far out
@@ -70,6 +70,6 @@ public class AutoMotions extends Command {
         return new SequentialCommandGroup(
                 new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
                 new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.FAR_SHOOTING),
-                shooterSubsystem.runShooterRoutine());
+                shooterSubsystem.runFarShooterRoutine());
     }
 }
