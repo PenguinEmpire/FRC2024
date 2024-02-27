@@ -41,9 +41,7 @@ public class SwerveDriveCommand extends Command {
     forwardPID = new PIDController(0.02, 0, 0);
     strafePID = new PIDController(0.02, 0, 0);
 
-    SmartDashboard.putBoolean("Red/Blue Pickup (r: true/: false)", true);
-    
-    
+    SmartDashboard.putBoolean("Blue/Red Pickup (r: true/b: false)", false);
   }
 
   @Override
@@ -72,24 +70,23 @@ public class SwerveDriveCommand extends Command {
     rotation = linearDeadband(rotation);
 
     // need to add pipeline filtering again
-    if(SmartDashboard.getBoolean("Blue/Red Pickup (r: true/: false)",false)) {
+
+    if (SmartDashboard.getBoolean("Blue/Red Pickup (r: true/b: false)", false)) {
       visionSubsystem.setPipeline(1);
     } else {
-    visionSubsystem.setPipeline(0);
+      visionSubsystem.setPipeline(0);
     }
-      
-
     SmartDashboard.putNumber("Gyro Yaw", subsystem.getNavX().getYaw());
     SmartDashboard.putNumber("Gyro Angle", subsystem.getNavX().getAngle());
     SmartDashboard.putNumber("Gyro Heading", subsystem.getHeading());
-    
+
     if (getInput().getLeftJoystick().getTrigger() && visionSubsystem.hasTargets()) {
       double distanceHorizFromTarget = visionSubsystem.getX();
       final double strafePIDVal = clamp(strafePID.calculate(distanceHorizFromTarget), -0.5, 0.5);
 
       // if the targets exist and the distance is accurate but the robot still goes away from the target, invert this.
-      boolean pidInvert = false;
-      subsystem.drive(forward, pidInvert ? -1 : 1 * strafePIDVal, 0, true, false);
+      boolean pidInvert = true;
+      subsystem.drive(forward, (pidInvert ? -1 : 1) * strafePIDVal, 0, false, false);
       
     } else {
       subsystem.drive(forward, strafe, clamp(rotation * 3.2,
