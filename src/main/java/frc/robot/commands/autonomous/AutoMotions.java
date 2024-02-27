@@ -14,13 +14,8 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class AutoMotions extends Command {
     private ShooterSubsystem shooterSubsystem;
     private IntakeSubsystem intakeSubsystem;
-
     private Sequence sequence;
-
-    private final DigitalInput sensor;
-    private final BooleanSupplier sensorBooleanSupplier;
-    private final BooleanSupplier negSensorBooleanSupplier;
-
+  
     private enum Sequence {
         INTAKE_IN_POS,
         AMP_POS
@@ -29,10 +24,6 @@ public class AutoMotions extends Command {
     public AutoMotions(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem) {
         this.shooterSubsystem = shooterSubsystem;
         this.intakeSubsystem = intakeSubsystem;
-
-        sensor = new DigitalInput(0);
-        sensorBooleanSupplier = () -> !sensor.get();
-        negSensorBooleanSupplier = () -> sensor.get();
     }
 
     public void execute() {
@@ -45,15 +36,15 @@ public class AutoMotions extends Command {
                 new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
                 new SequentialCommandGroup(new WaitCommand(0.1),
                         new ParallelCommandGroup(
-                                shooterSubsystem.runFeeder().until(sensorBooleanSupplier),
-                                intakeSubsystem.runRollers().until(sensorBooleanSupplier)),
+                                shooterSubsystem.runFeeder().until(shooterSubsystem::hasRing),
+                                intakeSubsystem.runRollers().until(shooterSubsystem::hasRing)),
                         shooterSubsystem.runFeeder().withTimeout(0.25),
                         new PositionCommand(shooterSubsystem, intakeSubsystem,
                                 PositionCommand.Position.INTAKE_IN_PICKUP),
                         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE),
                         new WaitCommand(1),
-                        shooterSubsystem.reverseFeeder().until(sensorBooleanSupplier),
-                        shooterSubsystem.reverseFeeder().until(negSensorBooleanSupplier)));
+                        shooterSubsystem.reverseFeeder().until(shooterSubsystem::hasRing),
+                        shooterSubsystem.reverseFeeder().onlyWhile(shooterSubsystem::hasRing)));
     }
 
     // used to shoot from middle
