@@ -101,16 +101,20 @@ public class RobotContainer {
     intakeMotion.onTrue(new ParallelCommandGroup(
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
-        new SequentialCommandGroup(new WaitCommand(0.1),
-            new ParallelCommandGroup(
-                shooterSubsystem.runFeeder().until(shooterSubsystem::hasRing),
-                intakeSubsystem.runRollers().until(shooterSubsystem::hasRing),
-            shooterSubsystem.runFeeder().withTimeout(0.25),
-            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_PICKUP),
-            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE),
-            new WaitCommand(1),
-            shooterSubsystem.reverseFeeder().until(shooterSubsystem::hasRing),
-            shooterSubsystem.reverseFeeder().onlyWhile(shooterSubsystem::hasRing)))));
+        new SequentialCommandGroup(
+          new WaitCommand(0.1),
+          new ParallelCommandGroup(
+              shooterSubsystem.runFeeder().until(shooterSubsystem::hasRing),
+              intakeSubsystem.runRollers().until(shooterSubsystem::hasRing),
+              shooterSubsystem.runFeeder().withTimeout(0.25),
+              new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_PICKUP),
+              new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE),
+              new WaitCommand(1),
+              shooterSubsystem.reverseFeeder().until(shooterSubsystem::hasRing),
+              shooterSubsystem.reverseFeeder().onlyWhile(shooterSubsystem::hasRing)
+          )
+        )
+    ));
 
     JoystickButton shooterMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 5);
     shooterMotion.onTrue(new SequentialCommandGroup(
