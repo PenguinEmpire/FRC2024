@@ -59,7 +59,7 @@ public class PositionCommand extends Command {
         m_ticks++;
 
         if (pos == Position.SAFE_OR_SPEAKER) {
-            // if safe mode is true (toggle is down), shooter should move to that pos, else 
+            // if safe mode is true (toggle is down), shooter should move to that pos, else
             // should go to speaker pos
             shooterSubsystem.setShooterPosition(shooterSubsystem.isSafeMode() ? 0.0 : 1.03);
         } else if (pos == Position.INTAKE_OUT) {
@@ -89,7 +89,14 @@ public class PositionCommand extends Command {
         } else if (pos == Position.CLOSE_SHOOTING) {
             intakeSubsystem.setPosition(0.0);
         } else if (pos == Position.OUT_OF_AUTO_POSITION) {
-            shooterSubsystem.setShooterPosition(0.0);
+            if (m_ticks < 15) {
+                shooterSubsystem.setArmPosition(5.6);
+            } else if (m_ticks < 60) {
+                intakeSubsystem.setPosition(4.2);
+            } else if (m_ticks < 90) {
+                shooterSubsystem.setArmPosition(0);
+                shooterSubsystem.setShooterPosition(1.03);
+            }
         } else if (pos == Position.SAFE_SPOT) {
             shooterSubsystem.setShooterPosition(0.0);
         }
