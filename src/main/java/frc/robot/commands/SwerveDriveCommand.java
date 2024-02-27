@@ -42,9 +42,15 @@ public class SwerveDriveCommand extends Command {
     strafePID = new PIDController(0.02, 0, 0);
 
     SmartDashboard.putBoolean("Red/Blue Pickup (r: true/: false)", false);
+    
+    
   }
 
   @Override
+
+ 
+
+  
   public void initialize() {
     rotationPID.enableContinuousInput(0, 360);
     rotationPID.reset();
@@ -70,10 +76,17 @@ public class SwerveDriveCommand extends Command {
     rotation = linearDeadband(rotation);
 
     // need to add pipeline filtering again
+    if(SmartDashboard.getBoolean("Red/Blue Pickup (r: true/: false)",true)) {
+      visionSubsystem.setPipeline(1);
+    } else {
+    visionSubsystem.setPipeline(0);
+    }
+      
+
     SmartDashboard.putNumber("Gyro Yaw", subsystem.getNavX().getYaw());
     SmartDashboard.putNumber("Gyro Angle", subsystem.getNavX().getAngle());
     SmartDashboard.putNumber("Gyro Heading", subsystem.getHeading());
-
+    
     if (getInput().getLeftJoystick().getTrigger() && visionSubsystem.hasTargets()) {
       double distanceHorizFromTarget = visionSubsystem.getX();
       final double strafePIDVal = clamp(strafePID.calculate(distanceHorizFromTarget), -0.5, 0.5);
