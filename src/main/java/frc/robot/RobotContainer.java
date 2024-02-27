@@ -110,8 +110,8 @@ public class RobotContainer {
         new SequentialCommandGroup(
             new WaitCommand(1.5),
             new ParallelCommandGroup(
-                shooterSubsystem.runFeeder().withTimeout(2),
-                intakeSubsystem.runRollers().withTimeout(2)),
+                shooterSubsystem.runFeeder().until(shooterSubsystem::hasRing),
+                intakeSubsystem.runRollers().until(shooterSubsystem::hasRing)),
             shooterSubsystem.runFeeder().withTimeout(0.25),
             new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_PICKUP),
             new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE),
@@ -127,7 +127,7 @@ public class RobotContainer {
 
   }
 
-  //until(shooterSubsystem::hasRing)
+  // might have to reverse the the .until and .onlyWhile for the reverse
 
   public void autoExit() {
     driveSubsystem.getNavX().setAngleAdjustment(0);

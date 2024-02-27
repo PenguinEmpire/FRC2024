@@ -15,7 +15,7 @@ public class AutoMotions extends Command {
     private ShooterSubsystem shooterSubsystem;
     private IntakeSubsystem intakeSubsystem;
     private Sequence sequence;
-  
+
     private enum Sequence {
         INTAKE_IN_POS,
         AMP_POS
@@ -27,17 +27,18 @@ public class AutoMotions extends Command {
     }
 
     public void execute() {
-    
+
     }
 
     public Command intakeAutoMotion() {
         return new ParallelCommandGroup(
                 new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
                 new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
-                new SequentialCommandGroup(new WaitCommand(0.1),
+                new SequentialCommandGroup(
+                        new WaitCommand(1.5),
                         new ParallelCommandGroup(
-                                shooterSubsystem.runFeeder().until(shooterSubsystem::hasRing),
-                                intakeSubsystem.runRollers().until(shooterSubsystem::hasRing)),
+                                shooterSubsystem.runFeeder().onlyWhile(shooterSubsystem::hasRing),
+                                intakeSubsystem.runRollers().onlyWhile(shooterSubsystem::hasRing)),
                         shooterSubsystem.runFeeder().withTimeout(0.25),
                         new PositionCommand(shooterSubsystem, intakeSubsystem,
                                 PositionCommand.Position.INTAKE_IN_PICKUP),
@@ -45,6 +46,7 @@ public class AutoMotions extends Command {
                         new WaitCommand(1),
                         shooterSubsystem.reverseFeeder().until(shooterSubsystem::hasRing),
                         shooterSubsystem.reverseFeeder().onlyWhile(shooterSubsystem::hasRing)));
+
     }
 
     // used to shoot from middle
@@ -58,16 +60,16 @@ public class AutoMotions extends Command {
     // used to shoot from against the speaker
     public Command shootingClosestAutoMotion() {
         return new SequentialCommandGroup(
-            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
-            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SPEAKER),
-            shooterSubsystem.runShooterRoutine());
+                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
+                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SPEAKER),
+                shooterSubsystem.runShooterRoutine());
     }
 
     // used to shoot from far out
     public Command shootingFarAutoMotion() {
         return new SequentialCommandGroup(
-            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
-            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.FAR_SHOOTING),
-            shooterSubsystem.runShooterRoutine());
+                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
+                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.FAR_SHOOTING),
+                shooterSubsystem.runShooterRoutine());
     }
 }
