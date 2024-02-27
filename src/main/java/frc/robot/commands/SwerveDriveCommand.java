@@ -41,16 +41,12 @@ public class SwerveDriveCommand extends Command {
     forwardPID = new PIDController(0.02, 0, 0);
     strafePID = new PIDController(0.02, 0, 0);
 
-    SmartDashboard.putBoolean("Red/Blue Pickup (r: true/: false)", false);
+    SmartDashboard.putBoolean("Red/Blue Pickup (r: true/: false)", true);
     
     
   }
 
   @Override
-
- 
-
-  
   public void initialize() {
     rotationPID.enableContinuousInput(0, 360);
     rotationPID.reset();
@@ -76,7 +72,7 @@ public class SwerveDriveCommand extends Command {
     rotation = linearDeadband(rotation);
 
     // need to add pipeline filtering again
-    if(SmartDashboard.getBoolean("Red/Blue Pickup (r: true/: false)",true)) {
+    if(SmartDashboard.getBoolean("Blue/Red Pickup (r: true/: false)",false)) {
       visionSubsystem.setPipeline(1);
     } else {
     visionSubsystem.setPipeline(0);
