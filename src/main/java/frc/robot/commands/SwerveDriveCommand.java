@@ -38,8 +38,8 @@ public class SwerveDriveCommand extends Command {
     setName("SwerveDrive");
 
     rotationPID = new PIDController(0, 0, 0);
-    forwardPID = new PIDController(0, 0, 0);
-    strafePID = new PIDController(0, 0, 0);
+    forwardPID = new PIDController(0.02, 0, 0);
+    strafePID = new PIDController(0.02, 0, 0);
 
     SmartDashboard.putBoolean("Red/Blue Pickup (r: true/: false)", false);
   }
@@ -80,7 +80,7 @@ public class SwerveDriveCommand extends Command {
 
       // if the targets exist and the distance is accurate but the robot still goes away from the target, invert this.
       boolean pidInvert = false;
-      subsystem.drive(forward, pidInvert ? -1 : 1 * strafePIDVal, 0, false, false);
+      subsystem.drive(forward, pidInvert ? -1 : 1 * strafePIDVal, 0, true, false);
       
     } else {
       subsystem.drive(forward, strafe, clamp(rotation * 3.2,

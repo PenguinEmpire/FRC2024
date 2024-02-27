@@ -24,14 +24,14 @@ public class PositionCommand extends Command {
         INTAKE_OUT,
         INTAKE_IN_PICKUP,
         INTAKE_IN_SHOOT,
-        GAME_MODE,
+        START_POSITION,
         BASE,
         TRAP,
         PICKUP,
         FAR_SHOOTING,
         CLOSE_SHOOTING,
         ARM_GROUND_PICKUP,
-
+        OUT_OF_AUTO_POSITION
     };
 
     private ShooterSubsystem shooterSubsystem;
@@ -62,13 +62,13 @@ public class PositionCommand extends Command {
         } else if (pos == Position.INTAKE_IN_PICKUP) {
             intakeSubsystem.setPosition(5.87);
 
-        } else if (pos == Position.GAME_MODE) {
+        } else if (pos == Position.START_POSITION) {
             if (m_ticks < 15) {
-                intakeSubsystem.setPosition(0.0);
-
-            } else if (m_ticks < 30) {
-                shooterSubsystem.setShooterPosition(0.0);
-
+                shooterSubsystem.setArmPosition(5.6);
+            } else if (m_ticks < 60) {
+                intakeSubsystem.setPosition(6.27);
+            } else if (m_ticks < 90) {
+                shooterSubsystem.setArmPosition(5.91);
             }
         } else if (pos == Position.BASE) {
             shooterSubsystem.setArmPosition(0.0);
@@ -83,11 +83,13 @@ public class PositionCommand extends Command {
             intakeSubsystem.setPosition(0.0);
         } else if (pos == Position.CLOSE_SHOOTING) {
             intakeSubsystem.setPosition(0.0);
+        } else if (pos == Position.OUT_OF_AUTO_POSITION) {
+            
         }
     }
 
     public boolean isFinished() {
-        return (pos == Position.TRAP || pos == Position.GAME_MODE) ? m_ticks > 85
+        return (pos == Position.TRAP || pos == Position.START_POSITION) ? m_ticks > 85
                 : true;
     }
 
