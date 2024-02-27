@@ -30,7 +30,6 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.commands.autonomous.AutoMotions;
 import frc.robot.commands.autonomous.AutoPaths;
 
-
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a
@@ -78,7 +77,6 @@ public class RobotContainer {
     m_chooser.addOption("Blue - Center 4 Pieces", Bcenter4P);
     SmartDashboard.putData("Auto Choices", m_chooser);
 
-
     configureBindings();
   }
 
@@ -110,19 +108,16 @@ public class RobotContainer {
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
         new SequentialCommandGroup(
-          new WaitCommand(0.1),
-          new ParallelCommandGroup(
-              shooterSubsystem.runFeeder().until(shooterSubsystem::hasRing),
-              intakeSubsystem.runRollers().until(shooterSubsystem::hasRing),
-              shooterSubsystem.runFeeder().withTimeout(0.25),
-              new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_PICKUP),
-              new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE),
-              new WaitCommand(1),
-              shooterSubsystem.reverseFeeder().until(shooterSubsystem::hasRing),
-              shooterSubsystem.reverseFeeder().onlyWhile(shooterSubsystem::hasRing)
-          )
-        )
-    ));
+            new WaitCommand(1.5),
+            new ParallelCommandGroup(
+                shooterSubsystem.runFeeder().withTimeout(2),
+                intakeSubsystem.runRollers().withTimeout(2)),
+            shooterSubsystem.runFeeder().withTimeout(0.25),
+            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_PICKUP),
+            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE),
+            new WaitCommand(1),
+            shooterSubsystem.reverseFeeder().until(shooterSubsystem::hasRing),
+            shooterSubsystem.reverseFeeder().onlyWhile(shooterSubsystem::hasRing))));
 
     JoystickButton shooterMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 5);
     shooterMotion.onTrue(new SequentialCommandGroup(
@@ -131,6 +126,8 @@ public class RobotContainer {
         shooterSubsystem.runShooterRoutine()));
 
   }
+
+  //until(shooterSubsystem::hasRing)
 
   public void autoExit() {
     driveSubsystem.getNavX().setAngleAdjustment(0);
@@ -153,10 +150,10 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     m_autoSelected = m_chooser.getSelected();
     // if (m_autoSelected == Bcenter4P) {
-    //   return autoPaths.blueCenterFourPiece(intakeSubsystem, shooterSubsystem, autoMotions);
+    // return autoPaths.blueCenterFourPiece(intakeSubsystem, shooterSubsystem,
+    // autoMotions);
     // } else {
-      return null;
-    
+    return null;
 
   }
 }
