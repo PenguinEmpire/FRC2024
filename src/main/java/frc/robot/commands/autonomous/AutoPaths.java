@@ -36,12 +36,21 @@ public class AutoPaths {
     public static Command blueAmpFourPiece(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem,
             AutoMotions autoMotions) {
         return new SequentialCommandGroup(
+                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.OUT_OF_AUTO_POSITION),
                 AutoBuilder.followPath(PathPlannerPath.fromPathFile("wallToSpeaker")),
                 autoMotions.shootingClosestAutoMotion(),
                 new ParallelCommandGroup(
                         autoMotions.intakeAutoMotion(),
                         AutoBuilder.followPath(PathPlannerPath.fromPathFile("rightSpeakertoRight"))),
-                autoMotions.shootingMiddleAutoMotion()
+                autoMotions.shootingMiddleAutoMotion(),
+                new ParallelCommandGroup(
+                    AutoBuilder.followPath(PathPlannerPath.fromPathFile("rightToBackRight")),
+                    new SequentialCommandGroup(
+                        new WaitCommand (1.5),
+                        autoMotions.intakeAutoMotion()
+                    )   
+                )
+
 
         );
     }

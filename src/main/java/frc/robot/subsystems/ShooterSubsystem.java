@@ -108,11 +108,18 @@ public class ShooterSubsystem extends SubsystemBase {
     // need to tune timings
     public Command runAmpShooterRoutine() {
         return new ParallelCommandGroup(
-            runShooter().withTimeout(2),
-            new SequentialCommandGroup(
-                new WaitCommand(2.0),
-                runFeeder().withTimeout(2))
-        );
+                runShooter().withTimeout(2),
+                new SequentialCommandGroup(
+                        new WaitCommand(2.0),
+                        runFeeder().withTimeout(2)));
+    }
+
+    public Command runShooterRoutine(double runTime) {
+        return new ParallelCommandGroup(
+                runShooter().withTimeout(runTime),
+                new SequentialCommandGroup(
+                        new WaitCommand(2.0),
+                        runFeeder().withTimeout(2)));
     }
 
     public void setArmPosition(double pos) {
