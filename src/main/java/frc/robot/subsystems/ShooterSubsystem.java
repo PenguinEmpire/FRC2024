@@ -86,25 +86,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
     }
 
-    public Command runCloseShooterRoutine() {
-        return new ParallelCommandGroup(
-                runShooter().withTimeout(3),
-                new SequentialCommandGroup(
-                        new WaitCommand(2.0),
-                        runFeeder().withTimeout(2)));
-    }
-
-    // need to tune timings
-    // basically runs at full power
-    // should be used for auto (far positions) + safe spot
-    public Command runFarShooterRoutine() {
-        return new ParallelCommandGroup(
-                runShooter().withTimeout(6),
-                new SequentialCommandGroup(
-                        new WaitCommand(2.0),
-                        runFeeder().withTimeout(2)));
-    }
-
     // need to tune timings
     public Command runAmpShooterRoutine() {
         return new ParallelCommandGroup(
