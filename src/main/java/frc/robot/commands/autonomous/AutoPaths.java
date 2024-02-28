@@ -46,10 +46,20 @@ public class AutoPaths {
                 new ParallelCommandGroup(
                     AutoBuilder.followPath(PathPlannerPath.fromPathFile("rightToBackRight")),
                     new SequentialCommandGroup(
-                        new WaitCommand (1.5),
+                        new WaitCommand (0.5),
                         autoMotions.intakeAutoMotion()
                     )   
+                ),
+                AutoBuilder.followPath(PathPlannerPath.fromPathFile("backRightToShoot")),
+                autoMotions.shootingFarAutoMotion(),
+                new ParallelCommandGroup(
+                    AutoBuilder.followPath(PathPlannerPath.fromPathFile("shootToBackSecond")),
+                    new SequentialCommandGroup(
+                        new WaitCommand (1.5),
+                        autoMotions.intakeAutoMotion()
+                    )
                 )
+
 
 
         );
