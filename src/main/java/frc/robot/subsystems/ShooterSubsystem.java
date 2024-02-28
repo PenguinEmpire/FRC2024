@@ -23,7 +23,6 @@ public class ShooterSubsystem extends SubsystemBase {
     private Joint shooter;
     private DigitalInput proximitySensor;
     private double intakeFeederSpeed;
-    private double shooterFeederSpeed;
     private double shooterSpeed;
 
     private ControlInput controlInput;
@@ -39,7 +38,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Shooter Speed", 1);
         SmartDashboard.putNumber("Intake Feeder Speed", 0.5);
-        SmartDashboard.putNumber("Shooter Feeder Speed", 0);
 
         this.controlInput = controlInput;
     }
@@ -47,7 +45,6 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         intakeFeederSpeed = SmartDashboard.getNumber("Intake Feeder Speed", 0.5);
-        shooterFeederSpeed = SmartDashboard.getNumber("Shooter Feeder Speed", 0);
         shooterSpeed = SmartDashboard.getNumber("Shooter Speed", 1);
         arm.periodic();
         shooter.periodic();
