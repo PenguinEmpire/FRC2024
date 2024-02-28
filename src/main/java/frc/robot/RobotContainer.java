@@ -70,7 +70,7 @@ public class RobotContainer {
     visionSubsystem = new VisionSubsystem();
     intakeSubsystem = new IntakeSubsystem(9, 12);
     swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, visionSubsystem, controlInput);
-    shooterSubsystem = new ShooterSubsystem(15, 13);
+    shooterSubsystem = new ShooterSubsystem(15, 13, controlInput);
     // autoPaths = new AutoPaths();
     // autoMotions = new AutoMotions(shooterSubsystem, intakeSubsystem);
 
@@ -97,6 +97,9 @@ public class RobotContainer {
     JoystickButton shooterRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 10);
     shooterRollers.whileTrue(shooterSubsystem.runShooter());
 
+    JoystickButton home = new JoystickButton(controlInput.getAccessoryJoystick(), 11);
+    home.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE));
+
     JoystickButton intakeOut = new JoystickButton(controlInput.getAccessoryJoystick(), 12);
     intakeOut.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT));
 
@@ -110,8 +113,8 @@ public class RobotContainer {
         new SequentialCommandGroup(
             new WaitCommand(1.5),
             new ParallelCommandGroup(
-                shooterSubsystem.runFeeder().withTimeout(2),
-                intakeSubsystem.runRollers().withTimeout(2)),
+                shooterSubsystem.runFeeder().until(shooterSubsystem::hasRing),
+                intakeSubsystem.runRollers().until(shooterSubsystem::hasRing)),
             shooterSubsystem.runFeeder().withTimeout(0.25),
             new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_PICKUP),
             new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE),
@@ -119,15 +122,16 @@ public class RobotContainer {
             shooterSubsystem.reverseFeeder().until(shooterSubsystem::hasRing),
             shooterSubsystem.reverseFeeder().onlyWhile(shooterSubsystem::hasRing))));
 
-    JoystickButton shooterMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 5);
-    shooterMotion.onTrue(new SequentialCommandGroup(
+    // might have to change this to runCloseShooterRoutine - depends on how much power we need
+    JoystickButton wooferShooterMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 5);
+    wooferShooterMotion.onTrue(new SequentialCommandGroup(
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_SHOOT),
-        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SPEAKER),
-        shooterSubsystem.runShooterRoutine()));
+        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
+        shooterSubsystem.runFarShooterRoutine()));
 
   }
 
-  //until(shooterSubsystem::hasRing)
+  // might have to reverse the the .until and .onlyWhile for the reverse
 
   public void autoExit() {
     driveSubsystem.getNavX().setAngleAdjustment(0);

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.ControlInput;
 import frc.robot.module.Joint;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -25,8 +26,9 @@ public class ShooterSubsystem extends SubsystemBase {
     private double shooterFeederSpeed;
     private double shooterSpeed;
 
+    private ControlInput controlInput;
 
-    public ShooterSubsystem(int feederID, int shooterID) {
+    public ShooterSubsystem(int feederID, int shooterID, ControlInput controlInput) {
         arm = new Joint("shooterArm", 11, 0.7, 0, 0, 0, -0.30, 0.30, true);
         shooter = new Joint("shooterEnt", 20, 0.95, 0.0001, 0, 0.001, -0.27, 0.27, false);
 
@@ -38,6 +40,8 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Shooter Speed", 1);
         SmartDashboard.putNumber("Intake Feeder Speed", 0.5);
         SmartDashboard.putNumber("Shooter Feeder Speed", 0);
+
+        this.controlInput = controlInput;
     }
 
     @Override
@@ -49,58 +53,73 @@ public class ShooterSubsystem extends SubsystemBase {
         shooter.periodic();
     }
 
-
     public boolean hasRing() {
         return !proximitySensor.get();
     }
 
-    //these methods are for legacy setting the intake speed, do not use these if possible
+    // these methods are for legacy setting the intake speed, do not use these if
+    // possible
     // public Command setIntakeState(boolean enabled) {
-    //     return Commands.runOnce(() -> feederMotor.set(enabled ? feederSpeed : 0));
+    // return Commands.runOnce(() -> feederMotor.set(enabled ? feederSpeed : 0));
     // }
 
-    //   public Command setShooterState(boolean enabled) {
-    //     return Commands.runOnce(() -> feederMotor.set(enabled ? shooterSpeed : 0));
+    // public Command setShooterState(boolean enabled) {
+    // return Commands.runOnce(() -> feederMotor.set(enabled ? shooterSpeed : 0));
     // }
 
     public Command runFeeder() {
         return Commands.runEnd(
                 () -> feederMotor.set(intakeFeederSpeed),
-                () -> feederMotor.set(0)
-            );
+                () -> feederMotor.set(0));
     }
 
     public Command reverseFeeder() {
         return Commands.runEnd(
                 () -> feederMotor.set(-intakeFeederSpeed),
-                () -> feederMotor.set(0)
-            );
-    }
-
-
-    public Command stopFeeder() {
-        return Commands.runEnd(
-                () -> feederMotor.set(0),
-                () -> feederMotor.set(0)
-            );
+                () -> feederMotor.set(0));
     }
 
     public Command runShooter() {
         return Commands.runEnd(
                 () -> shooterMotor.set(shooterSpeed),
-                () -> shooterMotor.set(0)
-            );
+                () -> shooterMotor.set(0));
 
     }
 
-    public Command runShooterRoutine() {
+    public Command runCloseShooterRoutine() {
         return new ParallelCommandGroup(
-            runShooter().withTimeout(5),
-            new SequentialCommandGroup(
-                new WaitCommand(2.0),
-                runFeeder().withTimeout(2)
-            )
-        );
+                runShooter().withTimeout(3),
+                new SequentialCommandGroup(
+                        new WaitCommand(2.0),
+                        runFeeder().withTimeout(2)));
+    }
+
+    // need to tune timings
+    // basically runs at full power
+    // should be used for auto (far positions) + safe spot
+    public Command runFarShooterRoutine() {
+        return new ParallelCommandGroup(
+                runShooter().withTimeout(6),
+                new SequentialCommandGroup(
+                        new WaitCommand(2.0),
+                        runFeeder().withTimeout(2)));
+    }
+
+    // need to tune timings
+    public Command runAmpShooterRoutine() {
+        return new ParallelCommandGroup(
+                runShooter().withTimeout(2),
+                new SequentialCommandGroup(
+                        new WaitCommand(2.0),
+                        runFeeder().withTimeout(2)));
+    }
+
+    public Command runShooterRoutine(double runTime) {
+        return new ParallelCommandGroup(
+                runShooter().withTimeout(runTime),
+                new SequentialCommandGroup(
+                        new WaitCommand(2.0),
+                        runFeeder().withTimeout(2)));
     }
 
     public void setArmPosition(double pos) {
@@ -109,5 +128,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void setShooterPosition(double pos) {
         shooter.setPosition(pos);
+    }
+
+    public boolean isSafeMode() {
+        return controlInput.isSafeMode();
     }
 }

@@ -89,7 +89,7 @@ public class SwerveDriveCommand extends Command {
       subsystem.drive(forward, (pidInvert ? -1 : 1) * strafePIDVal, 0, false, false);
       
     } else {
-      subsystem.drive(forward, strafe, clamp(rotation * 3.2,
+      subsystem.drive(forward * 1.4, strafe * 1.4, clamp(rotation * 3.6,
           -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed),
           true, false);
     }  
