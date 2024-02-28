@@ -6,7 +6,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class PositionCommand extends Command {
 
-    // SPEAKER: puts the shooter in speaker pos
+    // SAFE_OR_SPEAKER: puts the shooter in speaker or safe pos
     // INTAKE_OUT: assumes the arms are out and moves the intake to pickup
     // INTAKE_IN_PICKUP: folds intake into frame for ring to fit
     // INTAKE_IN_SHOOT: moves intake out a bit for ring to shoot
@@ -16,25 +16,29 @@ public class PositionCommand extends Command {
     // far
     // CLOSE_SHOOTING: (used in auto) does the same thing as above but positions for
     // a bit closer
+    // START_POSITION: moves everything to fit in frame
     // game_mode: intake moves to ground and shooter lifts up
-    // amp: arms move up and shooter moves down
+    // AMP: arms move up and shooter moves down
+    // OUT_OF_AUTO_POSITION: moves arms up a bit for intake to move down as auto
+    // starts
+    // HOME: puts arm and shooter to 0 and intake to inside frame
     // trap: arms push and shooter moves and deposits
-    // pickup: moves arms and shooter to pickup from the station
 
     public enum Position {
         SAFE_OR_SPEAKER,
+        SPEAKER,
         INTAKE_OUT,
         INTAKE_IN_PICKUP,
         INTAKE_IN_SHOOT,
         START_POSITION,
         BASE,
         TRAP,
-        PICKUP,
         FAR_SHOOTING,
-        CLOSE_SHOOTING,
+        MIDDLE_SHOOTING,
         ARM_GROUND_PICKUP,
         OUT_OF_AUTO_POSITION,
-        SAFE_SPOT
+        AMP,
+        HOME
     };
 
     private ShooterSubsystem shooterSubsystem;
@@ -62,6 +66,8 @@ public class PositionCommand extends Command {
             // if safe mode is true (toggle is down), shooter should move to that pos, else
             // should go to speaker pos
             shooterSubsystem.setShooterPosition(shooterSubsystem.isSafeMode() ? 0.0 : 1.03);
+        } else if (pos == Position.SPEAKER) {
+            shooterSubsystem.setShooterPosition(1.03);
         } else if (pos == Position.INTAKE_OUT) {
             intakeSubsystem.setPosition(4.12);
         } else if (pos == Position.INTAKE_IN_PICKUP) {
@@ -86,7 +92,7 @@ public class PositionCommand extends Command {
             intakeSubsystem.setPosition(5.23);
         } else if (pos == Position.FAR_SHOOTING) {
             intakeSubsystem.setPosition(0.0);
-        } else if (pos == Position.CLOSE_SHOOTING) {
+        } else if (pos == Position.MIDDLE_SHOOTING) {
             intakeSubsystem.setPosition(0.0);
         } else if (pos == Position.OUT_OF_AUTO_POSITION) {
             if (m_ticks < 15) {
@@ -95,10 +101,14 @@ public class PositionCommand extends Command {
                 intakeSubsystem.setPosition(4.2);
             } else if (m_ticks < 90) {
                 shooterSubsystem.setArmPosition(0);
-                shooterSubsystem.setShooterPosition(1.03);
             }
-        } else if (pos == Position.SAFE_SPOT) {
+        } else if (pos == Position.AMP) {
+            shooterSubsystem.setArmPosition(4.74);
+            shooterSubsystem.setShooterPosition(0.76);
+        } else if (pos == Position.HOME) {
+            shooterSubsystem.setArmPosition(0.0);
             shooterSubsystem.setShooterPosition(0.0);
+            intakeSubsystem.setPosition(5.23);
         }
     }
 

@@ -85,20 +85,24 @@ public class RobotContainer {
     JoystickButton alignmentButton = new JoystickButton(controlInput.getLeftJoystick(), 5);
     alignmentButton.whileTrue(alignmentCommand);
 
+    // emergency
     JoystickButton intakeRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 7);
     intakeRollers.whileTrue(intakeSubsystem.runRollers());
 
+    // emergency
     JoystickButton feederRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 8);
     feederRollers.whileTrue(shooterSubsystem.runFeeder());
 
+    // emergency
     JoystickButton reverseFeederRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 9);
     reverseFeederRollers.whileTrue(shooterSubsystem.reverseFeeder());
 
+    // emergency
     JoystickButton shooterRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 10);
     shooterRollers.whileTrue(shooterSubsystem.runShooter());
 
     JoystickButton home = new JoystickButton(controlInput.getAccessoryJoystick(), 11);
-    home.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE));
+    home.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.HOME));
 
     JoystickButton intakeOut = new JoystickButton(controlInput.getAccessoryJoystick(), 12);
     intakeOut.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT));
@@ -127,8 +131,13 @@ public class RobotContainer {
     wooferShooterMotion.onTrue(new SequentialCommandGroup(
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_SHOOT),
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
-        shooterSubsystem.runFarShooterRoutine()));
+        shooterSubsystem.runShooterRoutine(4.0)));
 
+    JoystickButton ampArms = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
+    ampArms.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.AMP));
+
+    JoystickButton ampShooting = new JoystickButton(controlInput.getAccessoryJoystick(), 4);
+    ampShooting.onTrue(shooterSubsystem.runAmpShooterRoutine());
   }
 
   // might have to reverse the the .until and .onlyWhile for the reverse

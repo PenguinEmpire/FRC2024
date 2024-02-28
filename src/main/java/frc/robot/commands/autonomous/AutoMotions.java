@@ -32,44 +32,43 @@ public class AutoMotions extends Command {
 
     public Command intakeAutoMotion() {
         return new ParallelCommandGroup(
-                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
-                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
-                new SequentialCommandGroup(
-                        new WaitCommand(1.5),
-                        new ParallelCommandGroup(
-                                shooterSubsystem.runFeeder().onlyWhile(shooterSubsystem::hasRing),
-                                intakeSubsystem.runRollers().onlyWhile(shooterSubsystem::hasRing)),
-                        shooterSubsystem.runFeeder().withTimeout(0.25),
-                        new PositionCommand(shooterSubsystem, intakeSubsystem,
-                                PositionCommand.Position.INTAKE_IN_PICKUP),
-                        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE),
-                        new WaitCommand(1),
-                        shooterSubsystem.reverseFeeder().until(shooterSubsystem::hasRing),
-                        shooterSubsystem.reverseFeeder().onlyWhile(shooterSubsystem::hasRing)));
+            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
+            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
+            new SequentialCommandGroup(
+                new WaitCommand(1.5),
+                new ParallelCommandGroup(
+                    shooterSubsystem.runFeeder().until(shooterSubsystem::hasRing),
+                    intakeSubsystem.runRollers().until(shooterSubsystem::hasRing)),
+                shooterSubsystem.runFeeder().withTimeout(0.25),
+                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_PICKUP),
+                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE),
+                new WaitCommand(1),
+                shooterSubsystem.reverseFeeder().until(shooterSubsystem::hasRing),
+                shooterSubsystem.reverseFeeder().onlyWhile(shooterSubsystem::hasRing)));
 
     }
 
-    // used to shoot from middle
+    // used to shoot from middle - need to change second position (shooter)
     public Command shootingMiddleAutoMotion() {
         return new SequentialCommandGroup(
                 new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_SHOOT),
-                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
-                shooterSubsystem.runFarShooterRoutine());
+                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.MIDDLE_SHOOTING),
+                shooterSubsystem.runShooterRoutine(4.0));
     }
 
     // used to shoot from against the speaker
     public Command shootingClosestAutoMotion() {
         return new SequentialCommandGroup(
                 new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
-                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
-                shooterSubsystem.runCloseShooterRoutine());
+                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SPEAKER),
+                shooterSubsystem.runShooterRoutine(3.0));
     }
 
-    // used to shoot from far out
+    // used to shoot from far out - need to change second position (shooter)
     public Command shootingFarAutoMotion() {
         return new SequentialCommandGroup(
                 new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
                 new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.FAR_SHOOTING),
-                shooterSubsystem.runFarShooterRoutine());
+                shooterSubsystem.runShooterRoutine(6.0));
     }
 }

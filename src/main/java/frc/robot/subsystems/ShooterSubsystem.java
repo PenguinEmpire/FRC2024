@@ -114,6 +114,18 @@ public class ShooterSubsystem extends SubsystemBase {
                         runFeeder().withTimeout(2)));
     }
 
+    /*
+    for auto -
+        close shooting (speaker): 3 seconds
+        middle shooting (during auto): 4 seconds
+        far shooting (during auto): 6 seconds
+    */
+
+    /*
+    for teleop (probably but i want to have speaker and safe same time) -
+        speaker: 3 seconds
+        safe: 5 seconds
+     */
     public Command runShooterRoutine(double runTime) {
         return new ParallelCommandGroup(
                 runShooter().withTimeout(runTime),

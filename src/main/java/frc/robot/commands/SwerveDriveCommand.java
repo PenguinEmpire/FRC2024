@@ -81,8 +81,8 @@ public class SwerveDriveCommand extends Command {
     SmartDashboard.putNumber("Gyro Heading", subsystem.getHeading());
 
     if (getInput().getLeftJoystick().getTrigger() && visionSubsystem.hasTargets()) {
-      double distanceHorizFromTarget = visionSubsystem.getX();
-      final double strafePIDVal = clamp(strafePID.calculate(distanceHorizFromTarget), -0.5, 0.5);
+      double distanceRotFromTarget = subsystem.getNavX().getAngle();
+      final double strafePIDVal = clamp(strafePID.calculate(distanceRotFromTarget), -0.5, 0.5);
 
       // if the targets exist and the distance is accurate but the robot still goes away from the target, invert this.
       boolean pidInvert = true;
