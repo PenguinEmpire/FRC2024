@@ -14,31 +14,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "sourceToShoot"
+            "pathName": "BsourceToShoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "trapToBackLeft"
+            "pathName": "BtrapToBackLeft"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "backLeftToTrapShoot"
+            "pathName": "BbackLeftToTrapShoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "trapToBackLeftSecond"
+            "pathName": "BtrapToBackLeftSecond"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "backSecondLeftToTrapShoot"
+            "pathName": "BbackSecondLeftToTrapShoot"
           }
         }
       ]

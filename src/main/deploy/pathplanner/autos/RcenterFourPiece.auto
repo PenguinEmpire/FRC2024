@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3529532900187298,
-      "y": 5.5
+      "x": 15.172173400987427,
+      "y": 5.530965861736411
     },
-    "rotation": 0
+    "rotation": 179.2576545335711
   },
   "command": {
     "type": "sequential",
@@ -14,24 +14,18 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BspeakerToLeft"
+            "pathName": "RspeakerToLeft"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BleftToMiddle"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BmiddleToRight"
+            "pathName": "RleftToMiddle"
           }
         }
       ]
     }
   },
-  "folder": "blueAutoPaths",
+  "folder": "redAutoPaths",
   "choreoAuto": false
 }

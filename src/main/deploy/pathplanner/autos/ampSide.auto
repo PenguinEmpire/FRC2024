@@ -14,37 +14,37 @@
         {
           "type": "path",
           "data": {
-            "pathName": "wallToSpeaker"
+            "pathName": "BwallToSpeaker"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "rightSpeakertoRight"
+            "pathName": "BrightSpeakertoRight"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "rightToBackRight"
+            "pathName": "BrightToBackRight"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "backRightToShoot"
+            "pathName": "BbackRightToShoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "shootToBackSecond"
+            "pathName": "BshootToBackSecond"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "backSecondToShoot"
+            "pathName": "BbackSecondToShoot"
           }
         }
       ]
