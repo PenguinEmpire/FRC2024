@@ -47,7 +47,6 @@ public class SwerveDriveCommand extends Command {
 
   @Override
   public void initialize() {
-    rotationPID.enableContinuousInput(0, 360);
     rotationPID.reset();
     forwardPID.reset();
     strafePID.reset();
@@ -70,6 +69,10 @@ public class SwerveDriveCommand extends Command {
     rotation = Math.copySign(Math.pow(rotation, pow), rotation);
     rotation = linearDeadband(rotation);
 
+    forward *= 1.4;
+    strafe *= 1.4;
+    rotation *= 3.6;
+
     // need to add pipeline filtering again
 
     if (SmartDashboard.getBoolean("Blue/Red Pickup (r: true/b: false)", false)) {
@@ -82,18 +85,19 @@ public class SwerveDriveCommand extends Command {
     SmartDashboard.putNumber("Gyro Heading", subsystem.getHeading());
 
     if (getInput().getLeftJoystick().getTrigger() && visionSubsystem.hasTargets()) {
-      double distanceRotFromTarget = subsystem.getNavX().getAngle();
+      double distanceRotFromTarget = visionSubsystem.getX();
+      rotationPID.setSetpoint(0);
       final double rotPIDVal = clamp(rotationPID.calculate(distanceRotFromTarget), -0.5, 0.5);
 
       // if the targets exist and the distance is accurate but the robot still goes away from the target, invert this.
       boolean pidInvert = true;
-      subsystem.drive(forward, 0, (pidInvert ? -1 : 1) * rotPIDVal, false, false);
+      rotation = (pidInvert ? -1 : 1) * rotPIDVal;
       
-    } else {
-      subsystem.drive(forward * 1.4, strafe * 1.4, clamp(rotation * 3.6,
+    }
+    subsystem.drive(forward, strafe, clamp(rotation,
           -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed),
           true, false);
-    }  
+  
 
   }
 
