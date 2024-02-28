@@ -28,4 +28,9 @@ public class ControlInput {
         return xboxController;
     }
 
+    public boolean isSafeMode() {
+        return getAccessoryJoystick().getRawAxis(4) > 0;
+    }
+
+
 }
