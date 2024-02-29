@@ -38,9 +38,9 @@ public class SwerveDriveCommand extends Command {
     setName("SwerveDrive");
 
     // prolly need to change rotation to 0.154 and forward and strafe to 0
-    rotationPID = new PIDController(0, 0, 0);
-    forwardPID = new PIDController(0.02, 0, 0);
-    strafePID = new PIDController(0.02, 0, 0);
+    rotationPID = new PIDController(0.024, 0, 0);
+    forwardPID = new PIDController(0, 0, 0);
+    strafePID = new PIDController(0, 0, 0);
 
     SmartDashboard.putBoolean("Blue/Red Pickup (r: true/b: false)", false);
   }
@@ -88,11 +88,13 @@ public class SwerveDriveCommand extends Command {
       double distanceRotFromTarget = visionSubsystem.getX();
       rotationPID.setSetpoint(0);
       final double rotPIDVal = clamp(rotationPID.calculate(distanceRotFromTarget), -0.5, 0.5);
-
+  
       // if the targets exist and the distance is accurate but the robot still goes away from the target, invert this.
       boolean pidInvert = true;
       rotation = (pidInvert ? -1 : 1) * rotPIDVal;
       
+    } else if (getInput().getLeftJoystick().getTrigger()) {
+      rotation = 0.5;
     }
     subsystem.drive(forward, strafe, clamp(rotation,
           -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed),

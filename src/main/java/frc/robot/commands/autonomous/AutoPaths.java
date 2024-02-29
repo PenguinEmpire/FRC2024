@@ -15,7 +15,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class AutoPaths {
-    public static Command blueCenterFourPiece(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem,
+    public Command blueCenterFourPiece(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem,
             AutoMotions autoMotions) {
         return new SequentialCommandGroup(
                 new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.OUT_OF_AUTO_POSITION),
@@ -36,7 +36,7 @@ public class AutoPaths {
         );
     }
 
-    public static Command blueAmpFourPiece(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem,
+    public Command blueAmpFourPiece(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem,
             AutoMotions autoMotions) {
         return new SequentialCommandGroup(
                 new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.OUT_OF_AUTO_POSITION),
@@ -47,28 +47,39 @@ public class AutoPaths {
                         AutoBuilder.followPath(PathPlannerPath.fromPathFile("BrightSpeakertoRight"))),
                 autoMotions.shootingMiddleAutoMotion(),
                 new ParallelCommandGroup(
-                    AutoBuilder.followPath(PathPlannerPath.fromPathFile("BrightToBackRight")),
-                    new SequentialCommandGroup(
-                        new WaitCommand (0.5),
-                        autoMotions.intakeAutoMotion()
-                    )   
-                ),
+                        AutoBuilder.followPath(PathPlannerPath.fromPathFile("BrightToBackRight")),
+                        new SequentialCommandGroup(
+                                new WaitCommand(0.5),
+                                autoMotions.intakeAutoMotion())),
                 AutoBuilder.followPath(PathPlannerPath.fromPathFile("BbackRightToShoot")),
                 autoMotions.shootingFarAutoMotion(),
                 new ParallelCommandGroup(
-                    AutoBuilder.followPath(PathPlannerPath.fromPathFile("BshootToBackSecond")),
-                    new SequentialCommandGroup(
-                        new WaitCommand (1.5),
-                        autoMotions.intakeAutoMotion()
-                    )
-                )
-        );
+                        AutoBuilder.followPath(PathPlannerPath.fromPathFile("BshootToBackSecond")),
+                        new SequentialCommandGroup(
+                                new WaitCommand(1.5),
+                                autoMotions.intakeAutoMotion())));
     }
 
-    public static Command redCenterFourPiece (IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem,
+    public Command redCenterFourPiece(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem,
             AutoMotions autoMotions) {
-                return new SequentialCommandGroup (
-                    new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.OUT_OF_AUTO_POSITION)
-                );
-            }
+        return new SequentialCommandGroup(
+                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.OUT_OF_AUTO_POSITION),
+                AutoBuilder.followPath(PathPlannerPath.fromPathFile("RspeakerToLeft")),
+                AutoBuilder.followPath(PathPlannerPath.fromPathFile("RleftToMiddle")),
+                AutoBuilder.followPath(PathPlannerPath.fromPathFile("RMiddleToRight"))
+                // // autoMotions.shootingClosestAutoMotion(),
+                // new ParallelCommandGroup(
+                //         autoMotions.intakeAutoMotion()),
+                // autoMotions.shootingMiddleAutoMotion(),
+                // new ParallelCommandGroup(
+                        
+                //         autoMotions.intakeAutoMotion()),
+                // autoMotions.shootingMiddleAutoMotion(),
+                // new ParallelCommandGroup(
+                        
+                //         autoMotions.intakeAutoMotion()),
+                // autoMotions.shootingMiddleAutoMotion()
+        );
+
+    }
 }

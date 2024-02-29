@@ -50,12 +50,13 @@ public class RobotContainer {
   private IntakeSubsystem intakeSubsystem;
   private ControlInput controlInput;
   private ShooterSubsystem shooterSubsystem;
-  // private AutoPaths autoPaths;
-  // private AutoMotions autoMotions;
+  private AutoPaths autoPaths;
+  private AutoMotions autoMotions;
 
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private String m_autoSelected;
   private static final String Bcenter4P = "Blue - Center 4 Piece";
+  private static final String Rcenter4P = "Red - Center 4 Piece";
 
   private String test = "test";
 
@@ -71,10 +72,11 @@ public class RobotContainer {
     intakeSubsystem = new IntakeSubsystem(9, 12);
     swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, visionSubsystem, controlInput);
     shooterSubsystem = new ShooterSubsystem(15, 13, controlInput);
-    // autoPaths = new AutoPaths();
-    // autoMotions = new AutoMotions(shooterSubsystem, intakeSubsystem);
+    autoPaths = new AutoPaths();
+    autoMotions = new AutoMotions(shooterSubsystem, intakeSubsystem);
 
     m_chooser.addOption("Blue - Center 4 Pieces", Bcenter4P);
+    m_chooser.addOption("Red - Center 4 Piece", Rcenter4P);
     SmartDashboard.putData("Auto Choices", m_chooser);
 
     configureBindings();
@@ -111,7 +113,7 @@ public class RobotContainer {
     start_mode.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.START_POSITION));
 
     JoystickButton intakeMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 3);
-    intakeMotion.onTrue(new ParallelCommandGroup(
+    intakeMotion.whileTrue(new ParallelCommandGroup(
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
         new SequentialCommandGroup(
@@ -126,7 +128,8 @@ public class RobotContainer {
             shooterSubsystem.reverseFeeder().until(shooterSubsystem::hasRing),
             shooterSubsystem.reverseFeeder().onlyWhile(shooterSubsystem::hasRing))));
 
-    // might have to change this to runCloseShooterRoutine - depends on how much power we need
+    // might have to change this to runCloseShooterRoutine - depends on how much
+    // power we need
     JoystickButton wooferShooterMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 5);
     wooferShooterMotion.onTrue(new SequentialCommandGroup(
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_SHOOT),
@@ -162,11 +165,13 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     m_autoSelected = m_chooser.getSelected();
-    // if (m_autoSelected == Bcenter4P) {
-    // return autoPaths.blueCenterFourPiece(intakeSubsystem, shooterSubsystem,
-    // autoMotions);
-    // } else {
-    return null;
-
+    if (m_autoSelected == Bcenter4P) {
+      return autoPaths.blueCenterFourPiece(intakeSubsystem, shooterSubsystem,
+          autoMotions);
+    } else if (m_autoSelected == Rcenter4P) {
+      return autoPaths.redCenterFourPiece(intakeSubsystem, shooterSubsystem, autoMotions);
+    } else {
+      return null;
+    }
   }
 }

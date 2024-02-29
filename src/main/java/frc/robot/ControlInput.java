@@ -29,7 +29,7 @@ public class ControlInput {
     }
 
     public boolean isSafeMode() {
-        return getAccessoryJoystick().getRawAxis(4) > 0;
+        return getAccessoryJoystick().getRawAxis(3) > 0;
     }
 
 

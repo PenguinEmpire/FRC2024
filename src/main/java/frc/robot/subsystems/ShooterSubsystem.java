@@ -37,14 +37,14 @@ public class ShooterSubsystem extends SubsystemBase {
         proximitySensor = new DigitalInput(0);
 
         SmartDashboard.putNumber("Shooter Speed", 1);
-        SmartDashboard.putNumber("Intake Feeder Speed", 0.5);
+        SmartDashboard.putNumber("Intake Feeder Speed", 0.6);
 
         this.controlInput = controlInput;
     }
 
     @Override
     public void periodic() {
-        intakeFeederSpeed = SmartDashboard.getNumber("Intake Feeder Speed", 0.5);
+        intakeFeederSpeed = SmartDashboard.getNumber("Intake Feeder Speed", 0.6);
         shooterSpeed = SmartDashboard.getNumber("Shooter Speed", 1);
         arm.periodic();
         shooter.periodic();
@@ -87,9 +87,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public Command runAmpShooterRoutine() {
         return new ParallelCommandGroup(
                 runShooter().withTimeout(2),
-                new SequentialCommandGroup(
-                        new WaitCommand(2.0),
-                        runFeeder().withTimeout(2)));
+                runFeeder().withTimeout(2));
     }
 
     /*
