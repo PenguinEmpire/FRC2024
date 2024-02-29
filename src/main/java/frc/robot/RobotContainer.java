@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.util.function.BooleanSupplier;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -75,7 +76,7 @@ public class RobotContainer {
     autoPaths = new AutoPaths();
     autoMotions = new AutoMotions(shooterSubsystem, intakeSubsystem);
 
-    m_chooser.addOption("Blue - Center 4 Pieces", Bcenter4P);
+    m_chooser.addOption("Blue - Center 4 Piece", Bcenter4P);
     m_chooser.addOption("Red - Center 4 Piece", Rcenter4P);
     SmartDashboard.putData("Auto Choices", m_chooser);
 
@@ -171,7 +172,7 @@ public class RobotContainer {
     } else if (m_autoSelected == Rcenter4P) {
       return autoPaths.redCenterFourPiece(intakeSubsystem, shooterSubsystem, autoMotions);
     } else {
-      return null;
+      return autoPaths.redCenterFourPiece(intakeSubsystem, shooterSubsystem, autoMotions);
     }
   }
 }

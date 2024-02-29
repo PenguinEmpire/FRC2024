@@ -63,9 +63,9 @@ public class AutoPaths {
     public Command redCenterFourPiece(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem,
             AutoMotions autoMotions) {
         return new SequentialCommandGroup(
-                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.OUT_OF_AUTO_POSITION),
-                AutoBuilder.followPath(PathPlannerPath.fromPathFile("RspeakerToLeft")),
-                AutoBuilder.followPath(PathPlannerPath.fromPathFile("RleftToMiddle")),
+                //new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.OUT_OF_AUTO_POSITION),
+                //AutoBuilder.followPath(PathPlannerPath.fromPathFile("RspeakerToLeft"))
+                // AutoBuilder.followPath(PathPlannerPath.fromPathFile("RleftToMiddle")),
                 AutoBuilder.followPath(PathPlannerPath.fromPathFile("RMiddleToRight"))
                 // // autoMotions.shootingClosestAutoMotion(),
                 // new ParallelCommandGroup(
