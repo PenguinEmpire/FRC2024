@@ -7,6 +7,7 @@ package frc.robot;
 import java.util.function.BooleanSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -29,7 +30,6 @@ import frc.robot.commands.AlignmentCommand;
 import frc.robot.commands.PositionCommand;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.commands.autonomous.AutoMotions;
-import frc.robot.commands.autonomous.AutoPaths;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -51,15 +51,10 @@ public class RobotContainer {
   private IntakeSubsystem intakeSubsystem;
   private ControlInput controlInput;
   private ShooterSubsystem shooterSubsystem;
-  private AutoPaths autoPaths;
   private AutoMotions autoMotions;
 
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private final SendableChooser<Command> autoChooser;
   private String m_autoSelected;
-  private static final String Bcenter4P = "Blue - Center 4 Piece";
-  private static final String Rcenter4P = "Red - Center 4 Piece";
-
-  private String test = "test";
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -73,12 +68,17 @@ public class RobotContainer {
     intakeSubsystem = new IntakeSubsystem(9, 12);
     swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, visionSubsystem, controlInput);
     shooterSubsystem = new ShooterSubsystem(15, 13, controlInput);
-    autoPaths = new AutoPaths();
     autoMotions = new AutoMotions(shooterSubsystem, intakeSubsystem);
 
-    m_chooser.addOption("Blue - Center 4 Piece", Bcenter4P);
-    m_chooser.addOption("Red - Center 4 Piece", Rcenter4P);
-    SmartDashboard.putData("Auto Choices", m_chooser);
+    NamedCommands.registerCommand("shootClose", autoMotions.shootingClosestAutoMotion());
+    NamedCommands.registerCommand("shootMiddle", autoMotions.shootingMiddleAutoMotion());
+    NamedCommands.registerCommand("shootFar", autoMotions.shootingFarAutoMotion());
+    NamedCommands.registerCommand("intakeMotion", autoMotions.intakeAutoMotion());
+    NamedCommands.registerCommand("outOfAutoPos",
+        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.OUT_OF_AUTO_POSITION));
+
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
 
     configureBindings();
   }
@@ -165,14 +165,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    m_autoSelected = m_chooser.getSelected();
-    if (m_autoSelected == Bcenter4P) {
-      return autoPaths.blueCenterFourPiece(intakeSubsystem, shooterSubsystem,
-          autoMotions);
-    } else if (m_autoSelected == Rcenter4P) {
-      return autoPaths.redCenterFourPiece(intakeSubsystem, shooterSubsystem, autoMotions);
-    } else {
-      return autoPaths.redCenterFourPiece(intakeSubsystem, shooterSubsystem, autoMotions);
-    }
+    return autoChooser.getSelected();
   }
+
 }
