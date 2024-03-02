@@ -78,7 +78,8 @@ public class PositionCommand extends Command {
                 shooterSubsystem.setArmPosition(5.6);
             } else if (m_ticks < 60) {
                 intakeSubsystem.setPosition(6.27);
-            } else if (m_ticks < 100) {
+                shooterSubsystem.setShooterPosition(0.0);
+            } else if (m_ticks < 120) {
                 shooterSubsystem.setArmPosition(5.91);
             }
         } else if (pos == Position.BASE) {

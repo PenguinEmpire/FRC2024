@@ -85,7 +85,7 @@ public class DriveSubsystem extends SubsystemBase {
         this::driveRobotRelative,
         new HolonomicPathFollowerConfig(
             new PIDConstants(0.5, 0, 0),
-            new PIDConstants(0.5, 0, 0),
+            new PIDConstants(5, 0, 0),
             0.15, // max speed in m/s
             0.15,
             new ReplanningConfig()),
@@ -118,6 +118,12 @@ public class DriveSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber("Odometry X", m_odometry.getPoseMeters().getX());
     SmartDashboard.putNumber("Odometry Y", m_odometry.getPoseMeters().getY());
+
+    SmartDashboard.putNumber("Auto Gyro Yaw", m_gyro.getYaw());
+    SmartDashboard.putNumber("Auto Gyro Angle", m_gyro.getAngle());
+    SmartDashboard.putNumber("Auto Gyro Heading", getHeading());
+
+    
       
   }
 
@@ -285,7 +291,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
-    return Rotation2d.fromDegrees(-m_gyro.getYaw()).getDegrees();
+    return Rotation2d.fromDegrees(-m_gyro.getAngle()).getDegrees();
   }
 
   /**

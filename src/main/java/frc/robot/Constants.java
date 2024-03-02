@@ -136,7 +136,7 @@ public final class Constants {
 
 
     // if navx is funky, change to true
-    public static final boolean kGyroReversed = true;
+    public static final boolean kGyroReversed = false;
   }
 
   public static final class ModuleConstants {
