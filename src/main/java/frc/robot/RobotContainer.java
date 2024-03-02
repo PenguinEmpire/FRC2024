@@ -9,9 +9,11 @@ import java.util.function.BooleanSupplier;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -53,6 +55,8 @@ public class RobotContainer {
   private ShooterSubsystem shooterSubsystem;
   private AutoMotions autoMotions;
 
+  private final Field2d field;
+
   private final SendableChooser<Command> autoChooser;
   private String m_autoSelected;
 
@@ -60,6 +64,9 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    field = new Field2d();
+    SmartDashboard.putData("Field", field);
+    
     // Configure the trigger bindings
     controlInput = new ControlInput();
     driveSubsystem = new DriveSubsystem();
@@ -81,6 +88,10 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
     configureBindings();
+
+    PathPlannerLogging.setLogCurrentPoseCallback((pos) -> field.setRobotPose(pos));
+    PathPlannerLogging.setLogTargetPoseCallback((pos) -> field.getObject("target pose").setPose(pos));
+    PathPlannerLogging.setLogActivePathCallback((poses) -> field.getObject("path").setPoses(poses));
   }
 
   private void configureBindings() {
