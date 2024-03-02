@@ -46,6 +46,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public void periodic() {
         intakeFeederSpeed = SmartDashboard.getNumber("Intake Feeder Speed", 0.6);
         shooterSpeed = SmartDashboard.getNumber("Shooter Speed", 1);
+        SmartDashboard.putBoolean("Has Ring", hasRing());
         arm.periodic();
         shooter.periodic();
     }

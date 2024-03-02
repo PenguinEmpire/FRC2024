@@ -85,8 +85,8 @@ public class DriveSubsystem extends SubsystemBase {
         this::driveRobotRelative,
         new HolonomicPathFollowerConfig(
             new PIDConstants(0.5, 0, 0),
-            new PIDConstants(5, 0, 0),
-            0.15, // max speed in m/s
+            new PIDConstants(0.15, 0, 0),
+            3.8, // max speed in m/s
             0.15,
             new ReplanningConfig()),
         () -> {
@@ -108,7 +108,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() {
     // Update the odometry in the periodic block
     m_odometry.update(
-        Rotation2d.fromDegrees(m_gyro.getYaw()),
+        Rotation2d.fromDegrees(-m_gyro.getYaw()),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
