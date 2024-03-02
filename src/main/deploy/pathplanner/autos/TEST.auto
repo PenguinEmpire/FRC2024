@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.34705112624833,
+      "y": 5.531749863093955
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "speakerToLeft"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "leftToMiddle"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "middleToRight"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
