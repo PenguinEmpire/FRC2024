@@ -4,8 +4,11 @@
 
 package frc.robot.subsystems;
 
+import java.util.Optional;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -85,7 +88,7 @@ public class DriveSubsystem extends SubsystemBase {
         this::driveRobotRelative,
         new HolonomicPathFollowerConfig(
             new PIDConstants(0.5, 0, 0),
-            new PIDConstants(0.15, 0, 0),
+            new PIDConstants(0.1, 0, 0),
             3.8, // max speed in m/s
             0.15,
             new ReplanningConfig()),
@@ -102,6 +105,8 @@ public class DriveSubsystem extends SubsystemBase {
           return false;
         },
         this);
+        
+        // PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.of(Rotation2d.fromDegrees(0)));
   }
 
   @Override
@@ -123,9 +128,36 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Auto Gyro Angle", m_gyro.getAngle());
     SmartDashboard.putNumber("Auto Gyro Heading", getHeading());
 
-    
-      
   }
+
+  // public Optional<Rotation2d> getRotationTargetOverride() {
+  //   // Some condition that should decide if we want to override rotation
+  //   if (false && visionSubsystem.hasTargets()) {
+  //     // Return an optional containing the rotation override (this should be a field
+  //     // relative rotation)
+  //     return Optional.of(moveToTarget());
+  //   } else {
+  //     // return an empty optional when we don't want to override the path's rotation
+  //     System.out.println("Getting called");
+  //     return Optional.empty();
+  //   }
+  // }
+
+  // public Rotation2d moveToTarget() {
+  //   double distanceRotFromTarget = visionSubsystem.getX();
+  //   rotationPID.setSetpoint(0);
+  //   final double rotPIDVal = clamp(rotationPID.calculate(distanceRotFromTarget), -0.5, 0.5);
+
+  //   // if the targets exist and the distance is accurate but the robot still goes
+  //   // away from the target, invert this.
+  //   boolean pidInvert = true;
+  //   double rotation = ((pidInvert ? -1 : 1) * rotPIDVal) * 0.1;
+
+  //   double currentPos = subsystem.getHeading();
+  //   return Rotation2d.fromDegrees(currentPos - rotation);
+
+  // }
+
 
   /**
    * Returns the currently-estimated pose of the robot.

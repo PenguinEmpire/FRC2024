@@ -8,7 +8,13 @@ import frc.robot.ControlInput;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+
+import java.util.Optional;
+
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -24,15 +30,14 @@ public class SwerveDriveCommand extends Command {
   // true = blue;
   // private boolean isTeam = false;
 
-  // pipeline 0: red
-  // pipeline 1: blue
+  // pipeline 0: blue
+  // pipeline 1: red
 
   // todo: add vision and lighting
-  public SwerveDriveCommand(DriveSubsystem subsystem, VisionSubsystem vs,ControlInput controlInput) {
+  public SwerveDriveCommand(DriveSubsystem subsystem, VisionSubsystem vs, ControlInput controlInput) {
     this.subsystem = subsystem;
     this.visionSubsystem = vs;
     this.controlInput = controlInput;
-    
 
     addRequirements(subsystem);
     setName("SwerveDrive");
@@ -43,6 +48,7 @@ public class SwerveDriveCommand extends Command {
     strafePID = new PIDController(0, 0, 0);
 
     SmartDashboard.putBoolean("Blue/Red Pickup (r: true/b: false)", false);
+
   }
 
   @Override
@@ -88,20 +94,21 @@ public class SwerveDriveCommand extends Command {
       double distanceRotFromTarget = visionSubsystem.getX();
       rotationPID.setSetpoint(0);
       final double rotPIDVal = clamp(rotationPID.calculate(distanceRotFromTarget), -0.5, 0.5);
-  
-      // if the targets exist and the distance is accurate but the robot still goes away from the target, invert this.
+
+      // if the targets exist and the distance is accurate but the robot still goes
+      // away from the target, invert this.
       boolean pidInvert = true;
       rotation = (pidInvert ? -1 : 1) * rotPIDVal;
-      
+
     } else if (getInput().getLeftJoystick().getTrigger()) {
       rotation = 0.5;
     }
     subsystem.drive(forward, strafe, clamp(rotation,
-          -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed),
-          true, false);
-  
+        -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed),
+        true, false);
 
   }
+
 
   private double linearDeadband(double input) {
     final double deadband = 0.095;

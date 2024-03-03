@@ -37,14 +37,14 @@ public class ShooterSubsystem extends SubsystemBase {
         proximitySensor = new DigitalInput(0);
 
         SmartDashboard.putNumber("Shooter Speed", 1);
-        SmartDashboard.putNumber("Intake Feeder Speed", 0.6);
+        SmartDashboard.putNumber("Intake Feeder Speed", 0.8);
 
         this.controlInput = controlInput;
     }
 
     @Override
     public void periodic() {
-        intakeFeederSpeed = SmartDashboard.getNumber("Intake Feeder Speed", 0.6);
+        intakeFeederSpeed = SmartDashboard.getNumber("Intake Feeder Speed", 0.8);
         shooterSpeed = SmartDashboard.getNumber("Shooter Speed", 1);
         SmartDashboard.putBoolean("Has Ring", hasRing());
         arm.periodic();
