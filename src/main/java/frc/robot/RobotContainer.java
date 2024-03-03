@@ -29,6 +29,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LightingSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.commands.AlignmentCommand;
+import frc.robot.commands.Autos;
 import frc.robot.commands.PositionCommand;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.commands.autonomous.AutoMotions;
@@ -54,6 +55,7 @@ public class RobotContainer {
   private ControlInput controlInput;
   private ShooterSubsystem shooterSubsystem;
   private AutoMotions autoMotions;
+  private Autos autos;
 
   private final Field2d field;
 
@@ -76,6 +78,7 @@ public class RobotContainer {
     swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, visionSubsystem, controlInput);
     shooterSubsystem = new ShooterSubsystem(15, 13, controlInput);
     autoMotions = new AutoMotions(shooterSubsystem, intakeSubsystem);
+    autos = new Autos(driveSubsystem, autoMotions, shooterSubsystem, intakeSubsystem, visionSubsystem);
 
     NamedCommands.registerCommand("shootClose", autoMotions.shootingClosestAutoMotion());
     NamedCommands.registerCommand("shootMiddle", autoMotions.shootingMiddleAutoMotion());
@@ -176,7 +179,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    return autos.test();
   }
 
 }

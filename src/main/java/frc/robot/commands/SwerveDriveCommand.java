@@ -109,7 +109,6 @@ public class SwerveDriveCommand extends Command {
 
   }
 
-
   private double linearDeadband(double input) {
     final double deadband = 0.095;
     if (Math.abs(input) < deadband) {
@@ -135,8 +134,5 @@ public class SwerveDriveCommand extends Command {
   public boolean isFinished() {
     return false;
   }
-
-  public void limelightDrive() {
-
-  }
+  
 }

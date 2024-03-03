@@ -85,7 +85,6 @@ public class PositionCommand extends Command {
         } else if (pos == Position.BASE) {
             shooterSubsystem.setArmPosition(0.0);
             shooterSubsystem.setShooterPosition(0.0);
-
         } else if (pos == Position.ARM_GROUND_PICKUP) {
             shooterSubsystem.setArmPosition(6.07);
             shooterSubsystem.setShooterPosition(0.95);
@@ -94,10 +93,10 @@ public class PositionCommand extends Command {
         } else if (pos == Position.FAR_SHOOTING) {
             intakeSubsystem.setPosition(0.0);
         } else if (pos == Position.MIDDLE_SHOOTING) {
-            intakeSubsystem.setPosition(0.79);
+            intakeSubsystem.setPosition(0.73);
         } else if (pos == Position.OUT_OF_AUTO_POSITION) {
             if (m_ticks < 15) {
-                shooterSubsystem.setArmPosition(5.6);
+                shooterSubsystem.setArmPosition(5.75);
             } else if (m_ticks < 60) {
                 intakeSubsystem.setPosition(4.2);
             } else if (m_ticks < 90) {
@@ -115,7 +114,7 @@ public class PositionCommand extends Command {
     }
 
     public boolean isFinished() {
-        return (pos == Position.TRAP || pos == Position.START_POSITION) ? m_ticks > 85
+        return (pos == Position.TRAP || pos == Position.START_POSITION || pos == Position.OUT_OF_AUTO_POSITION) ? m_ticks > 85
                 : true;
     }
 

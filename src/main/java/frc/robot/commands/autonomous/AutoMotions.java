@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.Vision;
 import frc.robot.commands.PositionCommand;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -37,6 +38,14 @@ public class AutoMotions extends Command {
                 shooterSubsystem.reverseFeeder().until(shooterSubsystem::hasRing),
                 shooterSubsystem.reverseFeeder().onlyWhile(shooterSubsystem::hasRing)));
 
+    }
+
+    public Command runIntake() {
+        return intakeSubsystem.runRollers();
+    }
+
+    public Command runShooter() {
+        return shooterSubsystem.runShooter();
     }
 
     // used to shoot from middle - need to change second position (shooter)

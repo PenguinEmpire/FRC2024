@@ -108,7 +108,7 @@ public class ShooterSubsystem extends SubsystemBase {
                 runShooter().withTimeout(runTime),
                 new SequentialCommandGroup(
                         new WaitCommand(2.0),
-                        runFeeder().withTimeout(2)));
+                        runFeeder().withTimeout(4)));
     }
 
     public void setArmPosition(double pos) {
