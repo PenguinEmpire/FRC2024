@@ -1,6 +1,7 @@
 package frc.robot.commands.autonomous;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -24,10 +25,8 @@ public class AutoMotions extends Command {
 
     public Command intakeAutoMotion() {
         return new ParallelCommandGroup(
-            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
             new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
             new SequentialCommandGroup(
-                new WaitCommand(1.5),
                 new ParallelCommandGroup(
                     shooterSubsystem.runFeeder().until(shooterSubsystem::hasRing),
                     intakeSubsystem.runRollers().until(shooterSubsystem::hasRing)),
@@ -46,12 +45,12 @@ public class AutoMotions extends Command {
         return shooterSubsystem.runShooter();
     }
 
-    // used to shoot from middle - need to change second position (shooter)
+    // used to shoot from middle - need to change time
     public Command shootingMiddleAutoMotion() {
-        return new SequentialCommandGroup(
-                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_SHOOT),
-                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.MIDDLE_SHOOTING),
-                shooterSubsystem.runShooterRoutine(4.0));
+        return Commands.race(
+            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
+            shooterSubsystem.runShooterRoutine(4)
+        );
     }
 
     // used to shoot from against the speaker
@@ -62,11 +61,11 @@ public class AutoMotions extends Command {
                 shooterSubsystem.runShooterRoutine(3.0));
     }
 
-    // used to shoot from far out - need to change second position (shooter)
+    // used to shoot from far out - need to change time (shooter)
     public Command shootingFarAutoMotion() {
-        return new SequentialCommandGroup(
-                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
-                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.FAR_SHOOTING),
-                shooterSubsystem.runShooterRoutine(6.0));
+        return Commands.race(
+            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
+            shooterSubsystem.runShooterRoutine(6)
+        );
     }
 }

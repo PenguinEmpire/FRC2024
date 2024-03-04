@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -146,10 +147,14 @@ public class RobotContainer {
     // might have to change this to runCloseShooterRoutine - depends on how much
     // power we need
     JoystickButton wooferShooterMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 5);
-    wooferShooterMotion.onTrue(new SequentialCommandGroup(
+    wooferShooterMotion.onTrue(Commands.race(
+      new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
+      new SequentialCommandGroup(
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_SHOOT),
-        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
-        shooterSubsystem.runShooterRoutine(6.0)));
+        shooterSubsystem.runShooterRoutine(6.0)
+      )
+
+    ));
 
     JoystickButton ampArms = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
     ampArms.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.AMP));
