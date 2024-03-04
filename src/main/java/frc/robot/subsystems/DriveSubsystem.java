@@ -90,7 +90,7 @@ public class DriveSubsystem extends SubsystemBase {
             new PIDConstants(0.5, 0, 0),
             new PIDConstants(0.1, 0, 0),
             3.8, // max speed in m/s
-            0.15,
+            0.5388153673,
             new ReplanningConfig()),
         () -> {
           // Boolean supplier that controls when the path will be mirrored for the red
