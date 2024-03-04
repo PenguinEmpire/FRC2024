@@ -20,6 +20,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -90,7 +91,7 @@ public class DriveSubsystem extends SubsystemBase {
             new PIDConstants(0.5, 0, 0),
             new PIDConstants(0.1, 0, 0),
             DriveConstants.kMaxSpeedMetersPerSecond, // max speed in m/s
-            0.5388153673,
+            new Translation2d(DriveConstants.kWheelBase / 2, DriveConstants.kTrackWidth / 2).getNorm(),
             new ReplanningConfig()),
         () -> {
           // Boolean supplier that controls when the path will be mirrored for the red
