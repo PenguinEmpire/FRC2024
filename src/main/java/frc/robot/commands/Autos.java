@@ -39,7 +39,8 @@ public class Autos extends Command {
                 new ParallelCommandGroup(
                         autoMotion.intakeAutoMotion(),
                         new MoveCommandOdometry(driveSubsystem, new Pose2d(0.809, 1.107, new Rotation2d(0.5)), true,
-                                0.75)),
+                                0.75),
+                        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER)),
                 new MoveCommandVision(driveSubsystem, true, 0.75, visionSubsystem),
                 autoMotion.shootingMiddleAutoMotion(),
                 new ParallelCommandGroup(

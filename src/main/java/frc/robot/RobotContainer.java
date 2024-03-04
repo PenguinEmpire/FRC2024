@@ -148,11 +148,12 @@ public class RobotContainer {
     // power we need
     // might want to change the whileTrue back to onTrue 3/3/24
     JoystickButton wooferShooterMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 5);
-    wooferShooterMotion.whileTrue(Commands.race(
-        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
-        new SequentialCommandGroup(
+    wooferShooterMotion.onTrue(Commands.race(
+      new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
+       new SequentialCommandGroup(
             new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_SHOOT),
-            shooterSubsystem.runShooterRoutine(6.0))
+            shooterSubsystem.runShooterRoutine(6.0)
+    )
     ));
 
     JoystickButton ampArms = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
@@ -160,6 +161,9 @@ public class RobotContainer {
 
     JoystickButton ampShooting = new JoystickButton(controlInput.getAccessoryJoystick(), 4);
     ampShooting.onTrue(shooterSubsystem.runAmpShooterRoutine());
+
+    JoystickButton shooting = new JoystickButton (controlInput.getRightJoystick(), 4);
+    shooting.onTrue(shooterSubsystem.runShooterRoutine(6.0));
   }
 
   // might have to reverse the the .until and .onlyWhile for the reverse
@@ -183,7 +187,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autos.test();
+    return autoChooser.getSelected();
   }
 
 }

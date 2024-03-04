@@ -42,8 +42,7 @@ public class SwerveDriveCommand extends Command {
     addRequirements(subsystem);
     setName("SwerveDrive");
 
-    // prolly need to change rotation to 0.154 and forward and strafe to 0
-    rotationPID = new PIDController(0.037, 0.001, 0.0007);
+    rotationPID = new PIDController(0.015, 0.001, 0.0001);
     forwardPID = new PIDController(0, 0, 0);
     strafePID = new PIDController(0, 0, 0);
 

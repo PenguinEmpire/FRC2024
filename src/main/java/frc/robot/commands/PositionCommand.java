@@ -71,7 +71,7 @@ public class PositionCommand extends Command {
         } else if (pos == Position.SPEAKER) {
             shooterSubsystem.setShooterPosition(1.03);
         } else if (pos == Position.INTAKE_OUT) {
-            intakeSubsystem.setPosition(4.12);
+            intakeSubsystem.setPosition(4.15);
         } else if (pos == Position.INTAKE_IN_PICKUP) {
             intakeSubsystem.setPosition(5.87);
 
@@ -89,7 +89,7 @@ public class PositionCommand extends Command {
             shooterSubsystem.setShooterPosition(0.0);
         } else if (pos == Position.ARM_GROUND_PICKUP) {
             shooterSubsystem.setArmPosition(6.07);
-            shooterSubsystem.setShooterPosition(0.95);
+            shooterSubsystem.setShooterPosition(1);
         } else if (pos == Position.INTAKE_IN_SHOOT) {
             intakeSubsystem.setPosition(5.5);
         } else if (pos == Position.FAR_SHOOTING) {

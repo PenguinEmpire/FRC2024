@@ -89,7 +89,7 @@ public class DriveSubsystem extends SubsystemBase {
         this::setChassisSpeeds,
         new HolonomicPathFollowerConfig(
             new PIDConstants(0.5, 0, 0),
-            new PIDConstants(0.1, 0, 0),
+            new PIDConstants(0.3, 0, 0),
             DriveConstants.kMaxSpeedMetersPerSecond, // max speed in m/s
             new Translation2d(DriveConstants.kWheelBase / 2, DriveConstants.kTrackWidth / 2).getNorm(),
             new ReplanningConfig()),
@@ -177,7 +177,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(
-        Rotation2d.fromDegrees(m_gyro.getYaw()),
+        Rotation2d.fromDegrees(-m_gyro.getYaw()),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -188,6 +188,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void setChassisSpeeds(ChassisSpeeds speeds) {
+    speeds.omegaRadiansPerSecond *= -1;
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);

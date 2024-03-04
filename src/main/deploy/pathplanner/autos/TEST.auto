@@ -16,6 +16,18 @@
           "data": {
             "pathName": "speakerToLeft"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "leftToMiddle"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "middleToRight"
+          }
         }
       ]
     }
