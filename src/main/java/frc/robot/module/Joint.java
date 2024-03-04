@@ -2,10 +2,12 @@ package frc.robot.module;
 
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.module.Joint;
 
@@ -20,6 +22,7 @@ public class Joint {
     private double targetPos;
     private double currentPos;
 
+    private double offsetFF;
     private double armP;
     private double armI;
     private double armD;
@@ -28,18 +31,21 @@ public class Joint {
     private double armMaxOutput;
     private double armMinOutput;
     private boolean invertedEncoder;
+    private ArmFeedforward jointFF;
+    private boolean reverseFF;
 
-    public Joint(String nameIn, int sparkID, double P, double I, double D, double FF, double minOutput, double maxOutput, boolean invertEncoder) {
+    public Joint(String nameIn, int sparkID, double P, double I, double D, double FF, double minOutput, double maxOutput, boolean invertEncoder, ArmFeedforward jFF, double jFFOffset, boolean reverseFF) {
         this.name = nameIn + ": ";
         this.armP = P;
         this.armI = I;
         this.armD = D;
-        this.armFF = FF;
+        this.jointFF = jFF;
+        this.reverseFF = reverseFF;
         this.armMinOutput = minOutput;
         this.armMaxOutput = maxOutput;
         this.invertedEncoder = invertEncoder;
         armMotor = new CANSparkMax(sparkID, CANSparkMax.MotorType.kBrushless);
-
+        armMotor.setIdleMode(IdleMode.kBrake);
         armEncoder = armMotor.getAbsoluteEncoder(Type.kDutyCycle);
         armEncoder.setPositionConversionFactor(2 * Math.PI);
         armEncoder.setInverted(invertEncoder);
@@ -49,7 +55,6 @@ public class Joint {
         armPIDController.setPositionPIDWrappingEnabled(true);
         armPIDController.setPositionPIDWrappingMinInput(0);
         armPIDController.setPositionPIDWrappingMaxInput(2*Math.PI);
-        
         SmartDashboard.putNumber(name + "P", armP);
         SmartDashboard.putNumber(name + "I", armI);
         SmartDashboard.putNumber(name + "D", armD);
@@ -63,6 +68,7 @@ public class Joint {
         armPIDController.setIZone(armIz);
         armPIDController.setFF(armFF);
         armPIDController.setOutputRange(armMinOutput, armMaxOutput);
+
     }
 
     public void periodic() {
@@ -93,9 +99,14 @@ public class Joint {
         if(invertedVal != this.invertedEncoder) {
             armEncoder.setInverted(invertedVal);
         }
+
+        double ffAddition = 0;
+        if(jointFF != null) {
+            ffAddition = (reverseFF ? -1 : 1) * jointFF.calculate(currentPos + offsetFF, armEncoder.getVelocity());
+        }
         
         double armSetRef = SmartDashboard.getNumber(name + "Reference", armEncoder.getPosition());
-        armPIDController.setReference(armSetRef, ControlType.kPosition);
+        armPIDController.setReference(armSetRef, ControlType.kPosition, 0, ffAddition);
 
     }
 

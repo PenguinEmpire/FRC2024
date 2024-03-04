@@ -100,8 +100,6 @@ public class SwerveDriveCommand extends Command {
       boolean pidInvert = true;
       rotation = (pidInvert ? -1 : 1) * rotPIDVal;
 
-    } else if (getInput().getLeftJoystick().getTrigger()) {
-      rotation = 0.5;
     }
     subsystem.drive(forward, strafe, clamp(rotation,
         -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed),

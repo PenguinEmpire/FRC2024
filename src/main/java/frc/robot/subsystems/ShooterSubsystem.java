@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,15 +28,18 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private VisionSubsystem visionSubsystem;
 
+    private SparkPIDController shooterPIDController;
+
     private ControlInput controlInput;
 
     public ShooterSubsystem(int feederID, int shooterID, ControlInput controlInput, VisionSubsystem vs) {
-        arm = new Joint("shooterArm", 11, 0.7, 0, 0, 0, -0.30, 0.30, true);
-        shooter = new Joint("shooterEnt", 20, 0.95, 0.0001, 0, 0.001, -0.27, 0.27, false);
+        arm = new Joint("shooterArm", 11, 0.7, 0, 0, 0, -0.30, 0.30, true, null, 0, false);
+        shooter = new Joint("shooterEnt", 20, 0.95, 0.0001, 0, 0.001, -0.27, 0.27, false, null, 0, false);
 
         feederMotor = new CANSparkMax(feederID, CANSparkMax.MotorType.kBrushless);
         shooterMotor = new CANSparkMax(shooterID, CANSparkMax.MotorType.kBrushless);
-
+        shooterPIDController = shooterMotor.getPIDController();
+        
         proximitySensor = new DigitalInput(0);
 
         SmartDashboard.putNumber("Shooter Speed", 1);
