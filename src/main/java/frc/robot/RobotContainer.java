@@ -69,7 +69,7 @@ public class RobotContainer {
   public RobotContainer() {
     field = new Field2d();
     SmartDashboard.putData("Field", field);
-    
+
     // Configure the trigger bindings
     controlInput = new ControlInput();
     driveSubsystem = new DriveSubsystem();
@@ -146,14 +146,13 @@ public class RobotContainer {
 
     // might have to change this to runCloseShooterRoutine - depends on how much
     // power we need
+    // might want to change the whileTrue back to onTrue 3/3/24
     JoystickButton wooferShooterMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 5);
-    wooferShooterMotion.onTrue(Commands.race(
-      new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
-      new SequentialCommandGroup(
-        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_SHOOT),
-        shooterSubsystem.runShooterRoutine(6.0)
-      )
-
+    wooferShooterMotion.whileTrue(Commands.race(
+        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
+        new SequentialCommandGroup(
+            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_SHOOT),
+            shooterSubsystem.runShooterRoutine(6.0))
     ));
 
     JoystickButton ampArms = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
