@@ -176,7 +176,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(
-        Rotation2d.fromDegrees(-m_gyro.getYaw()),
+        Rotation2d.fromDegrees(m_gyro.getYaw()),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -187,11 +187,11 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void setChassisSpeeds(ChassisSpeeds speeds) {
-    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
-    m_frontLeft.setDesiredStateNew(swerveModuleStates[0]);
-    m_frontRight.setDesiredStateNew(swerveModuleStates[1]);
-    m_rearLeft.setDesiredStateNew(swerveModuleStates[2]);
-    m_rearRight.setDesiredStateNew(swerveModuleStates[3]);
+     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
   public ChassisSpeeds getRobotRelativeSpeeds() {
