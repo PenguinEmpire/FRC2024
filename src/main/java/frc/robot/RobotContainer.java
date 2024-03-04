@@ -76,7 +76,7 @@ public class RobotContainer {
     visionSubsystem = new VisionSubsystem();
     intakeSubsystem = new IntakeSubsystem(9, 12);
     swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, visionSubsystem, controlInput);
-    shooterSubsystem = new ShooterSubsystem(15, 13, controlInput);
+    shooterSubsystem = new ShooterSubsystem(15, 13, controlInput, visionSubsystem);
     autoMotions = new AutoMotions(shooterSubsystem, intakeSubsystem);
     autos = new Autos(driveSubsystem, autoMotions, shooterSubsystem, intakeSubsystem, visionSubsystem);
 
@@ -149,7 +149,7 @@ public class RobotContainer {
     wooferShooterMotion.onTrue(new SequentialCommandGroup(
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_SHOOT),
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
-        shooterSubsystem.runShooterRoutine(4.0)));
+        shooterSubsystem.runShooterRoutine(6.0)));
 
     JoystickButton ampArms = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
     ampArms.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.AMP));

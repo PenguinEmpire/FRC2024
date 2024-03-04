@@ -25,9 +25,11 @@ public class ShooterSubsystem extends SubsystemBase {
     private double intakeFeederSpeed;
     private double shooterSpeed;
 
+    private VisionSubsystem visionSubsystem;
+
     private ControlInput controlInput;
 
-    public ShooterSubsystem(int feederID, int shooterID, ControlInput controlInput) {
+    public ShooterSubsystem(int feederID, int shooterID, ControlInput controlInput, VisionSubsystem vs) {
         arm = new Joint("shooterArm", 11, 0.7, 0, 0, 0, -0.30, 0.30, true);
         shooter = new Joint("shooterEnt", 20, 0.95, 0.0001, 0, 0.001, -0.27, 0.27, false);
 
@@ -38,6 +40,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Shooter Speed", 1);
         SmartDashboard.putNumber("Intake Feeder Speed", 0.8);
+        this.visionSubsystem = vs;
 
         this.controlInput = controlInput;
     }
@@ -107,8 +110,8 @@ public class ShooterSubsystem extends SubsystemBase {
         return new ParallelCommandGroup(
                 runShooter().withTimeout(runTime),
                 new SequentialCommandGroup(
-                        new WaitCommand(2.0),
-                        runFeeder().withTimeout(4)));
+                        new WaitCommand(4.0),
+                        runFeeder().withTimeout(2)));
     }
 
     public void setArmPosition(double pos) {
@@ -117,6 +120,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void setShooterPosition(double pos) {
         shooter.setPosition(pos);
+    }
+
+
+    public void setShooterVision() {
+        if(visionSubsystem.hasTargets()) {
+            shooter.setPosition((0.012 * visionSubsystem.getY()) + 0.86);
+        }
     }
 
     public boolean isSafeMode() {

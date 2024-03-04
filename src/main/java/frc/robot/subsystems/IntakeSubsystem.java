@@ -16,7 +16,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public IntakeSubsystem(int moveSparkID, int rollerSparkID) {
         rollerMotor = new CANSparkMax(rollerSparkID, CANSparkMax.MotorType.kBrushless);
-        intake = new Joint("intake", moveSparkID, 0.6, 0, 0, 0.002, -0.2, 0.2, true);
+        intake = new Joint("intake", moveSparkID, 0.6, 0, 0, 0.008, -0.2, 0.2, true);
         SmartDashboard.putNumber("Intake Speed", -0.75);
     }
 
