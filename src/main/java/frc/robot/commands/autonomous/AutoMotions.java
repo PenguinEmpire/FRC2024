@@ -32,12 +32,10 @@ public class AutoMotions extends Command {
                     shooterSubsystem.runFeeder().until(shooterSubsystem::hasRing),
                     intakeSubsystem.runRollers().until(shooterSubsystem::hasRing)),
                 shooterSubsystem.runFeeder().withTimeout(0.25),
-                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_PICKUP),
-                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE),
-                new WaitCommand(1),
-                shooterSubsystem.reverseFeeder().until(shooterSubsystem::hasRing),
-                shooterSubsystem.reverseFeeder().onlyWhile(shooterSubsystem::hasRing)));
-
+                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE)));
+                // new WaitCommand(1),
+                // shooterSubsystem.reverseFeeder().until(shooterSubsystem::hasRing),
+                // shooterSubsystem.reverseFeeder().onlyWhile(shooterSubsystem::hasRing)));
     }
 
     public Command runIntake() {
