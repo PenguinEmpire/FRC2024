@@ -85,11 +85,11 @@ public class DriveSubsystem extends SubsystemBase {
         this::getPose,
         this::resetOdometry,
         this::getRobotRelativeSpeeds,
-        this::driveRobotRelative,
+        this::setChassisSpeeds,
         new HolonomicPathFollowerConfig(
             new PIDConstants(0.5, 0, 0),
             new PIDConstants(0.1, 0, 0),
-            3.8, // max speed in m/s
+            DriveConstants.kMaxSpeedMetersPerSecond, // max speed in m/s
             0.5388153673,
             new ReplanningConfig()),
         () -> {
@@ -186,8 +186,12 @@ public class DriveSubsystem extends SubsystemBase {
         pose);
   }
 
-  public void driveRobotRelative(ChassisSpeeds speeds) {
-    this.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false, false);
+  public void setChassisSpeeds(ChassisSpeeds speeds) {
+     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
   public ChassisSpeeds getRobotRelativeSpeeds() {

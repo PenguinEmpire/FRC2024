@@ -75,8 +75,6 @@ public class SwerveDriveCommand extends Command {
     rotation = Math.copySign(Math.pow(rotation, pow), rotation);
     rotation = linearDeadband(rotation);
 
-    forward *= 1.4;
-    strafe *= 1.4;
     rotation *= 3.6;
 
     // need to add pipeline filtering again
