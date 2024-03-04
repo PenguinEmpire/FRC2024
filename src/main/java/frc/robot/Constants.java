@@ -108,7 +108,7 @@ public final class Constants {
     // Chassis configuration (changed)
     public static final double kTrackWidth = Units.inchesToMeters(30.0);
     // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = Units.inchesToMeters(23.16);
+    public static final double kWheelBase = Units.inchesToMeters(30);
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
