@@ -6,8 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.Timer
-;
+import edu.wpi.first.wpilibj.Timer;
 
 public class LightingSubsystem extends SubsystemBase {
     private int firstPixelHue = 0;
@@ -45,25 +44,28 @@ public class LightingSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Animation Speed", 0);
         SmartDashboard.putData("Lighting Modes", chooser);
-       
+
     }
 
     @Override
     public void periodic() {
         var choice = chooser.getSelected();
 
-        if (choice == kBlue) blue();
-        if (choice == kRed) red();
-        if (choice == kBlueWhite) blueAndWhite();
-        if (choice == kRainbow) rainbow();
-        if (choice == kPenguin) penguin(0,0,255);
-        
+        if (choice == kBlue)
+            blue();
+        if (choice == kRed)
+            red();
+        if (choice == kBlueWhite)
+            blueAndWhite();
+        if (choice == kRainbow)
+            rainbow();
+        if (choice == kPenguin)
+            penguin(0, 0, 255);
 
         if (isTempColor) {
-            for (var i = 0; i < ledBuffer.getLength(); i++) {
-                ledBuffer.setRGB(i, tempR, tempG, tempB);
-            }
+            hasPiece();
         }
+        
         led.setData(ledBuffer);
     }
 
@@ -73,24 +75,24 @@ public class LightingSubsystem extends SubsystemBase {
         }
     }
 
-    public void red(){
+    public void red() {
         for (var i = 0; i < ledBuffer.getLength(); i++) {
             ledBuffer.setRGB(i, 255, 0, 0);
         }
     }
 
-    public void blueAndWhite(){
+    public void blueAndWhite() {
         for (int i = 0; i < ledBuffer.getLength(); i++) {
             // Calculate the hue - hue is easier for rainbows because the color
             // shape is a circle so only one value needs to precess
             final var pixelHue = (firstPixelHue + (i * 180 / ledBuffer.getLength())) % 180;
             // Set the value
             ledBuffer.setHSV(i, 221, pixelHue, 128);
-          }
-          // Increase by to make the rainbow "move"
-          firstPixelHue += 3;
-          // Check bounds
-          firstPixelHue %= 180;
+        }
+        // Increase by to make the rainbow "move"
+        firstPixelHue += 3;
+        // Check bounds
+        firstPixelHue %= 180;
 
     }
 
@@ -101,37 +103,48 @@ public class LightingSubsystem extends SubsystemBase {
             final var hue = (firstPixelHue + (i * 180 / ledBuffer.getLength())) % 180;
             // Set the value
             ledBuffer.setHSV(i, hue, 255, 128);
-          }
-          // Increase by to make the rainbow "move"
-          firstPixelHue += 3;
-          // Check bounds
-          firstPixelHue %= 180;
+        }
+        // Increase by to make the rainbow "move"
+        firstPixelHue += 3;
+        // Check bounds
+        firstPixelHue %= 180;
     }
 
-    public void penguin(int red, int green, int blue){
-        for (var i = 0; i < ledBuffer.getLength(); i++){
+    public void penguin(int red, int green, int blue) {
+        for (var i = 0; i < ledBuffer.getLength(); i++) {
             if ((i + counterRGB) % 5 == 0) {
-              //blue
-              ledBuffer.setRGB(i, red, green, blue);
-            } else {      //black
-              ledBuffer.setRGB(i, 0, 0, 0);
+                // blue
+                ledBuffer.setRGB(i, red, green, blue);
+            } else { // black
+                ledBuffer.setRGB(i, 0, 0, 0);
             }
-          }
-          if(timer.hasElapsed(SmartDashboard.getNumber("Animation Speed", 0))) {
+        }
+        if (timer.hasElapsed(SmartDashboard.getNumber("Animation Speed", 0))) {
             counterRGB++;
             timer.reset();
-          }
+        }
     }
 
-    public void setTemporaryColor(int red, int green, int blue) {
-        isTempColor = true;
-        tempR = red;
-        tempG = green;
-        tempB = blue;
-      }
+    public void setPulsing(boolean pulsing) {
+        isTempColor = pulsing;
+    }
+
     public void releaseTemporaryColor() {
         isTempColor = false;
     }
 
+    public void hasPiece() {
+        for (var i = 0; i < ledBuffer.getLength(); i++) {
+            if (counterRGB % 16 >= 8) {
+                ledBuffer.setRGB(i, 0, 255, 0);
+
+            } else {
+                ledBuffer.setRGB(i, 0, 0, 0);
+
+            }
+        }
+        counterRGB++;
+    }
     
+
 }

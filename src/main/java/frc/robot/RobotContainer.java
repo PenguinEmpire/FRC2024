@@ -77,7 +77,7 @@ public class RobotContainer {
     visionSubsystem = new VisionSubsystem();
     intakeSubsystem = new IntakeSubsystem(9, 12);
     swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, visionSubsystem, controlInput);
-    shooterSubsystem = new ShooterSubsystem(15, 13, controlInput, visionSubsystem);
+    shooterSubsystem = new ShooterSubsystem(15, 13, controlInput, visionSubsystem, lightingSubsystem);
     autoMotions = new AutoMotions(shooterSubsystem, intakeSubsystem);
     autos = new Autos(driveSubsystem, autoMotions, shooterSubsystem, intakeSubsystem, visionSubsystem);
 
