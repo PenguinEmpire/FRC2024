@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -41,6 +42,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         feederMotor = new CANSparkMax(feederID, CANSparkMax.MotorType.kBrushless);
         shooterMotor = new CANSparkMax(shooterID, CANSparkMax.MotorType.kBrushless);
+        shooterMotor.setIdleMode(IdleMode.kBrake);
         shooterEncoder = shooterMotor.getEncoder();
         shooterPIDController = shooterMotor.getPIDController();
         

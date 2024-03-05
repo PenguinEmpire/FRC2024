@@ -85,6 +85,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("shootMiddle", autoMotions.shootingMiddleAutoMotion());
     NamedCommands.registerCommand("shootFar", autoMotions.shootingFarAutoMotion());
     NamedCommands.registerCommand("intakeMotion", autoMotions.intakeAutoMotion());
+    NamedCommands.registerCommand("intakeRollers", autoMotions.runIntake());
+    NamedCommands.registerCommand("shooterRollers", autoMotions.runShooter());
+    NamedCommands.registerCommand("shooterPos", autoMotions.setShooterAutoPos());
     NamedCommands.registerCommand("outOfAutoPos",
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.OUT_OF_AUTO_POSITION));
 
@@ -133,7 +136,7 @@ public class RobotContainer {
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
         new SequentialCommandGroup(
-            new WaitCommand(1.5),
+            new WaitCommand(0.5),
             new ParallelCommandGroup(
                 shooterSubsystem.runFeeder().until(shooterSubsystem::hasRing),
                 intakeSubsystem.runRollers().until(shooterSubsystem::hasRing)),
@@ -148,22 +151,18 @@ public class RobotContainer {
     // power we need
     // might want to change the whileTrue back to onTrue 3/3/24
     JoystickButton wooferShooterMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 5);
-    wooferShooterMotion.onTrue(Commands.race(
-      new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
-       new SequentialCommandGroup(
-            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_SHOOT),
-            shooterSubsystem.runShooterRoutine(6.0)
-    )
+    wooferShooterMotion.onTrue(new SequentialCommandGroup(
+        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
+        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_SHOOT),
+        shooterSubsystem.runShooterRoutine(4.0)
+
     ));
 
-    JoystickButton ampArms = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
+    JoystickButton ampArms = new JoystickButton(controlInput.getAccessoryJoystick(), 4);
     ampArms.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.AMP));
 
-    JoystickButton ampShooting = new JoystickButton(controlInput.getAccessoryJoystick(), 4);
+    JoystickButton ampShooting = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
     ampShooting.onTrue(shooterSubsystem.runAmpShooterRoutine());
-
-    JoystickButton shooting = new JoystickButton (controlInput.getRightJoystick(), 4);
-    shooting.onTrue(shooterSubsystem.runShooterRoutine(6.0));
   }
 
   // might have to reverse the the .until and .onlyWhile for the reverse

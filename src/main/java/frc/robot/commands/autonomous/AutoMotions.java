@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.Vision;
 import frc.robot.commands.PositionCommand;
+import frc.robot.commands.PositionCommand.Position;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -28,8 +29,8 @@ public class AutoMotions extends Command {
             new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
             new SequentialCommandGroup(
                 new ParallelCommandGroup(
-                    shooterSubsystem.runFeeder().until(shooterSubsystem::hasRing),
-                    intakeSubsystem.runRollers().until(shooterSubsystem::hasRing)),
+                    shooterSubsystem.runFeeder().withTimeout(3.0),
+                    intakeSubsystem.runRollers().withTimeout(3.0)),
                 shooterSubsystem.runFeeder().withTimeout(0.25),
                 new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE)));
                 // new WaitCommand(1),
@@ -45,13 +46,17 @@ public class AutoMotions extends Command {
         return shooterSubsystem.runShooter();
     }
 
+    public Command setShooterAutoPos() {
+        return new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER);
+    }
+
     // used to shoot from middle - need to change time
     public Command shootingMiddleAutoMotion() {
-        return Commands.race(
-            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
+        return new SequentialCommandGroup(
             shooterSubsystem.runShooterRoutine(4)
         );
-    }
+        
+    } 
 
     // used to shoot from against the speaker
     public Command shootingClosestAutoMotion() {
@@ -64,7 +69,6 @@ public class AutoMotions extends Command {
     // used to shoot from far out - need to change time (shooter)
     public Command shootingFarAutoMotion() {
         return Commands.race(
-            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
             shooterSubsystem.runShooterRoutine(6)
         );
     }
