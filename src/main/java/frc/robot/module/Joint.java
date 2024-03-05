@@ -34,11 +34,12 @@ public class Joint {
     private ArmFeedforward jointFF;
     private boolean reverseFF;
 
-    public Joint(String nameIn, int sparkID, double P, double I, double D, double FF, double minOutput, double maxOutput, boolean invertEncoder, ArmFeedforward jFF, double jFFOffset, boolean reverseFF) {
+    public Joint(String nameIn, int sparkID, double P, double I, double Iz, double D, double FF, double minOutput, double maxOutput, boolean invertEncoder, ArmFeedforward jFF, double jFFOffset, boolean reverseFF) {
         this.name = nameIn + ": ";
         this.armP = P;
         this.armI = I;
         this.armD = D;
+        this.armIz = Iz;
         this.jointFF = jFF;
         this.reverseFF = reverseFF;
         this.armMinOutput = minOutput;
@@ -57,6 +58,7 @@ public class Joint {
         armPIDController.setPositionPIDWrappingMaxInput(2*Math.PI);
         SmartDashboard.putNumber(name + "P", armP);
         SmartDashboard.putNumber(name + "I", armI);
+        SmartDashboard.putNumber(name + "IZ", armIz);
         SmartDashboard.putNumber(name + "D", armD);
         SmartDashboard.putNumber(name + "FF", armFF);
         SmartDashboard.putNumber(name + "Reference", armEncoder.getPosition());
@@ -83,6 +85,11 @@ public class Joint {
         double armIValue = SmartDashboard.getNumber(name + "I", 0);
         if (armIValue != armI) {
             armPIDController.setI(armIValue);
+        }
+
+        double armIZValue = SmartDashboard.getNumber(name + "IZ", 0);
+        if (armIZValue != armIz) {
+            armPIDController.setIZone(armIZValue);
         }
 
         double armDValue = SmartDashboard.getNumber(name +"D", 0);
