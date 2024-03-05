@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -29,6 +30,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private VisionSubsystem visionSubsystem;
 
     private SparkPIDController shooterPIDController;
+    private RelativeEncoder shooterEncoder;
 
     private ControlInput controlInput;
 
@@ -38,12 +40,14 @@ public class ShooterSubsystem extends SubsystemBase {
 
         feederMotor = new CANSparkMax(feederID, CANSparkMax.MotorType.kBrushless);
         shooterMotor = new CANSparkMax(shooterID, CANSparkMax.MotorType.kBrushless);
+        shooterEncoder = shooterMotor.getEncoder();
         shooterPIDController = shooterMotor.getPIDController();
         
         proximitySensor = new DigitalInput(0);
 
         SmartDashboard.putNumber("Shooter Speed", 1);
         SmartDashboard.putNumber("Intake Feeder Speed", 0.8);
+
         this.visionSubsystem = vs;
 
         this.controlInput = controlInput;
@@ -54,6 +58,7 @@ public class ShooterSubsystem extends SubsystemBase {
         intakeFeederSpeed = SmartDashboard.getNumber("Intake Feeder Speed", 0.8);
         shooterSpeed = SmartDashboard.getNumber("Shooter Speed", 1);
         SmartDashboard.putBoolean("Has Ring", hasRing());
+        SmartDashboard.putNumber("Shooter RPM",shooterEncoder.getVelocity());
         arm.periodic();
         shooter.periodic();
     }
@@ -114,7 +119,7 @@ public class ShooterSubsystem extends SubsystemBase {
         return new ParallelCommandGroup(
                 runShooter().withTimeout(runTime),
                 new SequentialCommandGroup(
-                        new WaitCommand(4.0),
+                        new WaitCommand(runTime - 2),
                         runFeeder().withTimeout(2)));
     }
 
