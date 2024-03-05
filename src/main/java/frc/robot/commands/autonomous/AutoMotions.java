@@ -24,18 +24,13 @@ public class AutoMotions extends Command {
 
     }
 
+    // tamper with feeding timing for far distances
     public Command intakeAutoMotion() {
         return new ParallelCommandGroup(
-            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
-            new SequentialCommandGroup(
-                new ParallelCommandGroup(
-                    shooterSubsystem.runFeeder().withTimeout(3.0),
-                    intakeSubsystem.runRollers().withTimeout(3.0)),
-                shooterSubsystem.runFeeder().withTimeout(0.25),
-                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE)));
-                // new WaitCommand(1),
-                // shooterSubsystem.reverseFeeder().until(shooterSubsystem::hasRing),
-                // shooterSubsystem.reverseFeeder().onlyWhile(shooterSubsystem::hasRing)));
+                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
+                new SequentialCommandGroup(
+                        shooterSubsystem.runFeeder().withTimeout(2.0),
+                        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE)));
     }
 
     public Command runIntake() {
@@ -46,17 +41,21 @@ public class AutoMotions extends Command {
         return shooterSubsystem.runShooter();
     }
 
+    // tamper with timing
+    public Command runFeederWithTimeout() {
+        return shooterSubsystem.runFeeder().withTimeout(2.0);
+    }
+
     public Command setShooterAutoPos() {
-        return new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER);
+        return new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER)
+                .repeatedly();
     }
 
     // used to shoot from middle - need to change time
     public Command shootingMiddleAutoMotion() {
         return new SequentialCommandGroup(
-            shooterSubsystem.runShooterRoutine(4)
-        );
-        
-    } 
+                shooterSubsystem.runShooterRoutine(4));
+    }
 
     // used to shoot from against the speaker
     public Command shootingClosestAutoMotion() {
@@ -69,7 +68,6 @@ public class AutoMotions extends Command {
     // used to shoot from far out - need to change time (shooter)
     public Command shootingFarAutoMotion() {
         return Commands.race(
-            shooterSubsystem.runShooterRoutine(6)
-        );
+                shooterSubsystem.runShooterRoutine(6));
     }
 }
