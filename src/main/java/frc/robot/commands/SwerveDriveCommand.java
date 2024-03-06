@@ -30,8 +30,8 @@ public class SwerveDriveCommand extends Command {
   // true = blue;
   // private boolean isTeam = false;
 
-  // pipeline 0: blue
-  // pipeline 1: red
+  // pipeline 0: red
+  // pipeline 1: blue
 
   // todo: add vision and lighting
   public SwerveDriveCommand(DriveSubsystem subsystem, VisionSubsystem vs, ControlInput controlInput) {
@@ -46,7 +46,7 @@ public class SwerveDriveCommand extends Command {
     forwardPID = new PIDController(0, 0, 0);
     strafePID = new PIDController(0, 0, 0);
 
-    SmartDashboard.putBoolean("Blue/Red Pickup (r: true/b: false)", false);
+    SmartDashboard.putBoolean("Pickup Side (r: true/b: false)", true);
 
   }
 
@@ -76,12 +76,10 @@ public class SwerveDriveCommand extends Command {
 
     rotation *= 2.6;
 
-    // need to add pipeline filtering again
-
-    if (SmartDashboard.getBoolean("Blue/Red Pickup (r: true/b: false)", false)) {
-      visionSubsystem.setPipeline(1);
-    } else {
+    if (SmartDashboard.getBoolean("Pickup Side (r: true/b: false)", true)) {
       visionSubsystem.setPipeline(0);
+    } else {
+      visionSubsystem.setPipeline(1);
     }
     SmartDashboard.putNumber("Gyro Yaw", subsystem.getNavX().getYaw());
     SmartDashboard.putNumber("Gyro Angle", subsystem.getNavX().getAngle());

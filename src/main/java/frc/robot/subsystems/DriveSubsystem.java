@@ -89,7 +89,7 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(VisionSubsystem visionSubsystem) {
     this.visionSubsystem = visionSubsystem;
-    rotationPID = new PIDController(0.015, 0.001, 0.0001);
+    rotationPID = new PIDController(0.015, 0.001, 0);
 
     AutoBuilder.configureHolonomic(
         this::getPose,
