@@ -34,6 +34,12 @@
                 }
               },
               {
+                "type": "named",
+                "data": {
+                  "name": "shooterRollers"
+                }
+              },
+              {
                 "type": "sequential",
                 "data": {
                   "commands": [
@@ -59,7 +65,13 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 3.0
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "shootingRoutine"
                       }
                     },
                     {
@@ -77,25 +89,6 @@
                             "data": {
                               "name": "intakeMotion"
                             }
-                          },
-                          {
-                            "type": "sequential",
-                            "data": {
-                              "commands": [
-                                {
-                                  "type": "wait",
-                                  "data": {
-                                    "waitTime": 1.0
-                                  }
-                                },
-                                {
-                                  "type": "named",
-                                  "data": {
-                                    "name": "shooterPos"
-                                  }
-                                }
-                              ]
-                            }
                           }
                         ]
                       }
@@ -103,7 +96,13 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 3.0
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "shootingRoutine"
                       }
                     },
                     {
@@ -121,27 +120,20 @@
                             "data": {
                               "name": "intakeMotion"
                             }
-                          },
-                          {
-                            "type": "sequential",
-                            "data": {
-                              "commands": [
-                                {
-                                  "type": "wait",
-                                  "data": {
-                                    "waitTime": 2.0
-                                  }
-                                },
-                                {
-                                  "type": "named",
-                                  "data": {
-                                    "name": "shooterPos"
-                                  }
-                                }
-                              ]
-                            }
                           }
                         ]
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "shootingRoutine"
                       }
                     }
                   ]

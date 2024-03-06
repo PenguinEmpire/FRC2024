@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.5034549278082932,
-      "y": 7.327563668799213
+      "x": 0.7,
+      "y": 6.7
     },
-    "rotation": -0.8091113664375581
+    "rotation": 59.56145909857741
   },
   "command": {
     "type": "sequential",
@@ -19,12 +19,6 @@
                 "type": "named",
                 "data": {
                   "name": "outOfAutoPos"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "wallToSpeaker"
                 }
               }
             ]
