@@ -30,7 +30,16 @@ public class AutoMotions extends Command {
                 new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
                 new SequentialCommandGroup(
                         shooterSubsystem.runFeeder().withTimeout(2.0),
-                        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE)));
+                        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE)
+                )
+        );
+    }
+
+    public Command shootingAutoMotion() {
+        return new ParallelCommandGroup(
+                setShooterAutoPos(),
+                runFeederWithTimeout()
+        );
     }
 
     public Command runIntake() {
@@ -47,8 +56,7 @@ public class AutoMotions extends Command {
     }
 
     public Command setShooterAutoPos() {
-        return new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER)
-                .repeatedly();
+        return new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER);
     }
 
     // used to shoot from middle - need to change time
@@ -56,6 +64,7 @@ public class AutoMotions extends Command {
         return new SequentialCommandGroup(
                 shooterSubsystem.runShooterRoutine(4));
     }
+
 
     // used to shoot from against the speaker
     public Command shootingClosestAutoMotion() {
@@ -67,7 +76,6 @@ public class AutoMotions extends Command {
 
     // used to shoot from far out - need to change time (shooter)
     public Command shootingFarAutoMotion() {
-        return Commands.race(
-                shooterSubsystem.runShooterRoutine(6));
+        return shooterSubsystem.runFeeder().withTimeout(2.0);
     }
 }

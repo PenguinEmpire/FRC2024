@@ -55,7 +55,7 @@ public class RobotContainer {
   private IntakeSubsystem intakeSubsystem;
   private ControlInput controlInput;
   private ShooterSubsystem shooterSubsystem;
-  private ClimberSubsystem climberSubsystem;
+  // private ClimberSubsystem climberSubsystem;
   private AutoMotions autoMotions;
 
   private final Field2d field;
@@ -78,7 +78,7 @@ public class RobotContainer {
     intakeSubsystem = new IntakeSubsystem(9, 12);
     swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, visionSubsystem, controlInput);
     shooterSubsystem = new ShooterSubsystem(15, 13, controlInput, visionSubsystem, lightingSubsystem);
-    climberSubsystem = new ClimberSubsystem(25);
+    // climberSubsystem = new ClimberSubsystem(25);
     autoMotions = new AutoMotions(shooterSubsystem, intakeSubsystem);
 
     NamedCommands.registerCommand("shootClose", autoMotions.shootingClosestAutoMotion());
@@ -89,6 +89,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("shooterRollers", autoMotions.runShooter());
     NamedCommands.registerCommand("feederRollers", autoMotions.runFeederWithTimeout());
     NamedCommands.registerCommand("shooterPos", autoMotions.setShooterAutoPos());
+    NamedCommands.registerCommand("shootingRoutine", autoMotions.shootingAutoMotion());
     NamedCommands.registerCommand("outOfAutoPos",
         new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.OUT_OF_AUTO_POSITION));
 
