@@ -13,6 +13,8 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.controller.PIDController;
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -36,6 +38,10 @@ import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
+
+  private VisionSubsystem visionSubsystem;
+  private PIDController rotationPID;
+
   // Create MAXSwerveModules
   private final SwerveModule m_frontLeft = new SwerveModule(
       DriveConstants.kFrontLeftDrivingCanId,
@@ -81,15 +87,18 @@ public class DriveSubsystem extends SubsystemBase {
       });
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem() {
+  public DriveSubsystem(VisionSubsystem visionSubsystem) {
+    this.visionSubsystem = visionSubsystem;
+    rotationPID = new PIDController(0.015, 0.001, 0.0001);
+
     AutoBuilder.configureHolonomic(
         this::getPose,
         this::resetOdometry,
         this::getRobotRelativeSpeeds,
         this::setChassisSpeeds,
         new HolonomicPathFollowerConfig(
-            new PIDConstants(0.5, 0, 0),
-            new PIDConstants(0.3, 0, 0),
+            new PIDConstants(0.6, 0, 0),
+            new PIDConstants(0.4, 0.0001, 0),
             DriveConstants.kMaxSpeedMetersPerSecond, // max speed in m/s
             new Translation2d(DriveConstants.kWheelBase / 2, DriveConstants.kTrackWidth / 2).getNorm(),
             new ReplanningConfig()),
@@ -106,8 +115,8 @@ public class DriveSubsystem extends SubsystemBase {
           return false;
         },
         this);
-        
-        // PPHolonomicDriveController.setRotationTargetOverride(() -> Optional.of(Rotation2d.fromDegrees(0)));
+      rotationPID.reset();
+      PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
   }
 
   @Override
@@ -132,35 +141,37 @@ public class DriveSubsystem extends SubsystemBase {
 
   }
 
-  // public Optional<Rotation2d> getRotationTargetOverride() {
-  //   // Some condition that should decide if we want to override rotation
-  //   if (false && visionSubsystem.hasTargets()) {
-  //     // Return an optional containing the rotation override (this should be a field
-  //     // relative rotation)
-  //     return Optional.of(moveToTarget());
-  //   } else {
-  //     // return an empty optional when we don't want to override the path's rotation
-  //     System.out.println("Getting called");
-  //     return Optional.empty();
-  //   }
-  // }
+  public Optional<Rotation2d> getRotationTargetOverride() {
+    // Some condition that should decide if we want to override rotation
+    if (visionSubsystem.hasTargets()) {
+      // Return an optional containing the rotation override (this should be a field
+      // relative rotation)
+      System.out.println("Rotation");
+      return Optional.of(new Rotation2d(getHeading()));
+    } else {
+      // return an empty optional when we don't want to override the path's rotation
+      System.out.println("No rotatio");
+      return Optional.empty();
+    }
+  }
 
-  // public Rotation2d moveToTarget() {
-  //   double distanceRotFromTarget = visionSubsystem.getX();
-  //   rotationPID.setSetpoint(0);
-  //   final double rotPIDVal = clamp(rotationPID.calculate(distanceRotFromTarget), -0.5, 0.5);
+  public double limeAlign() {
+    double distanceRotFromTarget = visionSubsystem.getX();
+    rotationPID.setSetpoint(0);
+    final double rotPIDVal = clamp(rotationPID.calculate(distanceRotFromTarget), -0.5, 0.5);
 
-  //   // if the targets exist and the distance is accurate but the robot still goes
-  //   // away from the target, invert this.
-  //   boolean pidInvert = true;
-  //   double rotation = ((pidInvert ? -1 : 1) * rotPIDVal) * 0.1;
+    // if the targets exist and the distance is accurate but the robot still goes
+    // away from the target, invert this.
+    boolean pidInvert = true;
+    double rotation = ((pidInvert ? -1 : 1) * rotPIDVal);
 
-  //   double currentPos = subsystem.getHeading();
-  //   return Rotation2d.fromDegrees(currentPos - rotation);
+    return rotation;
 
-  // }
+  }
 
-
+  public double clamp(double value, double min, double max) {
+    return Math.max(min, Math.min(max, value));
+  }
   /**
    * Returns the currently-estimated pose of the robot.
    *
@@ -189,6 +200,9 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void setChassisSpeeds(ChassisSpeeds speeds) {
     speeds.omegaRadiansPerSecond *= -1;
+    if(visionSubsystem.hasTargets()) speeds.omegaRadiansPerSecond = limeAlign() * DriveConstants.kMaxAngularSpeed;
+    else rotationPID.reset();
+    
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);

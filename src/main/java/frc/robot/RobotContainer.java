@@ -55,7 +55,7 @@ public class RobotContainer {
   private IntakeSubsystem intakeSubsystem;
   private ControlInput controlInput;
   private ShooterSubsystem shooterSubsystem;
-  // private ClimberSubsystem climberSubsystem;
+  private ClimberSubsystem climberSubsystem;
   private AutoMotions autoMotions;
 
   private final Field2d field;
@@ -72,13 +72,13 @@ public class RobotContainer {
 
     // Configure the trigger bindings
     controlInput = new ControlInput();
-    driveSubsystem = new DriveSubsystem();
     lightingSubsystem = new LightingSubsystem(controlInput);
     visionSubsystem = new VisionSubsystem();
+    driveSubsystem = new DriveSubsystem(visionSubsystem);
     intakeSubsystem = new IntakeSubsystem(9, 12);
     swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, visionSubsystem, controlInput);
     shooterSubsystem = new ShooterSubsystem(15, 13, controlInput, visionSubsystem, lightingSubsystem);
-    // climberSubsystem = new ClimberSubsystem(25);
+    climberSubsystem = new ClimberSubsystem(25);
     autoMotions = new AutoMotions(shooterSubsystem, intakeSubsystem);
 
     NamedCommands.registerCommand("shootClose", autoMotions.shootingClosestAutoMotion());
@@ -165,6 +165,12 @@ public class RobotContainer {
 
     JoystickButton ampShooting = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
     ampShooting.onTrue(shooterSubsystem.runAmpShooterRoutine());
+
+    JoystickButton climbUp = new JoystickButton (controlInput.getRightJoystick(), 9);
+    climbUp.whileTrue(climberSubsystem.runClimberMotorUp());
+
+    JoystickButton climbDown = new JoystickButton(controlInput.getRightJoystick(), 11);
+    climbDown.whileTrue(climberSubsystem.runClimberMotorDown());
   }
 
   // might have to reverse the the .until and .onlyWhile for the reverse

@@ -14,12 +14,19 @@ public class ClimberSubsystem extends SubsystemBase {
     // if motor is neo motor, set motor type to brushless
 
     public ClimberSubsystem (int sparkID) {
-        climberMotor = new CANSparkMax(sparkID, MotorType.kBrushed);
+        climberMotor = new CANSparkMax(sparkID, CANSparkMax.MotorType.kBrushless);
     }
 
-    public Command runClimberMotor() {
+    public Command runClimberMotorDown() {
         return Commands.runEnd(
-            () -> climberMotor.set(0.5),
+            () -> climberMotor.set(1),
+            () -> climberMotor.set(0)
+        );
+    }
+
+    public Command runClimberMotorUp() {
+        return Commands.runEnd(
+            () -> climberMotor.set(-0.1),
             () -> climberMotor.set(0)
         );
     }

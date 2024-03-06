@@ -32,6 +32,7 @@ public class PositionCommand extends Command {
         INTAKE_IN_SHOOT,
         START_POSITION,
         BASE,
+        AUTO_BASE,
         TRAP,
         FAR_SHOOTING,
         MIDDLE_SHOOTING,
@@ -112,6 +113,8 @@ public class PositionCommand extends Command {
             shooterSubsystem.setArmPosition(0.0);
             shooterSubsystem.setShooterPosition(0.0);
             intakeSubsystem.setPosition(5.75);
+        } else if (pos == Position.AUTO_BASE) {
+            shooterSubsystem.setArmPosition(0.0);
         }
     }
 

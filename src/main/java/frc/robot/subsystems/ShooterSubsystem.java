@@ -37,8 +37,8 @@ public class ShooterSubsystem extends SubsystemBase {
     private ControlInput controlInput;
 
     public ShooterSubsystem(int feederID, int shooterID, ControlInput controlInput, VisionSubsystem vs, LightingSubsystem ls) {
-        arm = new Joint("shooterArm", 11, 0.7, 0, 0, 0, 0, -0.30, 0.30, true, null, 0, false);
-        shooter = new Joint("shooterEnt", 20, 0.95, 0.01, 0.2, 0, 0, -0.27, 0.27, false, null, 0, false);
+        arm = new Joint("shooterArm", 11, 0.7, 0, 0, 0, 0, -0.33, 0.33, true, null, 0, false);
+        shooter = new Joint("shooterEnt", 20, 0.95, 0.01, 0.2, 0, 0, -0.3, 0.3, false, null, 0, false);
 
         feederMotor = new CANSparkMax(feederID, CANSparkMax.MotorType.kBrushless);
         shooterMotor = new CANSparkMax(shooterID, CANSparkMax.MotorType.kBrushless);

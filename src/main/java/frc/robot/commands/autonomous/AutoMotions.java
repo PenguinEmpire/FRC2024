@@ -29,8 +29,11 @@ public class AutoMotions extends Command {
         return new ParallelCommandGroup(
                 new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
                 new SequentialCommandGroup(
-                        shooterSubsystem.runFeeder().withTimeout(2.0),
-                        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE)
+                        Commands.race(
+                            shooterSubsystem.runFeeder().until(shooterSubsystem::hasRing),
+                            new WaitCommand(2.5)
+                        ),
+                        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.AUTO_BASE)
                 )
         );
     }
