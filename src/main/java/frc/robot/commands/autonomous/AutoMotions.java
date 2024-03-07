@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.Vision;
+import frc.robot.commands.AlignmentCommand;
 import frc.robot.commands.PositionCommand;
 import frc.robot.commands.PositionCommand.Position;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -16,11 +17,13 @@ public class AutoMotions extends Command {
     private ShooterSubsystem shooterSubsystem;
     private IntakeSubsystem intakeSubsystem;
     private ClimberSubsystem climberSubsystem;
+    //private AlignmentCommand alignmentCommand;
 
     public AutoMotions(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem, ClimberSubsystem climberSubsystem) {
         this.shooterSubsystem = shooterSubsystem;
         this.intakeSubsystem = intakeSubsystem;
         this.climberSubsystem = climberSubsystem;
+        //this.alignmentCommand = alignmentCommand;
     }
 
     public void execute() {
@@ -61,7 +64,7 @@ public class AutoMotions extends Command {
 
     // tamper with timing
     public Command runFeederWithTimeout() {
-        return shooterSubsystem.runFeeder().withTimeout(2.0);
+        return shooterSubsystem.runFeeder().withTimeout(0.5);
     }
 
     public Command setShooterAutoPos() {
@@ -78,8 +81,8 @@ public class AutoMotions extends Command {
     // used to shoot from against the speaker
     public Command shootingClosestAutoMotion() {
         return new SequentialCommandGroup(
-                new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.SPEAKER),
-                shooterSubsystem.runShooterRoutine(3.0));
+                new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
+                shooterSubsystem.runShooterRoutine(2));
     }
 
     // used to shoot from far out - need to change time (shooter)

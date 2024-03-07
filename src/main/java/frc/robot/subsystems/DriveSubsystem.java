@@ -89,7 +89,7 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(VisionSubsystem visionSubsystem) {
     this.visionSubsystem = visionSubsystem;
-    rotationPID = new PIDController(0.015, 0.001, 0.0001);
+    rotationPID = new PIDController(0.015, 0, 0.0001);
 
     AutoBuilder.configureHolonomic(
         this::getPose,
@@ -115,8 +115,8 @@ public class DriveSubsystem extends SubsystemBase {
           return false;
         },
         this);
-      rotationPID.reset();
-      PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
+    rotationPID.reset();
+    PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
   }
 
   @Override
@@ -137,7 +137,6 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Auto Gyro Yaw", m_gyro.getYaw());
     SmartDashboard.putNumber("Auto Gyro Angle", m_gyro.getAngle());
     SmartDashboard.putNumber("Auto Gyro Heading", getHeading());
-
 
   }
 
@@ -172,6 +171,7 @@ public class DriveSubsystem extends SubsystemBase {
   public double clamp(double value, double min, double max) {
     return Math.max(min, Math.min(max, value));
   }
+
   /**
    * Returns the currently-estimated pose of the robot.
    *
@@ -200,9 +200,12 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void setChassisSpeeds(ChassisSpeeds speeds) {
     speeds.omegaRadiansPerSecond *= -1;
-    if(visionSubsystem.hasTargets()) speeds.omegaRadiansPerSecond = limeAlign() * DriveConstants.kMaxAngularSpeed;
-    else rotationPID.reset();
-    
+    if (visionSubsystem.hasTargets()) {
+      speeds.omegaRadiansPerSecond = limeAlign() * DriveConstants.kMaxAngularSpeed;
+      System.out.println("Modifying rotation");
+    } else
+      rotationPID.reset();
+
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
