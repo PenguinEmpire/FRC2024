@@ -8,16 +8,19 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.Vision;
 import frc.robot.commands.PositionCommand;
 import frc.robot.commands.PositionCommand.Position;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class AutoMotions extends Command {
     private ShooterSubsystem shooterSubsystem;
     private IntakeSubsystem intakeSubsystem;
+    private ClimberSubsystem climberSubsystem;
 
-    public AutoMotions(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem) {
+    public AutoMotions(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem, ClimberSubsystem climberSubsystem) {
         this.shooterSubsystem = shooterSubsystem;
         this.intakeSubsystem = intakeSubsystem;
+        this.climberSubsystem = climberSubsystem;
     }
 
     public void execute() {
@@ -27,13 +30,13 @@ public class AutoMotions extends Command {
     // tamper with feeding timing for far distances
     public Command intakeAutoMotion() {
         return new ParallelCommandGroup(
-                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
+                new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
                 new SequentialCommandGroup(
                         Commands.race(
                             shooterSubsystem.runFeeder().until(shooterSubsystem::hasRing),
                             new WaitCommand(2.5)
                         ),
-                        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.AUTO_BASE)
+                        new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.AUTO_BASE)
                 )
         );
     }
@@ -41,7 +44,10 @@ public class AutoMotions extends Command {
     public Command shootingAutoMotion() {
         return new ParallelCommandGroup(
                 setShooterAutoPos(),
-                runFeederWithTimeout()
+                new SequentialCommandGroup(
+                    new WaitCommand(0.2),
+                    runFeederWithTimeout()
+                )
         );
     }
 
@@ -59,7 +65,7 @@ public class AutoMotions extends Command {
     }
 
     public Command setShooterAutoPos() {
-        return new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER);
+        return new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER);
     }
 
     // used to shoot from middle - need to change time
@@ -72,8 +78,7 @@ public class AutoMotions extends Command {
     // used to shoot from against the speaker
     public Command shootingClosestAutoMotion() {
         return new SequentialCommandGroup(
-                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
-                new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SPEAKER),
+                new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.SPEAKER),
                 shooterSubsystem.runShooterRoutine(3.0));
     }
 

@@ -42,7 +42,6 @@ public class LightingSubsystem extends SubsystemBase {
         chooser.addOption(kRainbow, kRainbow);
         chooser.addOption(kPenguin, kPenguin);
 
-        SmartDashboard.putNumber("Animation Speed", 0);
         SmartDashboard.putData("Lighting Modes", chooser);
 
     }

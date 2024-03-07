@@ -58,8 +58,6 @@ public class RobotContainer {
   private ClimberSubsystem climberSubsystem;
   private AutoMotions autoMotions;
 
-  private final Field2d field;
-
   private final SendableChooser<Command> autoChooser;
   private String m_autoSelected;
 
@@ -67,9 +65,6 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    field = new Field2d();
-    SmartDashboard.putData("Field", field);
-
     // Configure the trigger bindings
     controlInput = new ControlInput();
     lightingSubsystem = new LightingSubsystem(controlInput);
@@ -79,7 +74,7 @@ public class RobotContainer {
     swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, visionSubsystem, controlInput);
     shooterSubsystem = new ShooterSubsystem(15, 13, controlInput, visionSubsystem, lightingSubsystem);
     climberSubsystem = new ClimberSubsystem(25);
-    autoMotions = new AutoMotions(shooterSubsystem, intakeSubsystem);
+    autoMotions = new AutoMotions(shooterSubsystem, intakeSubsystem, climberSubsystem);
 
     NamedCommands.registerCommand("shootClose", autoMotions.shootingClosestAutoMotion());
     NamedCommands.registerCommand("shootMiddle", autoMotions.shootingMiddleAutoMotion());
@@ -91,16 +86,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("shooterPos", autoMotions.setShooterAutoPos());
     NamedCommands.registerCommand("shootingRoutine", autoMotions.shootingAutoMotion());
     NamedCommands.registerCommand("outOfAutoPos",
-        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.OUT_OF_AUTO_POSITION));
+        new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem,
+            PositionCommand.Position.OUT_OF_AUTO_POSITION));
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
     configureBindings();
-
-    PathPlannerLogging.setLogCurrentPoseCallback((pos) -> field.setRobotPose(pos));
-    PathPlannerLogging.setLogTargetPoseCallback((pos) -> field.getObject("target pose").setPose(pos));
-    PathPlannerLogging.setLogActivePathCallback((poses) -> field.getObject("path").setPoses(poses));
   }
 
   private void configureBindings() {
@@ -125,49 +117,54 @@ public class RobotContainer {
     shooterRollers.whileTrue(shooterSubsystem.runShooter());
 
     JoystickButton home = new JoystickButton(controlInput.getAccessoryJoystick(), 11);
-    home.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.HOME));
+    home.onTrue(
+        new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.HOME));
 
     JoystickButton intakeOut = new JoystickButton(controlInput.getAccessoryJoystick(), 12);
-    intakeOut.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT));
+    intakeOut.onTrue(
+        new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.INTAKE_OUT));
 
     JoystickButton start_mode = new JoystickButton(controlInput.getLeftJoystick(), 7);
-    start_mode.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.START_POSITION));
+    start_mode.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem,
+        PositionCommand.Position.START_POSITION));
 
     JoystickButton intakeMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 3);
     intakeMotion.whileTrue(new ParallelCommandGroup(
-        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_OUT),
-        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.ARM_GROUND_PICKUP),
+        new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.INTAKE_OUT),
+        new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem,
+            PositionCommand.Position.ARM_GROUND_PICKUP),
         new SequentialCommandGroup(
             new WaitCommand(0.5),
             new ParallelCommandGroup(
                 shooterSubsystem.runFeeder().until(shooterSubsystem::hasRing),
                 intakeSubsystem.runRollers().until(shooterSubsystem::hasRing)),
-            shooterSubsystem.runFeeder().withTimeout(0.25),
-            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_PICKUP),
-            new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.BASE),
-            new WaitCommand(1),
-            shooterSubsystem.reverseFeeder().until(shooterSubsystem::hasRing),
-            shooterSubsystem.reverseFeeder().onlyWhile(shooterSubsystem::hasRing))));
+            new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem,
+                PositionCommand.Position.INTAKE_IN_PICKUP),
+            new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.BASE))));
 
     // might have to change this to runCloseShooterRoutine - depends on how much
     // power we need
     // might want to change the whileTrue back to onTrue 3/3/24
     JoystickButton wooferShooterMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 5);
     wooferShooterMotion.onTrue(new SequentialCommandGroup(
-        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
-        new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.INTAKE_IN_SHOOT),
+        new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem,
+            PositionCommand.Position.SAFE_OR_SPEAKER),
+        new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem,
+            PositionCommand.Position.INTAKE_IN_SHOOT),
         shooterSubsystem.runShooterRoutine(4.0)
 
     ));
 
     JoystickButton ampArms = new JoystickButton(controlInput.getAccessoryJoystick(), 4);
-    ampArms.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, PositionCommand.Position.AMP));
+    ampArms
+        .onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.AMP));
 
     JoystickButton ampShooting = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
     ampShooting.onTrue(shooterSubsystem.runAmpShooterRoutine());
 
-    JoystickButton climbUp = new JoystickButton (controlInput.getRightJoystick(), 9);
-    climbUp.whileTrue(climberSubsystem.runClimberMotorUp());
+    JoystickButton climbUp = new JoystickButton(controlInput.getRightJoystick(), 9);
+    climbUp.onTrue(
+        new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.CLIMBER_UP));
 
     JoystickButton climbDown = new JoystickButton(controlInput.getRightJoystick(), 11);
     climbDown.whileTrue(climberSubsystem.runClimberMotorDown());

@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -39,18 +40,21 @@ public class PositionCommand extends Command {
         ARM_GROUND_PICKUP,
         OUT_OF_AUTO_POSITION,
         AMP,
-        HOME
+        HOME,
+        CLIMBER_UP,
     };
 
     private ShooterSubsystem shooterSubsystem;
     private IntakeSubsystem intakeSubsystem;
+    private ClimberSubsystem climberSubystem;
     private Position pos;
 
     private int m_ticks = 0;
 
-    public PositionCommand(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem, Position pos) {
+    public PositionCommand(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem, ClimberSubsystem climberSubsystem, Position pos) {
         this.shooterSubsystem = shooterSubsystem;
         this.intakeSubsystem = intakeSubsystem;
+        this.climberSubystem = climberSubsystem;
         this.pos = pos;
     }
 
@@ -115,7 +119,9 @@ public class PositionCommand extends Command {
             intakeSubsystem.setPosition(5.75);
         } else if (pos == Position.AUTO_BASE) {
             shooterSubsystem.setArmPosition(0.0);
-        }
+        } else if (pos == Position.CLIMBER_UP) {
+            climberSubystem.setClimberPosition(7.95);
+        } 
     }
 
     public boolean isFinished() {

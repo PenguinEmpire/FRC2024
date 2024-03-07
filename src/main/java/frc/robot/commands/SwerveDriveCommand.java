@@ -81,9 +81,10 @@ public class SwerveDriveCommand extends Command {
     } else {
       visionSubsystem.setPipeline(1);
     }
-    SmartDashboard.putNumber("Gyro Yaw", subsystem.getNavX().getYaw());
-    SmartDashboard.putNumber("Gyro Angle", subsystem.getNavX().getAngle());
-    SmartDashboard.putNumber("Gyro Heading", subsystem.getHeading());
+    
+    // SmartDashboard.putNumber("Gyro Yaw", subsystem.getNavX().getYaw());
+    // SmartDashboard.putNumber("Gyro Angle", subsystem.getNavX().getAngle());
+    // SmartDashboard.putNumber("Gyro Heading", subsystem.getHeading());
 
     if (getInput().getLeftJoystick().getTrigger() && visionSubsystem.hasTargets()) {
       double distanceRotFromTarget = visionSubsystem.getX();
