@@ -162,11 +162,10 @@ public class RobotContainer {
     JoystickButton ampShooting = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
     ampShooting.onTrue(shooterSubsystem.runAmpShooterRoutine());
 
-    JoystickButton climbUp = new JoystickButton(controlInput.getRightJoystick(), 9);
-    climbUp.onTrue(
-        new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.CLIMBER_UP));
+    JoystickButton climbUp = new JoystickButton(controlInput.getRightJoystick(), 11);
+    climbUp.whileTrue(climberSubsystem.runClimberMotorUp());
 
-    JoystickButton climbDown = new JoystickButton(controlInput.getRightJoystick(), 11);
+    JoystickButton climbDown = new JoystickButton(controlInput.getRightJoystick(), 9);
     climbDown.whileTrue(climberSubsystem.runClimberMotorDown());
   }
 

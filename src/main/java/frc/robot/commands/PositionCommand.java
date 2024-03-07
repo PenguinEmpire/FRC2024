@@ -42,6 +42,7 @@ public class PositionCommand extends Command {
         AMP,
         HOME,
         CLIMBER_UP,
+        CLIMBER_DOWN
     };
 
     private ShooterSubsystem shooterSubsystem;
@@ -119,9 +120,11 @@ public class PositionCommand extends Command {
             intakeSubsystem.setPosition(5.75);
         } else if (pos == Position.AUTO_BASE) {
             shooterSubsystem.setArmPosition(0.0);
+        } else if (pos == Position.CLIMBER_DOWN) {
+            climberSubystem.setClimberPosition(0.0);
         } else if (pos == Position.CLIMBER_UP) {
-            climberSubystem.setClimberPosition(7.95);
-        } 
+            climberSubystem.setClimberPosition(0.0);
+        }
     }
 
     public boolean isFinished() {

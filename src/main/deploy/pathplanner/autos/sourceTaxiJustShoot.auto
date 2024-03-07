@@ -12,9 +12,22 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "sourceTaxi"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "sourceTaxi"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "outOfAutoPos"
+                }
+              }
+            ]
           }
         }
       ]

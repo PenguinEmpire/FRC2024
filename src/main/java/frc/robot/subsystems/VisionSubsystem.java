@@ -7,11 +7,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class VisionSubsystem extends SubsystemBase{
-    private NetworkTable table;   
+public class VisionSubsystem extends SubsystemBase {
+    private NetworkTable table;
 
     public VisionSubsystem() {
-        table = NetworkTableInstance.getDefault().getTable("limelight"); 
+        table = NetworkTableInstance.getDefault().getTable("limelight");
+                SmartDashboard.putBoolean("Pickup Side (r: true/b: false)", true);
+
     }
 
     @Override
@@ -19,6 +21,12 @@ public class VisionSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Vision X", getX());
         SmartDashboard.putNumber("Vision Y", getY());
         SmartDashboard.putBoolean("Has V Targets", hasTargets());
+
+        if (SmartDashboard.getBoolean("Pickup Side (r: true/b: false)", true)) {
+            setPipeline(0);
+        } else {
+            setPipeline(1);
+        }
     }
 
     public double getX() {
@@ -43,19 +51,17 @@ public class VisionSubsystem extends SubsystemBase{
 
     public Command UpdateLimelight(boolean toggle, int index) {
         return Commands.startEnd(
-            () -> {
-                table.getEntry("ledMode").getDouble(toggle ? 3 : 1);
-            },
-            () -> {
-                table.getEntry("pipeline").getDouble(index);
-            }
-        );
+                () -> {
+                    table.getEntry("ledMode").getDouble(toggle ? 3 : 1);
+                },
+                () -> {
+                    table.getEntry("pipeline").getDouble(index);
+                });
     }
 
     public void setPipeline(int index) {
         table.getEntry("pipeline").setNumber(index);
     }
-      
 
     public void Periodic() {
     }

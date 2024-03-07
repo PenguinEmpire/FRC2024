@@ -139,7 +139,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void setShooterVision() {
         if(visionSubsystem.hasTargets()) {
-            shooter.setPosition((0.012 * visionSubsystem.getY()) + 0.86);
+            double x = visionSubsystem.getY();
+            double output = (-0.00015152 * Math.pow(x, 2)) + (0.0126955 * x) + 0.904188;
+            setShooterPosition(output);
         }
     }
 
@@ -147,3 +149,4 @@ public class ShooterSubsystem extends SubsystemBase {
         return controlInput.isSafeMode();
     }
 }
+

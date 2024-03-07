@@ -45,9 +45,6 @@ public class SwerveDriveCommand extends Command {
     rotationPID = new PIDController(0.015, 0.001, 0.0001);
     forwardPID = new PIDController(0, 0, 0);
     strafePID = new PIDController(0, 0, 0);
-
-    SmartDashboard.putBoolean("Pickup Side (r: true/b: false)", true);
-
   }
 
   @Override
@@ -75,12 +72,6 @@ public class SwerveDriveCommand extends Command {
     rotation = linearDeadband(rotation);
 
     rotation *= 2.6;
-
-    if (SmartDashboard.getBoolean("Pickup Side (r: true/b: false)", true)) {
-      visionSubsystem.setPipeline(0);
-    } else {
-      visionSubsystem.setPipeline(1);
-    }
     
     // SmartDashboard.putNumber("Gyro Yaw", subsystem.getNavX().getYaw());
     // SmartDashboard.putNumber("Gyro Angle", subsystem.getNavX().getAngle());

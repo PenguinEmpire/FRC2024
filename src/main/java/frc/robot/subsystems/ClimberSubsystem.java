@@ -23,12 +23,12 @@ public class ClimberSubsystem extends SubsystemBase {
     // if motor is CIM motor, set motor type to brushed
     // if motor is neo motor, set motor type to brushless
 
+    // NEED TO CHANGE 3/6 8:20 (CLIMBER WORKED)
     // up: 7.95 
     // down: -15.16
 
     public ClimberSubsystem(int sparkID) {
         climberMotor = new CANSparkMax(sparkID, CANSparkMax.MotorType.kBrushless);
-        climberMotor.setInverted(true);
         climberEncoder = climberMotor.getEncoder();
         climberPID = climberMotor.getPIDController();
 
@@ -61,19 +61,21 @@ public class ClimberSubsystem extends SubsystemBase {
         if (dValue != armD) {
             climberPID.setD(dValue);
         }
+
+
     }
 
     public Command runClimberMotorDown() {
         return Commands.runEnd(
                 () -> {
-                    climberMotor.set(-0.8);
+                    climberMotor.set(1);
                 },
                 () -> climberMotor.set(0));
     }
 
     public Command runClimberMotorUp() {
         return Commands.runEnd(
-                () -> climberMotor.set(0.1),
+                () -> climberMotor.set(-1),
                 () -> climberMotor.set(0));
     }
 
