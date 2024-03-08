@@ -61,7 +61,6 @@ public class RobotContainer {
   private ClimberSubsystem climberSubsystem;
   private AutoMotions autoMotions;
 
-  private final SendableChooser<Command> autoChooser;
   private final SendableChooser<String> stringAuto = new SendableChooser<String>();
 
   /**
@@ -93,8 +92,6 @@ public class RobotContainer {
             PositionCommand.Position.OUT_OF_AUTO_POSITION));
     // NamedCommands.registerCommand("align", autoMotions.resetGyroAuto());
 
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoChooser);
 
     stringAuto.addOption("centerFourPiece", "centerFourPiece");
     stringAuto.addOption("ampJustShoot", "ampJustShoot");
@@ -181,9 +178,16 @@ public class RobotContainer {
   // might have to reverse the the .until and .onlyWhile for the reverse
 
   public void autoExit() {
-    Rotation2d pos = PathPlannerAuto.getStaringPoseFromAutoFile(stringAuto.getSelected()).getRotation();
-    double autoPos = pos.getRadians();
-    driveSubsystem.getNavX().setAngleAdjustment(autoPos);
+    double angleAdjustment = 0;
+    switch(stringAuto.getSelected()) {
+      case "routine1":
+          angleAdjustment = 90;
+        break;
+      case "routine2":
+        angleAdjustment = 180;
+        break;
+    }
+    driveSubsystem.getNavX().setAngleAdjustment(angleAdjustment);
   }
 
   public void robotInit() {
@@ -201,7 +205,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    if(stringAuto.getSelected() == "none") {
+      return null;
+    }
+    
+    return new PathPlannerAuto(stringAuto.getSelected());
   }
 
 }

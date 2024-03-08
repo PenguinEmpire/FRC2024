@@ -20,6 +20,12 @@
         {
           "type": "named",
           "data": {
+            "name": "shootClose"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "shootingRoutine"
           }
         }
