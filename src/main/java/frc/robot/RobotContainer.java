@@ -61,7 +61,8 @@ public class RobotContainer {
   private ClimberSubsystem climberSubsystem;
   private AutoMotions autoMotions;
 
-  private final SendableChooser<String> stringAuto = new SendableChooser<String>();
+  private final SendableChooser<Command> autoChooser;
+  private final SendableChooser<Double> chooseAlign = new SendableChooser<Double>();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -92,11 +93,14 @@ public class RobotContainer {
             PositionCommand.Position.OUT_OF_AUTO_POSITION));
     // NamedCommands.registerCommand("align", autoMotions.resetGyroAuto());
 
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
 
-    stringAuto.addOption("centerFourPiece", "centerFourPiece");
-    stringAuto.addOption("ampJustShoot", "ampJustShoot");
-    stringAuto.addOption("sourceTaxiJustShoot", "sourceTaxiJustShoot");
-    SmartDashboard.putData("Auto Choice", stringAuto);
+    // might need to make it negative (direction) or add 180 (rotation)
+    chooseAlign.addOption("None", 0.0);
+    chooseAlign.addOption("ampShootAdjustment", 60.0);
+    chooseAlign.addOption("90", 90.0);
+    SmartDashboard.putData("Alignment Choice", chooseAlign);
 
     configureBindings();
   }
@@ -162,8 +166,7 @@ public class RobotContainer {
     ));
 
     JoystickButton ampArms = new JoystickButton(controlInput.getAccessoryJoystick(), 4);
-    ampArms
-        .onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.AMP));
+    ampArms.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.AMP));
 
     JoystickButton ampShooting = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
     ampShooting.onTrue(shooterSubsystem.runAmpShooterRoutine());
@@ -178,16 +181,7 @@ public class RobotContainer {
   // might have to reverse the the .until and .onlyWhile for the reverse
 
   public void autoExit() {
-    double angleAdjustment = 0;
-    switch(stringAuto.getSelected()) {
-      case "routine1":
-          angleAdjustment = 90;
-        break;
-      case "routine2":
-        angleAdjustment = 180;
-        break;
-    }
-    driveSubsystem.getNavX().setAngleAdjustment(angleAdjustment);
+    driveSubsystem.getNavX().setAngleAdjustment(chooseAlign.getSelected());
   }
 
   public void robotInit() {
@@ -205,11 +199,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    if(stringAuto.getSelected() == "none") {
-      return null;
-    }
-    
-    return new PathPlannerAuto(stringAuto.getSelected());
+    return autoChooser.getSelected();
   }
 
 }
