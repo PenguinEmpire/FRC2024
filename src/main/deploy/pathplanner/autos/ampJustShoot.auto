@@ -2,32 +2,25 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.5034549278082932,
-      "y": 7.327563668799213
+      "x": 0.7177620543359899,
+      "y": 6.702324188476761
     },
-    "rotation": -0.03048458319064652
+    "rotation": 60.13958133716968
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "wallToSpeaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "outOfAutoPos"
-                }
-              }
-            ]
+            "name": "outOfAutoPos"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootingRoutine"
           }
         }
       ]

@@ -10,7 +10,10 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.PathPlannerLogging;
+import com.pathplanner.lib.path.PathPlannerTrajectory.State;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -59,7 +62,7 @@ public class RobotContainer {
   private AutoMotions autoMotions;
 
   private final SendableChooser<Command> autoChooser;
-  private String m_autoSelected;
+  private final SendableChooser<String> stringAuto = new SendableChooser<String>();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -88,9 +91,15 @@ public class RobotContainer {
     NamedCommands.registerCommand("outOfAutoPos",
         new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem,
             PositionCommand.Position.OUT_OF_AUTO_POSITION));
+    // NamedCommands.registerCommand("align", autoMotions.resetGyroAuto());
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
+
+    stringAuto.addOption("centerFourPiece", "centerFourPiece");
+    stringAuto.addOption("ampJustShoot", "ampJustShoot");
+    stringAuto.addOption("sourceTaxiJustShoot", "sourceTaxiJustShoot");
+    SmartDashboard.putData("Auto Choice", stringAuto);
 
     configureBindings();
   }
@@ -172,7 +181,9 @@ public class RobotContainer {
   // might have to reverse the the .until and .onlyWhile for the reverse
 
   public void autoExit() {
-    driveSubsystem.getNavX().setAngleAdjustment(0);
+    Rotation2d pos = PathPlannerAuto.getStaringPoseFromAutoFile(stringAuto.getSelected()).getRotation();
+    double autoPos = pos.getRadians();
+    driveSubsystem.getNavX().setAngleAdjustment(autoPos);
   }
 
   public void robotInit() {

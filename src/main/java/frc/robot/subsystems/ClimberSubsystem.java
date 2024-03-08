@@ -13,12 +13,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ClimberSubsystem extends SubsystemBase {
     private CANSparkMax climberMotor;
-    private RelativeEncoder climberEncoder;
-    private SparkPIDController climberPID;
+    // private RelativeEncoder climberEncoder;
+    // private SparkPIDController climberPID;
 
-    private double armP = 1;
-    private double armI = 0.0;
-    private double armD = 0.0;
+    // private double armP = 1;
+    // private double armI = 0.0;
+    // private double armD = 0.0;
 
     // if motor is CIM motor, set motor type to brushed
     // if motor is neo motor, set motor type to brushless
@@ -29,41 +29,28 @@ public class ClimberSubsystem extends SubsystemBase {
 
     public ClimberSubsystem(int sparkID) {
         climberMotor = new CANSparkMax(sparkID, CANSparkMax.MotorType.kBrushless);
-        climberEncoder = climberMotor.getEncoder();
-        climberPID = climberMotor.getPIDController();
-
-        climberPID.setP(armP);
-        climberPID.setI(armI);
-        climberPID.setD(armD);
-
-        climberPID.setOutputRange(-0.8, 0.8);
-
-        SmartDashboard.putNumber("Climber P", 1);
-        SmartDashboard.putNumber("Climber I", 0.0);
-        SmartDashboard.putNumber("Climber D", 0.0);
     }
 
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("Climber Encoder Pos", climberEncoder.getPosition());
+    // @Override
+    // public void periodic() {
+    //     // SmartDashboard.putNumber("Climber Encoder Pos", climberEncoder.getPosition());
 
-        double pValue = SmartDashboard.getNumber("Climber P", 1);
-        if (pValue != armP) {
-            climberPID.setP(pValue);
-        }
+    //     // double pValue = SmartDashboard.getNumber("Climber P", 1);
+    //     // if (pValue != armP) {
+    //     //     climberPID.setP(pValue);
+    //     // }
 
-        double iValue = SmartDashboard.getNumber("Climber I", 0.0);
-        if (iValue != armI) {
-            climberPID.setI(iValue);
-        }
+    //     // double iValue = SmartDashboard.getNumber("Climber I", 0.0);
+    //     // if (iValue != armI) {
+    //     //     climberPID.setI(iValue);
+    //     // }
 
-        double dValue = SmartDashboard.getNumber("Climber D", 0.0);
-        if (dValue != armD) {
-            climberPID.setD(dValue);
-        }
+    //     // double dValue = SmartDashboard.getNumber("Climber D", 0.0);
+    //     // if (dValue != armD) {
+    //     //     climberPID.setD(dValue);
+    //     // }
 
-
-    }
+    // }
 
     public Command runClimberMotorDown() {
         return Commands.runEnd(
@@ -79,9 +66,9 @@ public class ClimberSubsystem extends SubsystemBase {
                 () -> climberMotor.set(0));
     }
 
-    public void setClimberPosition(double position) {
-        climberPID.setReference(position, ControlType.kPosition);
-        SmartDashboard.putNumber("Climber Reference", position);
-    }
+    // public void setClimberPosition(double position) {
+    //     climberPID.setReference(position, ControlType.kPosition);
+    //     SmartDashboard.putNumber("Climber Reference", position);
+    // }
 
 }
