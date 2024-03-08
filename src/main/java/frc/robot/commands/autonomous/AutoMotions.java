@@ -5,31 +5,21 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.Vision;
-import frc.robot.commands.AlignmentCommand;
 import frc.robot.commands.PositionCommand;
 import frc.robot.commands.PositionCommand.Position;
 import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
 
 public class AutoMotions extends Command {
     private ShooterSubsystem shooterSubsystem;
-    private VisionSubsystem visionSubsystem;
-    // private DriveSubsystem driveSubsystem;
     private IntakeSubsystem intakeSubsystem;
     private ClimberSubsystem climberSubsystem;
-    // private AlignmentCommand alignmentCommand;
 
     public AutoMotions(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem, ClimberSubsystem climberSubsystem) {
         this.shooterSubsystem = shooterSubsystem;
         this.intakeSubsystem = intakeSubsystem;
         this.climberSubsystem = climberSubsystem;
-
-        // visionSubsystem = new VisionSubsystem();
-        // driveSubsystem = new DriveSubsystem(visionSubsystem);
     }
 
     public void execute() {
@@ -95,9 +85,4 @@ public class AutoMotions extends Command {
     public Command shootingFarAutoMotion() {
         return shooterSubsystem.runFeeder().withTimeout(2.0);
     }
-
-    // public Command resetGyroAuto() {
-    //     alignmentCommand = new AlignmentCommand(driveSubsystem);
-    //     return alignmentCommand;
-    // }
 }

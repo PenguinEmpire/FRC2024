@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ClimberSubsystem extends SubsystemBase {
     private CANSparkMax climberMotor;
+    private CANSparkMax secondClimberMotor;
     // private RelativeEncoder climberEncoder;
     // private SparkPIDController climberPID;
 
@@ -29,6 +30,9 @@ public class ClimberSubsystem extends SubsystemBase {
 
     public ClimberSubsystem(int sparkID) {
         climberMotor = new CANSparkMax(sparkID, CANSparkMax.MotorType.kBrushless);
+        secondClimberMotor = new CANSparkMax(26, CANSparkMax.MotorType.kBrushless);
+
+        secondClimberMotor.follow(climberMotor);
     }
 
     // @Override

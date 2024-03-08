@@ -72,6 +72,7 @@ public class SwerveDriveCommand extends Command {
     rotation = linearDeadband(rotation);
 
     rotation *= 2.6;
+    forward *= 1.4;
     
     // SmartDashboard.putNumber("Gyro Yaw", subsystem.getNavX().getYaw());
     // SmartDashboard.putNumber("Gyro Angle", subsystem.getNavX().getAngle());
