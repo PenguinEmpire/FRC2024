@@ -77,7 +77,7 @@ public class AutoMotions extends Command {
     // used to shoot from against the speaker
     public Command shootingClosestAutoMotion() {
         return new SequentialCommandGroup(
-                new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.SAFE_OR_SPEAKER),
+                new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.SPEAKER),
                 shooterSubsystem.runShooterRoutine(2));
     }
 
