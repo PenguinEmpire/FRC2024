@@ -156,17 +156,19 @@ public class RobotContainer {
     // power we need
     // might want to change the whileTrue back to onTrue 3/3/24
     JoystickButton wooferShooterMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 5);
-    wooferShooterMotion.onTrue(new SequentialCommandGroup(
+    wooferShooterMotion.whileTrue(new ParallelCommandGroup(
         new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem,
-            PositionCommand.Position.SAFE_OR_SPEAKER),
-        new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem,
-            PositionCommand.Position.INTAKE_IN_SHOOT),
-        shooterSubsystem.runShooterRoutine(4.0)
-
+            PositionCommand.Position.SAFE_OR_SPEAKER).repeatedly(),
+        new SequentialCommandGroup(
+            new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem,
+                PositionCommand.Position.INTAKE_IN_SHOOT),
+                new WaitCommand(0.8),
+            shooterSubsystem.runFeeder().withTimeout(1.0))
     ));
 
     JoystickButton ampArms = new JoystickButton(controlInput.getAccessoryJoystick(), 4);
-    ampArms.onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.AMP));
+    ampArms
+        .onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.AMP));
 
     JoystickButton ampShooting = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
     ampShooting.onTrue(shooterSubsystem.runAmpShooterRoutine());

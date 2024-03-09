@@ -62,7 +62,7 @@ public class ShooterSubsystem extends SubsystemBase {
         intakeFeederSpeed = SmartDashboard.getNumber("Intake Feeder Speed", 0.8);
         shooterSpeed = SmartDashboard.getNumber("Shooter Speed", 1);
         SmartDashboard.putBoolean("Has Ring", hasRing());
-        SmartDashboard.putNumber("Shooter RPM",shooterEncoder.getVelocity());
+        SmartDashboard.putNumber("Shooter RPM", (shooterEncoder.getVelocity()/5676)*100);
         arm.periodic();
         shooter.periodic();
         lightingSubystem.setPulsing(hasRing());
@@ -127,6 +127,7 @@ public class ShooterSubsystem extends SubsystemBase {
                         new WaitCommand(runTime - 1),
                         runFeeder().withTimeout(0.5)));
     }
+
 
     public void setArmPosition(double pos) {
         arm.setPosition(pos);
