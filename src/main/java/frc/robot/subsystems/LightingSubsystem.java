@@ -5,8 +5,10 @@ import frc.robot.ControlInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.MatchType;
 
 public class LightingSubsystem extends SubsystemBase {
     private int firstPixelHue = 0;
@@ -18,15 +20,20 @@ public class LightingSubsystem extends SubsystemBase {
 
     public int tempR = 0;
     public int tempG = 0;
+
+    public final int trailLength = 6;
     public int tempB = 0;
     public boolean isTempColor;
     public SendableChooser<String> chooser = new SendableChooser<String>();
 
+    final String kOff = "Off";
     final String kBlue = "Blue";
     final String kRed = "Red";
     final String kBlueWhite = "Blue & White";
     final String kRainbow = "Rainbow";
     final String kPenguin = "Penguin";
+    final String kNewTest = "New";
+    private int matchDiv = 1;
 
     public LightingSubsystem(ControlInput controlInput) {
         led = new AddressableLED(9);
@@ -36,7 +43,9 @@ public class LightingSubsystem extends SubsystemBase {
         led.setData(ledBuffer);
         led.start();
 
-        chooser.setDefaultOption(kBlue, kBlue);
+        chooser.setDefaultOption(kOff, kOff);
+        chooser.addOption(kBlue, kBlue);
+        chooser.addOption(kNewTest, kNewTest);
         chooser.addOption(kRed, kRed);
         chooser.addOption(kBlueWhite, kBlueWhite);
         chooser.addOption(kRainbow, kRainbow);
@@ -48,8 +57,8 @@ public class LightingSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        matchDiv = DriverStation.getMatchType() == MatchType.None ? 5 : 2;
         var choice = chooser.getSelected();
-
         if (choice == kBlue)
             blue();
         if (choice == kRed)
@@ -58,25 +67,35 @@ public class LightingSubsystem extends SubsystemBase {
             blueAndWhite();
         if (choice == kRainbow)
             rainbow();
+        if (choice == kNewTest)
+            newTest();
         if (choice == kPenguin)
             penguin(0, 0, 255);
+        if (choice == kOff)
+            off();
 
         if (isTempColor) {
             hasPiece();
         }
-        
+
         led.setData(ledBuffer);
     }
 
     public void blue() {
         for (var i = 0; i < ledBuffer.getLength(); i++) {
-            ledBuffer.setRGB(i, 0, 0, 255);
+            ledBuffer.setRGB(i, 0, 0, (int) 255 / matchDiv);
         }
     }
 
     public void red() {
         for (var i = 0; i < ledBuffer.getLength(); i++) {
-            ledBuffer.setRGB(i, 255, 0, 0);
+            ledBuffer.setRGB(i, (int) 255 / matchDiv, 0, 0);
+        }
+    }
+
+    public void newTest() {
+        for (var i = counterRGB; i < ledBuffer.getLength(); i++) {
+            ledBuffer.setRGB(i, (int) 255 / matchDiv, 0, 0);
         }
     }
 
@@ -86,7 +105,7 @@ public class LightingSubsystem extends SubsystemBase {
             // shape is a circle so only one value needs to precess
             final var pixelHue = (firstPixelHue + (i * 180 / ledBuffer.getLength())) % 180;
             // Set the value
-            ledBuffer.setHSV(i, 221, pixelHue, 128);
+            ledBuffer.setHSV(i, 221, pixelHue, 128 / matchDiv);
         }
         // Increase by to make the rainbow "move"
         firstPixelHue += 3;
@@ -101,7 +120,7 @@ public class LightingSubsystem extends SubsystemBase {
             // shape is a circle so only one value needs to precess
             final var hue = (firstPixelHue + (i * 180 / ledBuffer.getLength())) % 180;
             // Set the value
-            ledBuffer.setHSV(i, hue, 255, 128);
+            ledBuffer.setHSV(i, hue, 255, 128 / matchDiv);
         }
         // Increase by to make the rainbow "move"
         firstPixelHue += 3;
@@ -124,6 +143,12 @@ public class LightingSubsystem extends SubsystemBase {
         }
     }
 
+    public void off() {
+        for (var i = 0; i < ledBuffer.getLength(); i++) {
+            ledBuffer.setRGB(i, 0, 0, 0);
+        }
+    }
+
     public void setPulsing(boolean pulsing) {
         isTempColor = pulsing;
     }
@@ -135,7 +160,7 @@ public class LightingSubsystem extends SubsystemBase {
     public void hasPiece() {
         for (var i = 0; i < ledBuffer.getLength(); i++) {
             if (counterRGB % 16 >= 8) {
-                ledBuffer.setRGB(i, 0, 255, 0);
+                ledBuffer.setRGB(i, 0, (int) 255 / matchDiv, 0);
 
             } else {
                 ledBuffer.setRGB(i, 0, 0, 0);
@@ -144,6 +169,5 @@ public class LightingSubsystem extends SubsystemBase {
         }
         counterRGB++;
     }
-    
 
 }

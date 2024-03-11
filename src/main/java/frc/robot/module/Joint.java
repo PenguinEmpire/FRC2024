@@ -31,7 +31,12 @@ public class Joint {
     private double armMaxOutput;
     private double armMinOutput;
     private boolean invertedEncoder;
-    private ArmFeedforward jointFF;
+    public ArmFeedforward jointFF;
+
+    public double staticGain = 0;
+    public double gravityGain = 0;
+    public double velocityGain = 0;
+
     private boolean reverseFF;
 
     public Joint(String nameIn, int sparkID, double P, double I, double Iz, double D, double FF, double minOutput, double maxOutput, boolean invertEncoder, ArmFeedforward jFF, double jFFOffset, boolean reverseFF) {
@@ -41,6 +46,12 @@ public class Joint {
         this.armD = D;
         this.armIz = Iz;
         this.jointFF = jFF;
+        this.offsetFF = jFFOffset;
+        if(jointFF != null) {
+            this.staticGain = jointFF.ks;
+            this.gravityGain = jointFF.kg;
+            this.velocityGain = jointFF.kv;
+        }
         this.reverseFF = reverseFF;
         this.armMinOutput = minOutput;
         this.armMaxOutput = maxOutput;
@@ -50,6 +61,8 @@ public class Joint {
         armEncoder = armMotor.getAbsoluteEncoder(Type.kDutyCycle);
         armEncoder.setPositionConversionFactor(2 * Math.PI);
         armEncoder.setInverted(invertEncoder);
+
+        jointFF = new ArmFeedforward(staticGain, gravityGain, velocityGain);
         
         armPIDController = armMotor.getPIDController();
         armPIDController.setFeedbackDevice(armEncoder);
@@ -61,6 +74,9 @@ public class Joint {
         SmartDashboard.putNumber(name + "IZ", armIz);
         SmartDashboard.putNumber(name + "D", armD);
         SmartDashboard.putNumber(name + "FF", armFF);
+        SmartDashboard.putNumber(name + "Static Gain", staticGain);
+        SmartDashboard.putNumber(name + "Gravity Gain", gravityGain);
+        SmartDashboard.putNumber(name + "Velocity Gain", velocityGain);
         SmartDashboard.putNumber(name + "Reference", armEncoder.getPosition());
         SmartDashboard.putBoolean(name + "Inverted", invertedEncoder);
 
@@ -107,14 +123,50 @@ public class Joint {
             armEncoder.setInverted(invertedVal);
         }
 
+
+        double sGain = SmartDashboard.getNumber(name + "Static Gain", staticGain);
+        if (staticGain != sGain) {
+            jointFF = new ArmFeedforward(sGain, gravityGain, velocityGain);
+            this.staticGain = sGain;
+        }
+
+        double gGain = SmartDashboard.getNumber(name + "Gravity Gain", gravityGain);
+        if (gravityGain != gGain) {
+            jointFF = new ArmFeedforward(staticGain, gGain, velocityGain);
+            this.gravityGain = gGain;
+        }
+
+        double vGain = SmartDashboard.getNumber(name + "Velocity Gain", velocityGain);
+        if (velocityGain != vGain) {
+            jointFF = new ArmFeedforward(staticGain, gravityGain, vGain);
+            this.velocityGain = vGain;
+        }
+
         double ffAddition = 0;
         if(jointFF != null) {
-            ffAddition = (reverseFF ? -1 : 1) * jointFF.calculate(currentPos + offsetFF, armEncoder.getVelocity());
+            ffAddition = (reverseFF ? -1 : 1) * jointFF.calculate(WrapAngle(currentPos + offsetFF), armEncoder.getVelocity());
         }
         
         double armSetRef = SmartDashboard.getNumber(name + "Reference", armEncoder.getPosition());
         armPIDController.setReference(armSetRef, ControlType.kPosition, 0, ffAddition);
 
+    }
+
+    public static double WrapAngle(double _angle) {
+        double twoPi = 2*Math.PI;
+
+        if (_angle == twoPi) { // Handle this case separately to avoid floating point errors with the floor after the division in the case below
+            return 0.0;
+        }
+        else if (_angle > twoPi) {
+            return _angle - twoPi*Math.floor(_angle / twoPi);
+        }
+        else if (_angle < 0.0) {
+            return _angle + twoPi*(Math.floor((-_angle) / twoPi)+1);
+        }
+        else {
+            return _angle;
+        }
     }
 
     public boolean hasReachedTarget(double tolerance){
