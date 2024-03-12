@@ -185,7 +185,13 @@ public class RobotContainer {
         new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.HOME)));
 
     JoystickButton manualOveride = new JoystickButton(controlInput.getAccessoryJoystick(), 2);
-    manualOveride.onTrue(shooterSubsystem.setContinuousRun(false));
+    manualOveride.onTrue(new ParallelCommandGroup(
+        new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.HOME),
+        shooterSubsystem.endShooter(),
+        shooterSubsystem.setContinuousRun(false),
+        shooterSubsystem.endFeeder(),
+        intakeSubsystem.endRollers()
+    ));
 
     JoystickButton ampArms = new JoystickButton(controlInput.getAccessoryJoystick(), 4);
     ampArms

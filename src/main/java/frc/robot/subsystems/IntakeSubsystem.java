@@ -19,9 +19,11 @@ public class IntakeSubsystem extends SubsystemBase {
     public IntakeSubsystem(int moveSparkID, int rollerSparkID) {
         rollerMotor = new CANSparkMax(rollerSparkID, CANSparkMax.MotorType.kBrushless);
         // could change back to:
-        // intake = new Joint("intake", moveSparkID, 0.6, 0.001,0.2, 0, 0, -0.25, 0.25, true, null, 0, false);
+        // intake = new Joint("intake", moveSparkID, 0.6, 0.001,0.2, 0, 0, -0.25, 0.25,
+        // true, null, 0, false);
 
-        intake = new Joint("intake", moveSparkID, 0.3, 0.0001,0.2, 0.08, 0.001, -0.3, 0.3, true, new ArmFeedforward(0, 0, 0), 4.84, true);
+        intake = new Joint("intake", moveSparkID, 0.3, 0.0001, 0.2, 0.08, 0.001, -0.3, 0.3, true,
+                new ArmFeedforward(0, 0, 0), 4.84, true);
         SmartDashboard.putNumber("Intake Speed", -0.75);
     }
 
@@ -37,9 +39,13 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public Command runRollers() {
         return Commands.runEnd(
-            () -> rollerMotor.set(intakeSpeed),
-            () -> rollerMotor.set(0)
-        );
+                () -> rollerMotor.set(intakeSpeed),
+                () -> rollerMotor.set(0));
+    }
+
+    public Command endRollers() {
+        return Commands.runOnce(
+                () -> rollerMotor.set(0.0));
     }
 
 }

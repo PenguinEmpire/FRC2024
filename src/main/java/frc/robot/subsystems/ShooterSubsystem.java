@@ -78,8 +78,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public Command setContinuousRun(boolean state) {
         return Commands.runOnce(
-           () -> continuousRun = state
-        );
+                () -> continuousRun = state);
     }
 
     public boolean hasRing() {
@@ -123,6 +122,12 @@ public class ShooterSubsystem extends SubsystemBase {
     public Command endShooter() {
         return Commands.runOnce(
                 () -> shooterMotor.set(0.0));
+    }
+
+    public Command endFeeder() {
+        return Commands.runOnce(
+            () -> feederMotor.set(0.0)
+        );
     }
 
     // need to tune timings
