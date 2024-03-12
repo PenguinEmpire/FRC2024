@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -36,7 +37,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private ControlInput controlInput;
 
-    public ShooterSubsystem(int feederID, int shooterID, ControlInput controlInput, VisionSubsystem vs, LightingSubsystem ls) {
+    private boolean continuousRun;
+
+    public ShooterSubsystem(int feederID, int shooterID, ControlInput controlInput, VisionSubsystem vs,
+            LightingSubsystem ls) {
         arm = new Joint("shooterArm", 11, 0.7, 0, 0, 0, 0, -0.3, 0.3, true, null, 0, false);
         shooter = new Joint("shooterEnt", 20, 0.95, 0.01, 0.2, 0, 0, -0.3, 0.3, false, null, 0, false);
 
@@ -45,7 +49,7 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotor.setIdleMode(IdleMode.kBrake);
         shooterEncoder = shooterMotor.getEncoder();
         shooterPIDController = shooterMotor.getPIDController();
-        
+
         proximitySensor = new DigitalInput(0);
 
         SmartDashboard.putNumber("Shooter Speed", 1);
@@ -62,10 +66,20 @@ public class ShooterSubsystem extends SubsystemBase {
         intakeFeederSpeed = SmartDashboard.getNumber("Intake Feeder Speed", 0.8);
         shooterSpeed = SmartDashboard.getNumber("Shooter Speed", 1);
         SmartDashboard.putBoolean("Has Ring", hasRing());
-        SmartDashboard.putNumber("Shooter RPM", (shooterEncoder.getVelocity()/5676)*100);
+        SmartDashboard.putNumber("Shooter RPM", (shooterEncoder.getVelocity() / 5676) * 100);
         arm.periodic();
         shooter.periodic();
         lightingSubystem.setPulsing(hasRing());
+
+        if (continuousRun) {
+            setShooterVision();
+        }
+    }
+
+    public Command setContinuousRun(boolean state) {
+        return Commands.runOnce(
+           () -> continuousRun = state
+        );
     }
 
     public boolean hasRing() {
@@ -101,6 +115,16 @@ public class ShooterSubsystem extends SubsystemBase {
 
     }
 
+    public Command startShooter() {
+        return Commands.runOnce(
+                () -> shooterMotor.set(shooterSpeed));
+    }
+
+    public Command endShooter() {
+        return Commands.runOnce(
+                () -> shooterMotor.set(0.0));
+    }
+
     // need to tune timings
     public Command runAmpShooterRoutine() {
         return new ParallelCommandGroup(
@@ -109,16 +133,16 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     /*
-    for auto -
-        close shooting (speaker): 3 seconds
-        middle shooting (during auto): 4 seconds
-        far shooting (during auto): 6 seconds
-    */
+     * for auto -
+     * close shooting (speaker): 3 seconds
+     * middle shooting (during auto): 4 seconds
+     * far shooting (during auto): 6 seconds
+     */
 
     /*
-    for teleop (probably but i want to have speaker and safe same time) -
-        speaker: 3 seconds
-        safe: 5 seconds
+     * for teleop (probably but i want to have speaker and safe same time) -
+     * speaker: 3 seconds
+     * safe: 5 seconds
      */
     public Command runShooterRoutine(double runTime) {
         return new ParallelCommandGroup(
@@ -128,7 +152,6 @@ public class ShooterSubsystem extends SubsystemBase {
                         runFeeder().withTimeout(0.5)));
     }
 
-
     public void setArmPosition(double pos) {
         arm.setPosition(pos);
     }
@@ -137,9 +160,8 @@ public class ShooterSubsystem extends SubsystemBase {
         shooter.setPosition(pos);
     }
 
-
     public void setShooterVision() {
-        if(visionSubsystem.hasTargets()) {
+        if (visionSubsystem.hasTargets()) {
             double x = visionSubsystem.getY();
             double output = (-0.00015152 * Math.pow(x, 2)) + (0.0126955 * x) + 0.904188;
             setShooterPosition(output);
@@ -150,4 +172,3 @@ public class ShooterSubsystem extends SubsystemBase {
         return controlInput.isSafeMode();
     }
 }
-
