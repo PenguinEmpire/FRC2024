@@ -156,15 +156,29 @@ public class RobotContainer {
     // power we need
     // might want to change the whileTrue back to onTrue 3/3/24
     JoystickButton wooferShooterMotion = new JoystickButton(controlInput.getAccessoryJoystick(), 5);
-    wooferShooterMotion.whileTrue(new ParallelCommandGroup(
-        new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem,
-            PositionCommand.Position.SAFE_OR_SPEAKER).repeatedly(),
-        new SequentialCommandGroup(
-            new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem,
-                PositionCommand.Position.INTAKE_IN_SHOOT),
-                new WaitCommand(0.8),
-            shooterSubsystem.runFeeder().withTimeout(1.0))
-    ));
+    wooferShooterMotion.onTrue(
+      new Commands.race(
+        shooterSubsystem.runShooter().onlyWhile(shooterSubsystem::hasRing),
+
+      )
+    );
+
+    // // wooferShooterMotion.whileTrue(new ParallelCommandGroup(
+    //     new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem,
+    //         PositionCommand.Position.SAFE_OR_SPEAKER).repeatedly(),
+    //     new SequentialCommandGroup(
+    //         new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem,
+    //             PositionCommand.Position.INTAKE_IN_SHOOT),
+    //             new WaitCommand(0.8),
+    //         shooterSubsystem.runFeeder().withTimeout(1.0))
+    // ));
+
+//     //public void alignX() {
+//  m_frontRight.setDesiredState(new SwerveModuleState(0, new Rotation2d(Math.PI/4)));
+//  m_frontLeft.setDesiredState(new SwerveModuleState(0, new Rotation2d(-Math.PI/4)));
+//  m_rearRight.setDesiredState(new SwerveModuleState(0, new Rotation2d(-Math.PI/4)));
+//  m_rearLeft.setDesiredState(new SwerveModuleState(0, new Rotation2d(Math.PI/4)));
+//   }
 
     JoystickButton ampArms = new JoystickButton(controlInput.getAccessoryJoystick(), 4);
     ampArms
@@ -173,7 +187,7 @@ public class RobotContainer {
     JoystickButton ampShooting = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
     ampShooting.onTrue(new SequentialCommandGroup(
       shooterSubsystem.runAmpShooterRoutine(),
-      new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.HOME));
+      new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.HOME)));
 
     JoystickButton climbUp = new JoystickButton(controlInput.getRightJoystick(), 11);
     climbUp.whileTrue(climberSubsystem.runClimberMotorUp());
