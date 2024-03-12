@@ -98,8 +98,8 @@ public class RobotContainer {
 
     // might need to make it negative (direction) or add 180 (rotation)
     chooseAlign.addOption("None", 0.0);
-    chooseAlign.addOption("ampShootAdjustment", -60.0);
-    chooseAlign.addOption("90", 90.0);
+    chooseAlign.addOption("ampShootAdjustment", 60.0);
+    chooseAlign.addOption("sourceShooterAdjustment", -60.0);
     SmartDashboard.putData("Alignment Choice", chooseAlign);
 
     configureBindings();

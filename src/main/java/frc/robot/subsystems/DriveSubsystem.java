@@ -98,8 +98,8 @@ public class DriveSubsystem extends SubsystemBase {
         this::setChassisSpeeds,
         new HolonomicPathFollowerConfig(
             new PIDConstants(0.6, 0, 0),
-            new PIDConstants(0.4, 0.0001, 0),
-            DriveConstants.kMaxSpeedMetersPerSecond, // max speed in m/s
+            new PIDConstants(0.7, 0, 0),
+            DriveConstants.kMaxSpeedMetersPerSecond / 1.5, // max speed in m/s
             new Translation2d(DriveConstants.kWheelBase / 2, DriveConstants.kTrackWidth / 2).getNorm(),
             new ReplanningConfig()),
         () -> {

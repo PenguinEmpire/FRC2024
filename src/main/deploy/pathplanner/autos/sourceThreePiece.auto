@@ -2,42 +2,23 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4188914763968143,
-      "y": 1.6228142491350994
+      "x": 0.709765596511391,
+      "y": 4.383298109624273
     },
-    "rotation": 0
+    "rotation": -59.60981942972723
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "race",
+          "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "shooterRollers"
-                }
-              },
-              {
-                "type": "parallel",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "sourceToShoot"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "outOfAutoPos"
-                      }
-                    }
-                  ]
+                  "name": "outOfAutoPos"
                 }
               },
               {
@@ -47,35 +28,16 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 2.5
+                        "waitTime": 1.5
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "shootingRoutine"
+                        "name": "shootClose"
                       }
                     }
                   ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "trapToBackLeft"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intakeMotion"
                 }
               }
             ]
@@ -92,29 +54,125 @@
                 }
               },
               {
-                "type": "parallel",
+                "type": "named",
+                "data": {
+                  "name": "intakeRollers"
+                }
+              },
+              {
+                "type": "sequential",
                 "data": {
                   "commands": [
                     {
-                      "type": "path",
-                      "data": {
-                        "pathName": "backLeftToTrapShoot"
-                      }
-                    },
-                    {
-                      "type": "sequential",
+                      "type": "parallel",
                       "data": {
                         "commands": [
                           {
-                            "type": "wait",
+                            "type": "path",
                             "data": {
-                              "waitTime": 1.0
+                              "pathName": "speakerToTrap"
+                            }
+                          },
+                          {
+                            "type": "sequential",
+                            "data": {
+                              "commands": [
+                                {
+                                  "type": "wait",
+                                  "data": {
+                                    "waitTime": 0.5
+                                  }
+                                },
+                                {
+                                  "type": "named",
+                                  "data": {
+                                    "name": "intakeMotion"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "backLeftToTrapShoot"
+                            }
+                          },
+                          {
+                            "type": "sequential",
+                            "data": {
+                              "commands": [
+                                {
+                                  "type": "wait",
+                                  "data": {
+                                    "waitTime": 1.0
+                                  }
+                                },
+                                {
+                                  "type": "named",
+                                  "data": {
+                                    "name": "shooterPos"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "trapToBackLeftSecond"
                             }
                           },
                           {
                             "type": "named",
                             "data": {
-                              "name": "shootingRoutine"
+                              "name": "intakeMotion"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "backSecondLeftToTrapShoot"
+                            }
+                          },
+                          {
+                            "type": "sequential",
+                            "data": {
+                              "commands": [
+                                {
+                                  "type": "wait",
+                                  "data": {
+                                    "waitTime": 0.5
+                                  }
+                                },
+                                {
+                                  "type": "named",
+                                  "data": {
+                                    "name": "shooterPos"
+                                  }
+                                }
+                              ]
                             }
                           }
                         ]

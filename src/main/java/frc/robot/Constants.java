@@ -23,7 +23,7 @@ public final class Constants {
   //too lazy to do enum for drive constants
   // first four constants are from swervedrivespecialties github
 
-  // this is all the old swerve code (can bring back if needed)
+  // this is all the old swerve code (can bring back if needed) 
   // public static class Drive {
   //   public static final double DISTANCE_PER_ROT = 1.0/8.16;
   //   public static final double WHEEL_DIAMETER = 4.064;
@@ -191,8 +191,8 @@ public final class Constants {
     public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
-    public static final int kDrivingMotorCurrentLimit = 80; // amps
-    public static final int kTurningMotorCurrentLimit = 40; // amps
+    public static final int kDrivingMotorCurrentLimit = 40; // amps
+    public static final int kTurningMotorCurrentLimit = 30; // amps
   }
 
   public static final class NeoMotorConstants {

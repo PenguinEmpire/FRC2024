@@ -17,6 +17,7 @@ public class AlignmentCommand extends Command {
     public void initialize() {
         this.driveSubsystem.resetGyroscope();
         this.driveSubsystem.resetOdometry(new Pose2d());
+        this.driveSubsystem.getNavX().setAngleAdjustment(0);
     }
 
     @Override
