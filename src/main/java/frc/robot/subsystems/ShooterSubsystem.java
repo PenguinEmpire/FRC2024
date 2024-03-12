@@ -104,7 +104,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // need to tune timings
     public Command runAmpShooterRoutine() {
         return new ParallelCommandGroup(
-                runShooter().withTimeout(2),
+                runShooter().withTimeout(0.75),
                 runFeeder().withTimeout(2));
     }
 

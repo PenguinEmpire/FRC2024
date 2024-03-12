@@ -171,7 +171,9 @@ public class RobotContainer {
         .onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.AMP));
 
     JoystickButton ampShooting = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
-    ampShooting.onTrue(shooterSubsystem.runAmpShooterRoutine());
+    ampShooting.onTrue(new SequentialCommandGroup(
+      shooterSubsystem.runAmpShooterRoutine(),
+      new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.HOME));
 
     JoystickButton climbUp = new JoystickButton(controlInput.getRightJoystick(), 11);
     climbUp.whileTrue(climberSubsystem.runClimberMotorUp());
