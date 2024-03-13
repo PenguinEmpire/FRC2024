@@ -33,7 +33,7 @@ public class AutoMotions extends Command {
                 new SequentialCommandGroup(
                         Commands.race(
                             shooterSubsystem.runFeeder().until(shooterSubsystem::hasRing),
-                            new WaitCommand(4)
+                            new WaitCommand(2.5)
                         ),
                         new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.AUTO_BASE)
                 )

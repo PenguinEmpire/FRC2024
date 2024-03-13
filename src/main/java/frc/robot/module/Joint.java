@@ -57,6 +57,8 @@ public class Joint {
         this.armMaxOutput = maxOutput;
         this.invertedEncoder = invertEncoder;
         armMotor = new CANSparkMax(sparkID, CANSparkMax.MotorType.kBrushless);
+
+        // change back to brake for everything
         armMotor.setIdleMode(IdleMode.kBrake);
         armEncoder = armMotor.getAbsoluteEncoder(Type.kDutyCycle);
         armEncoder.setPositionConversionFactor(2 * Math.PI);

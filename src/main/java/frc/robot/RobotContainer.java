@@ -20,7 +20,10 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -180,17 +183,19 @@ public class RobotContainer {
             new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem,
                 PositionCommand.Position.INTAKE_IN_SHOOT)),
         new WaitCommand(0.3),
+        new ConditionalCommand(new InstantCommand(), new InstantCommand(), () -> SmartDashboard.getNumber("Shooter RPM", 0) > 90).repeatedly().until(() -> SmartDashboard.getNumber("Shooter RPM", 0) > 90),
         shooterSubsystem.runFeeder().withTimeout(1),
         shooterSubsystem.endShooter(),
         new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.HOME)));
 
     JoystickButton manualOveride = new JoystickButton(controlInput.getAccessoryJoystick(), 2);
-    manualOveride.onTrue(new ParallelCommandGroup(
-        new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.HOME),
+    manualOveride.onTrue(new SequentialCommandGroup(
+     new ParallelCommandGroup( new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.HOME),
         shooterSubsystem.endShooter(),
         shooterSubsystem.setContinuousRun(false),
         shooterSubsystem.endFeeder(),
-        intakeSubsystem.endRollers()
+        intakeSubsystem.endRollers()),
+        Commands.runOnce(() -> CommandScheduler.getInstance().cancelAll())
     ));
 
     JoystickButton ampArms = new JoystickButton(controlInput.getAccessoryJoystick(), 4);

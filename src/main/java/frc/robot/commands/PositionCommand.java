@@ -75,7 +75,7 @@ public class PositionCommand extends Command {
         } else if (pos == Position.SPEAKER) {
             shooterSubsystem.setShooterPosition(1.03);
         } else if (pos == Position.INTAKE_OUT) {
-            intakeSubsystem.setPosition(4.19);
+            intakeSubsystem.setPosition(4.12);
         } else if (pos == Position.INTAKE_IN_PICKUP) {
             intakeSubsystem.setPosition(5.87);
         } else if (pos == Position.START_POSITION) {

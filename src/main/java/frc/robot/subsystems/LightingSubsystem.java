@@ -13,7 +13,8 @@ import edu.wpi.first.wpilibj.DriverStation.MatchType;
 public class LightingSubsystem extends SubsystemBase {
     private int firstPixelHue = 0;
     private int counterRGB = 0;
-    private int length = 251;
+    private int trailCounter = 0;
+    private int length = 86;
     private AddressableLED led;
     private Timer timer = new Timer();
     private AddressableLEDBuffer ledBuffer;
@@ -57,18 +58,18 @@ public class LightingSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        matchDiv = DriverStation.getMatchType() == MatchType.None ? 5 : 2;
+        matchDiv = DriverStation.getMatchType() == MatchType.None ? 4 : 2;
         var choice = chooser.getSelected();
         if (choice == kBlue)
-            blue();
+             newTest(0,0,255);
         if (choice == kRed)
-            red();
+            newTest(255,0,0);
         if (choice == kBlueWhite)
             blueAndWhite();
         if (choice == kRainbow)
             rainbow();
         if (choice == kNewTest)
-            newTest();
+            newTest(255,255,255);
         if (choice == kPenguin)
             penguin(0, 0, 255);
         if (choice == kOff)
@@ -93,9 +94,19 @@ public class LightingSubsystem extends SubsystemBase {
         }
     }
 
-    public void newTest() {
-        for (var i = counterRGB; i < ledBuffer.getLength(); i++) {
-            ledBuffer.setRGB(i, (int) 255 / matchDiv, 0, 0);
+    public void newTest(int r, int g, int b) {
+         for (var i = 0; i < ledBuffer.getLength(); i++) {
+            ledBuffer.setRGB(i, (int) 0, 0, 0);
+        }
+        int size = 25;
+        var length = Math.min(trailCounter + size, ledBuffer.getLength() + size);
+        for (var i = trailCounter - size; i < length - size; i++) {
+            if(i >= 0)
+                ledBuffer.setRGB(i, (int) r / matchDiv, (int) g / matchDiv, (int) b / matchDiv);
+        }
+        trailCounter++;
+        if(trailCounter > ledBuffer.getLength() + size) {
+            trailCounter = 0;
         }
     }
 
