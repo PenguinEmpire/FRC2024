@@ -23,7 +23,7 @@ public class IntakeSubsystem extends SubsystemBase {
         // true, null, 0, false);
 
         intake = new Joint("intake", moveSparkID, 0.2, 0, 0, 0, 0, -0.35, 0.35, true,
-                new ArmFeedforward(0.1, 0.4, 0), 4.84, true);
+                new ArmFeedforward(0.1, 0.4, 0), 4, true);
         SmartDashboard.putNumber("Intake Speed", -0.75);
         
     }

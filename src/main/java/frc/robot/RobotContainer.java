@@ -182,8 +182,8 @@ public class RobotContainer {
                 PositionCommand.Position.SAFE_OR_SPEAKER),
             new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem,
                 PositionCommand.Position.INTAKE_IN_SHOOT)),
-        new WaitCommand(0.3),
-        new ConditionalCommand(new InstantCommand(), new InstantCommand(), () -> SmartDashboard.getNumber("Shooter RPM", 0) > 90).repeatedly().until(() -> SmartDashboard.getNumber("Shooter RPM", 0) > 90),
+        new WaitCommand(0.5),
+        new ConditionalCommand(new InstantCommand(), new InstantCommand(), () -> SmartDashboard.getNumber("Shooter RPM", 0) > 95).repeatedly().until(() -> SmartDashboard.getNumber("Shooter RPM", 0) > 95),
         shooterSubsystem.runFeeder().withTimeout(1),
         shooterSubsystem.endShooter(),
         new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.HOME)));
