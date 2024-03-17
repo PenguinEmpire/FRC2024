@@ -123,7 +123,9 @@ public class RobotContainer {
 
     // emergency
     JoystickButton reverseFeederRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 9);
-    reverseFeederRollers.whileTrue(shooterSubsystem.reverseFeeder());
+    reverseFeederRollers.whileTrue(new ParallelCommandGroup(
+        shooterSubsystem.reverseFeeder(),
+        intakeSubsystem.reverseRollers()));
 
     // emergency
     JoystickButton shooterRollers = new JoystickButton(controlInput.getAccessoryJoystick(), 10);
@@ -183,28 +185,33 @@ public class RobotContainer {
             new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem,
                 PositionCommand.Position.INTAKE_IN_SHOOT)),
         new WaitCommand(0.5),
-        new ConditionalCommand(new InstantCommand(), new InstantCommand(), () -> SmartDashboard.getNumber("Shooter RPM", 0) > 95).repeatedly().until(() -> SmartDashboard.getNumber("Shooter RPM", 0) > 95),
+        new ConditionalCommand(new InstantCommand(), new InstantCommand(),
+            () -> SmartDashboard.getNumber("Shooter RPM", 0) > 95).repeatedly()
+            .until(() -> SmartDashboard.getNumber("Shooter RPM", 0) > 95),
         shooterSubsystem.runFeeder().withTimeout(1),
         shooterSubsystem.endShooter(),
         new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.HOME)));
 
     JoystickButton manualOveride = new JoystickButton(controlInput.getAccessoryJoystick(), 2);
     manualOveride.onTrue(new SequentialCommandGroup(
-     new ParallelCommandGroup( new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.HOME),
-        shooterSubsystem.endShooter(),
-        shooterSubsystem.setContinuousRun(false),
-        shooterSubsystem.endFeeder(),
-        intakeSubsystem.endRollers()),
-        Commands.runOnce(() -> CommandScheduler.getInstance().cancelAll())
-    ));
+        new ParallelCommandGroup(
+            new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.HOME),
+            shooterSubsystem.endShooter(),
+            shooterSubsystem.setContinuousRun(false),
+            shooterSubsystem.endFeeder(),
+            intakeSubsystem.endRollers()),
+        Commands.runOnce(() -> CommandScheduler.getInstance().cancelAll())));
 
     JoystickButton ampArms = new JoystickButton(controlInput.getAccessoryJoystick(), 4);
     ampArms
-        .onTrue(new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.AMP));
+        .onTrue(new SequentialCommandGroup(
+            new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.AMP),
+            shooterSubsystem.endShooter()));
 
     JoystickButton ampShooting = new JoystickButton(controlInput.getAccessoryJoystick(), 6);
     ampShooting.onTrue(new SequentialCommandGroup(
         shooterSubsystem.runAmpShooterRoutine(),
+        new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.HOME_TWO),
         new PositionCommand(shooterSubsystem, intakeSubsystem, climberSubsystem, PositionCommand.Position.HOME)));
 
     JoystickButton climbUp = new JoystickButton(controlInput.getRightJoystick(), 11);
