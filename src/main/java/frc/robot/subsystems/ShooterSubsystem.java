@@ -17,15 +17,28 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.ControlInput;
 import frc.robot.module.Joint;
 
+import com.revrobotics.ColorSensorV3;
+import com.revrobotics.ColorMatchResult;
+import com.revrobotics.ColorMatch;
+import edu.wpi.first.wpilibj.util.Color; 
+import edu.wpi.first.wpilibj.I2C;
+
+
 public class ShooterSubsystem extends SubsystemBase {
 
     private final CANSparkMax feederMotor;
     // used for output rollers
     private final CANSparkMax shooterMotor;
-
+// change
+    private final I2C.Port i2cPort = I2C.Port.kOnboard;
+    private final ColorSensorV3  m_colorSensor = new ColorSensorV3(i2cPort);
+    private final ColorMatch m_colorMatcher = new ColorMatch();
+    private final Color kOrangeTarget = new Color(0.08, 0.355, 0.563);
+    private final Color kBaseTarget = new Color(64 / 255, 63 / 255, 62 / 255);
     private Joint arm;
     private Joint shooter;
-    private DigitalInput proximitySensor;
+    //  private DigitalInput proximitySensor;
+    private DigitalInput ColorSensor;
     private double intakeFeederSpeed;
     private double shooterSpeed;
 
@@ -51,8 +64,10 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotor.setIdleMode(IdleMode.kBrake);
         shooterEncoder = shooterMotor.getEncoder();
         shooterPIDController = shooterMotor.getPIDController();
-
-        proximitySensor = new DigitalInput(0);
+        m_colorSensor.configureColorSensor(ColorSensorV3.ColorSensorResolution.kColorSensorRes16bit, ColorSensorV3.ColorSensorMeasurementRate.kColorRate50ms, ColorSensorV3.GainFactor.kGain3x);
+        m_colorMatcher.setConfidenceThreshold(85);
+        m_colorMatcher.addColorMatch(kOrangeTarget);
+        m_colorMatcher.addColorMatch(kBaseTarget);
 
         SmartDashboard.putNumber("Shooter Speed", 1);
         SmartDashboard.putNumber("Intake Feeder Speed", 0.8);
@@ -75,6 +90,7 @@ public class ShooterSubsystem extends SubsystemBase {
         arm.periodic();
         shooter.periodic();
         lightingSubystem.setPulsing(hasRing());
+      
 
         if (continuousRun) {
             setShooterVision();
@@ -87,7 +103,10 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public boolean hasRing() {
-        return !proximitySensor.get();
+    
+        final Color detectedColor = m_colorSensor.getColor();
+        final ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
+        return match.color != kOrangeTarget;
     }
 
     // these methods are for legacy setting the intake speed, do not use these if
