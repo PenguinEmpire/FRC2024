@@ -64,8 +64,8 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotor.setIdleMode(IdleMode.kBrake);
         shooterEncoder = shooterMotor.getEncoder();
         shooterPIDController = shooterMotor.getPIDController();
-        m_colorSensor.configureColorSensor(ColorSensorV3.ColorSensorResolution.kColorSensorRes16bit, ColorSensorV3.ColorSensorMeasurementRate.kColorRate50ms, ColorSensorV3.GainFactor.kGain3x);
-        m_colorMatcher.setConfidenceThreshold(85);
+        m_colorSensor.configureColorSensor(ColorSensorV3.ColorSensorResolution.kColorSensorRes13bit, ColorSensorV3.ColorSensorMeasurementRate.kColorRate25ms, ColorSensorV3.GainFactor.kGain3x);
+        m_colorMatcher.setConfidenceThreshold(95);
         m_colorMatcher.addColorMatch(kOrangeTarget);
         m_colorMatcher.addColorMatch(kBaseTarget);
 
