@@ -25,7 +25,7 @@ public class IntakeSubsystem extends SubsystemBase {
         intake = new Joint("intake", moveSparkID, 0.2, 0, 0, 0, 0, -0.35, 0.35, true,
                 new ArmFeedforward(0.1, 0.4, 0), 4, true);
         SmartDashboard.putNumber("Intake Speed", -0.75);
-
+        
     }
 
     @Override
@@ -41,12 +41,6 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command runRollers() {
         return Commands.runEnd(
                 () -> rollerMotor.set(intakeSpeed),
-                () -> rollerMotor.set(0));
-    }
-
-    public Command reverseRollers() {
-        return Commands.runEnd(
-                () -> rollerMotor.set(-intakeSpeed),
                 () -> rollerMotor.set(0));
     }
 

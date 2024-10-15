@@ -40,8 +40,7 @@ public class PositionCommand extends Command {
         ARM_GROUND_PICKUP,
         OUT_OF_AUTO_POSITION,
         AMP,
-        HOME,
-        HOME_TWO
+        HOME
     };
 
     private ShooterSubsystem shooterSubsystem;
@@ -76,9 +75,9 @@ public class PositionCommand extends Command {
         } else if (pos == Position.SPEAKER) {
             shooterSubsystem.setShooterPosition(1.03);
         } else if (pos == Position.INTAKE_OUT) {
-            intakeSubsystem.setPosition(4.08);
+            intakeSubsystem.setPosition(4.12);
         } else if (pos == Position.INTAKE_IN_PICKUP) {
-            intakeSubsystem.setPosition(5.65);
+            intakeSubsystem.setPosition(5.87);
         } else if (pos == Position.START_POSITION) {
             if (m_ticks < 15) {
                 shooterSubsystem.setArmPosition(5.6);
@@ -110,7 +109,7 @@ public class PositionCommand extends Command {
             }
         } else if (pos == Position.AMP) {
             shooterSubsystem.setArmPosition(4.74);
-            shooterSubsystem.setShooterPosition(0.8);
+            shooterSubsystem.setShooterPosition(0.76);
             intakeSubsystem.setPosition(5.23);
         } else if (pos == Position.HOME) {
             shooterSubsystem.setArmPosition(0.0);
@@ -118,10 +117,6 @@ public class PositionCommand extends Command {
             intakeSubsystem.setPosition(5.75);
         } else if (pos == Position.AUTO_BASE) {
             shooterSubsystem.setArmPosition(0.0);
-        } else if (pos == Position.HOME_TWO) {
-            shooterSubsystem.setArmPosition(0.0);
-            shooterSubsystem.setShooterPosition(0.0);
-            intakeSubsystem.setPosition(5);
         }
     }
 
