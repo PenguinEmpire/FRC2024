@@ -67,8 +67,6 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
   private final SendableChooser<Double> chooseAlign = new SendableChooser<Double>();
 
-  // my last comp
-  
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
