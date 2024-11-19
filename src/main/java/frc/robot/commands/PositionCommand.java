@@ -8,9 +8,9 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class PositionCommand extends Command {
 
     // SAFE_OR_SPEAKER: puts the shooter in speaker or safe pos
-    // INTAKE_OUT: assumes the arms are out and moves the intake to pickup
-    // INTAKE_IN_PICKUP: folds intake into frame for ring to fit
-    // INTAKE_IN_SHOOT: moves intake out a bit for ring to shoot
+    // INTAKE_OUT: assumes the arms are out and moves the intake to pickup (REMOVED)
+    // INTAKE_IN_PICKUP: folds intake into frame for ring to fit (REMOVED)
+    // INTAKE_IN_SHOOT: moves intake out a bit for ring to shoot (REMOVED)
     // BASE: resets arms and shooter (0's them)
     // ARM_GROUND_PICKUP: lifts the arm and shooter a bit for smooth intake
     // FAR_SHOOTING: (used in auto) lifts arms and shooter to be able to shoot from
@@ -28,9 +28,6 @@ public class PositionCommand extends Command {
     public enum Position {
         SAFE_OR_SPEAKER,
         SPEAKER,
-        INTAKE_OUT,
-        INTAKE_IN_PICKUP,
-        INTAKE_IN_SHOOT,
         START_POSITION,
         BASE,
         AUTO_BASE,
@@ -67,61 +64,66 @@ public class PositionCommand extends Command {
     public void execute() {
         m_ticks++;
 
-        if (pos == Position.SAFE_OR_SPEAKER) {
-            // if safe mode is true (toggle is down), shooter should move to that pos, else
-            // should go to speaker pos
-            shooterSubsystem.setShooterVision();
-            shooterSubsystem.setArmPosition(0.0);
-            // shooterSubsystem.setShooterPosition(shooterSubsystem.isSafeMode() ? 0.75 : 1.03);
-        } else if (pos == Position.SPEAKER) {
-            shooterSubsystem.setShooterPosition(1.03);
-        } else if (pos == Position.INTAKE_OUT) {
-            intakeSubsystem.setPosition(4.08);
-        } else if (pos == Position.INTAKE_IN_PICKUP) {
-            intakeSubsystem.setPosition(5.65);
-        } else if (pos == Position.START_POSITION) {
-            if (m_ticks < 15) {
-                shooterSubsystem.setArmPosition(5.6);
-            } else if (m_ticks < 60) {
-                intakeSubsystem.setPosition(6.27);
+        switch (pos) {
+            case SAFE_OR_SPEAKER:
+                shooterSubsystem.setShooterVision();
+                shooterSubsystem.setArmPosition(0.0);
+                // shooterSubsystem.setShooterPosition(shooterSubsystem.isSafeMode() ? 0.75 : 1.03);
+            break;
+            case SPEAKER:
+                shooterSubsystem.setShooterPosition(1.03);
+            break;
+            case START_POSITION:
+                if (m_ticks < 15) {
+                    shooterSubsystem.setArmPosition(5.6);
+                } else if (m_ticks < 60) {
+                    intakeSubsystem.setPosition(6.27);
+                    shooterSubsystem.setShooterPosition(0.0);
+                } else if (m_ticks < 120) {
+                    shooterSubsystem.setArmPosition(5.91);
+                }
+                break;
+            case BASE:
+                shooterSubsystem.setArmPosition(0.0);
                 shooterSubsystem.setShooterPosition(0.0);
-            } else if (m_ticks < 120) {
-                shooterSubsystem.setArmPosition(5.91);
-            }
-        } else if (pos == Position.BASE) {
-            shooterSubsystem.setArmPosition(0.0);
-            shooterSubsystem.setShooterPosition(0.0);
-        } else if (pos == Position.ARM_GROUND_PICKUP) {
-            shooterSubsystem.setArmPosition(6.07);
-            shooterSubsystem.setShooterPosition(0.88);
-        } else if (pos == Position.INTAKE_IN_SHOOT) {
-            intakeSubsystem.setPosition(5.5);
-        } else if (pos == Position.FAR_SHOOTING) { 
-            intakeSubsystem.setPosition(0.0);
-        } else if (pos == Position.MIDDLE_SHOOTING) {
-            intakeSubsystem.setPosition(0.73);
-        } else if (pos == Position.OUT_OF_AUTO_POSITION) {
-            if (m_ticks < 15) {
-                shooterSubsystem.setArmPosition(5.75);
-            } else if (m_ticks < 60) {
-                intakeSubsystem.setPosition(4.12);
-            } else if (m_ticks < 90) {
-                shooterSubsystem.setArmPosition(0);
-            }
-        } else if (pos == Position.AMP) {
-            shooterSubsystem.setArmPosition(4.74);
-            shooterSubsystem.setShooterPosition(0.8);
-            intakeSubsystem.setPosition(5.23);
-        } else if (pos == Position.HOME) {
-            shooterSubsystem.setArmPosition(0.0);
-            shooterSubsystem.setShooterPosition(0.0);
-            intakeSubsystem.setPosition(5.75);
-        } else if (pos == Position.AUTO_BASE) {
-            shooterSubsystem.setArmPosition(0.0);
-        } else if (pos == Position.HOME_TWO) {
-            shooterSubsystem.setArmPosition(0.0);
-            shooterSubsystem.setShooterPosition(0.0);
-            intakeSubsystem.setPosition(5);
+                break;
+            case ARM_GROUND_PICKUP:
+                shooterSubsystem.setArmPosition(6.07);
+                shooterSubsystem.setShooterPosition(0.88);
+                break;
+            case FAR_SHOOTING:
+                intakeSubsystem.setPosition(0.0);
+                break;
+            case MIDDLE_SHOOTING:
+                intakeSubsystem.setPosition(0.73);
+                break;
+            case OUT_OF_AUTO_POSITION:
+                if (m_ticks < 15) {
+                    shooterSubsystem.setArmPosition(5.75);
+                } else if (m_ticks < 60) {
+                    intakeSubsystem.setPosition(4.12);
+                } else if (m_ticks < 90) {
+                    shooterSubsystem.setArmPosition(0);
+                }
+                break;
+            case AMP:
+                shooterSubsystem.setArmPosition(4.74);
+                shooterSubsystem.setShooterPosition(0.8);
+                intakeSubsystem.setPosition(5.23);
+                break;
+            case HOME:
+                shooterSubsystem.setArmPosition(0.0);
+                shooterSubsystem.setShooterPosition(0.0);
+                intakeSubsystem.setPosition(5.75);
+            break;
+            case AUTO_BASE:
+                shooterSubsystem.setArmPosition(0.0);
+                break;
+            case HOME_TWO:
+                shooterSubsystem.setArmPosition(0.0);
+                shooterSubsystem.setShooterPosition(0.0);
+                intakeSubsystem.setPosition(5);
+                break;
         }
     }
 
