@@ -45,6 +45,7 @@ public class PositionCommand extends Command {
 
     private ShooterSubsystem shooterSubsystem;
     private IntakeSubsystem intakeSubsystem;
+    @SuppressWarnings("unused")
     private ClimberSubsystem climberSubystem;
     private Position pos;
 
