@@ -1,8 +1,9 @@
-package frc.robot.commands;
+package org.penguinempire.commands;
+
+import org.penguinempire.subsystems.DriveSubsystem;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.DriveSubsystem;
 
 public class AlignmentCommand extends Command {
     private DriveSubsystem driveSubsystem;

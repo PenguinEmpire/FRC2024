@@ -1,14 +1,15 @@
-package frc.robot.commands.autonomous;
+package org.penguinempire.commands.autonomous;
+
+import org.penguinempire.commands.PositionCommand;
+import org.penguinempire.subsystems.ClimberSubsystem;
+import org.penguinempire.subsystems.IntakeSubsystem;
+import org.penguinempire.subsystems.ShooterSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.PositionCommand;
-import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
 
 public class AutoMotions extends Command {
     private ShooterSubsystem shooterSubsystem;

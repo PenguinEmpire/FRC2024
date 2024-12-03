@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package org.penguinempire.subsystems;
 
 import com.revrobotics.CANSparkMax;
 

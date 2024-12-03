@@ -1,15 +1,17 @@
-package frc.robot.module;
+package org.penguinempire.module;
 
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
+
+import org.penguinempire.module.Joint;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.module.Joint;
 
 public class Joint {
 

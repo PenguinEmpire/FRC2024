@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package org.penguinempire.subsystems;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;

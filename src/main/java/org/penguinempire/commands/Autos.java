@@ -1,4 +1,13 @@
-package frc.robot.commands;
+package org.penguinempire.commands;
+
+import org.penguinempire.commands.autonomous.AutoMotions;
+import org.penguinempire.commands.autonomous.MoveCommandOdometry;
+import org.penguinempire.commands.autonomous.MoveCommandVision;
+import org.penguinempire.subsystems.ClimberSubsystem;
+import org.penguinempire.subsystems.DriveSubsystem;
+import org.penguinempire.subsystems.IntakeSubsystem;
+import org.penguinempire.subsystems.ShooterSubsystem;
+import org.penguinempire.subsystems.VisionSubsystem;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -6,14 +15,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.autonomous.AutoMotions;
-import frc.robot.commands.autonomous.MoveCommandOdometry;
-import frc.robot.commands.autonomous.MoveCommandVision;
-import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
 
 public class Autos extends Command {
     private DriveSubsystem driveSubsystem;

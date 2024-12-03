@@ -2,9 +2,21 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot;
+package org.penguinempire;
 
 import java.util.function.BooleanSupplier;
+
+import org.penguinempire.commands.AlignmentCommand;
+import org.penguinempire.commands.PositionCommand;
+import org.penguinempire.commands.SwerveDriveCommand;
+import org.penguinempire.commands.PositionCommand.Position;
+import org.penguinempire.commands.autonomous.AutoMotions;
+import org.penguinempire.subsystems.ClimberSubsystem;
+import org.penguinempire.subsystems.DriveSubsystem;
+import org.penguinempire.subsystems.IntakeSubsystem;
+import org.penguinempire.subsystems.LightingSubsystem;
+import org.penguinempire.subsystems.ShooterSubsystem;
+import org.penguinempire.subsystems.VisionSubsystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -29,17 +41,6 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.SwerveDriveCommand;
-import frc.robot.commands.PositionCommand.Position;
-import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LightingSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.commands.AlignmentCommand;
-import frc.robot.commands.PositionCommand;
-import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.commands.autonomous.AutoMotions;
 
 /**
  * This class is where the bulk of the robot should be declared. Since

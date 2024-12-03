@@ -1,10 +1,12 @@
-package frc.robot.commands;
+package org.penguinempire.commands;
+
+import org.penguinempire.subsystems.ClimberSubsystem;
+import org.penguinempire.subsystems.IntakeSubsystem;
+import org.penguinempire.subsystems.ShooterSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
 
+@SuppressWarnings("unused")
 public class PositionCommand extends Command {
 
     // SAFE_OR_SPEAKER: puts the shooter in speaker or safe pos
@@ -45,7 +47,6 @@ public class PositionCommand extends Command {
 
     private ShooterSubsystem shooterSubsystem;
     private IntakeSubsystem intakeSubsystem;
-    @SuppressWarnings("unused")
     private ClimberSubsystem climberSubystem;
     private Position pos;
 

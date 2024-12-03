@@ -1,4 +1,7 @@
-package frc.robot.subsystems;
+package org.penguinempire.subsystems;
+
+import org.penguinempire.ControlInput;
+import org.penguinempire.module.Joint;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -13,8 +16,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.ControlInput;
-import frc.robot.module.Joint;
 
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.ColorMatchResult;

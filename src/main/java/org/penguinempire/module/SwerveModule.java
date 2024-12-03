@@ -1,4 +1,4 @@
-package frc.robot.module;
+package org.penguinempire.module;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -8,10 +8,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
+
+import org.penguinempire.Constants.ModuleConstants;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
-
-import frc.robot.Constants.ModuleConstants;
 
 public class SwerveModule {
   private final CANSparkMax m_drivingSparkMax;
